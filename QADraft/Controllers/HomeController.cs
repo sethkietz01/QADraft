@@ -50,6 +50,26 @@ namespace QADraft.Controllers
         }
 
         [HttpGet]
+        public IActionResult QADescriptions()
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+            return View(); 
+        }
+
+        [HttpGet]
+        public IActionResult DetailedQAReports()
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult AddUser()
         {
             if (!IsAuthenticated())
@@ -95,6 +115,16 @@ namespace QADraft.Controllers
 
         public IActionResult Links()
         {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Settings()
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
             return View();
         }
 
