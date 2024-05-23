@@ -1,0 +1,67 @@
+﻿@model QADraft.Models.GeekQA
+
+@{
+    ViewData["Title"] = "Add QA";
+}
+
+<h2>Add QA</h2>
+
+<form asp-action="AddQA" method="post">
+    <div class="form-group">
+        <label asp-for="CommittedById" class="control-label"></label>
+        <input asp-for="CommittedById" class="form-control" />
+        <span asp-validation-for="CommittedById" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FoundById" class="control-label"></label>
+        <input asp-for="FoundById" class="form-control" />
+        <span asp-validation-for="FoundById" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CategoryOfError" class="control-label"></label>
+        <input asp-for="CategoryOfError" class="form-control" />
+        <span asp-validation-for="CategoryOfError" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="NatureOfError" class="control-label"></label>
+        <input asp-for="NatureOfError" class="form-control" />
+        <span asp-validation-for="NatureOfError" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Severity" class="control-label"></label>
+        <input asp-for="Severity" class="form-control" />
+        <span asp-validation-for="Severity" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CustomerName" class="control-label"></label>
+        <input asp-for="CustomerName" class="form-control" />
+        <span asp-validation-for="CustomerName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="UnitId" class="control-label"></label>
+        <input asp-for="UnitId" class="form-control" />
+        <span asp-validation-for="UnitId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ErrorDate" class="control-label"></label>
+        <input asp-for="ErrorDate" class="form-control" type="date" />
+        <span asp-validation-for="ErrorDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FoundOn" class="control-label"></label>
+        <input asp-for="FoundOn" class="form-control" type="date" />
+        <span asp-validation-for="FoundOn" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Add QA" class="btn btn-primary" />
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
