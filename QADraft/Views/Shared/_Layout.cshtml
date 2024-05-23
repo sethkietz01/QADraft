@@ -64,7 +64,9 @@
                 </button>
                 @{
                     string isAuthenticated = Context.Session.GetString("IsAuthenticated");
+                    var user = Context.Session.GetMessage("username");
                 }
+
                 @if (isAuthenticated == "true")
                 {
                     <div class="collapse navbar-collapse" id="navbarNav">

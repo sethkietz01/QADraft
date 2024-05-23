@@ -33,6 +33,7 @@ namespace QADraft.Controllers
             {
                 HttpContext.Session.SetString("IsAuthenticated", "true");
                 HttpContext.Session.SetString("username", username);
+
                 return RedirectToAction("Index");
             }
 
