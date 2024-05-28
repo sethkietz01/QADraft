@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace QADraft.Controllers
 {
@@ -85,6 +86,19 @@ namespace QADraft.Controllers
         }
 
         [HttpGet]
+        public IActionResult UserOptions()
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+
+            var qas = _context.Users
+                .ToList();
+            return View(qas);
+        }
+
+        [HttpGet]
         public IActionResult AddUser()
         {
             if (!IsAuthenticated())
@@ -102,6 +116,67 @@ namespace QADraft.Controllers
                 _context.Users.Add(user);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
+            }
+            return View(user);
+        }
+
+        [HttpGet]
+        public IActionResult EditUser(string username, string firstname, string lastname, string email, string role, DateTime createdat)
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult EditUser(User user, string username, string action)
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+            user.Password = "Pass";
+
+            if (ModelState.IsValid)
+            {
+                var existingUser = _context.Users.SingleOrDefault(u => u.Username == username);
+                if (existingUser != null)
+                {
+                    if (action == "Update User")
+                    {
+                        Debug.WriteLine("1");
+                        existingUser.Username = user.Username;
+                        Debug.WriteLine("2");
+                        existingUser.FirstName = user.FirstName;
+                        Debug.WriteLine("3");
+                        existingUser.LastName = user.LastName;
+                        Debug.WriteLine("4");
+                        existingUser.Email = user.Email;
+                        Debug.WriteLine("5");
+                        existingUser.Role = user.Role;
+
+                        Debug.WriteLine("6");
+                        _context.SaveChanges();
+                        Debug.WriteLine("7");
+                        return RedirectToAction("UserOptions");
+                    }
+                    if (action == "Delete User")
+                    {
+                        Debug.WriteLine("DELETE USER");
+                    }
+                }
+            }
+            if (!ModelState.IsValid)
+            {
+                foreach (var modelStateEntry in ModelState.Values)
+                {
+                    foreach (var error in modelStateEntry.Errors)
+                    {
+                        Debug.WriteLine(error.ErrorMessage);
+                    }
+                }
             }
             return View(user);
         }
