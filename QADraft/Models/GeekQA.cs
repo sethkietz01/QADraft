@@ -1,5 +1,6 @@
-﻿using QADraft.Data;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,13 +10,17 @@ namespace QADraft.Models
     {
         public int Id { get; set; }
 
-        public int CommittedById { get; set; }
-        [ForeignKey("CommittedById")]
-        public User CommittedBy { get; set; }
+        [Required]
+        public int? CommittedById { get; set; }
 
-        public int FoundById { get; set; }
+        [ForeignKey("CommittedById")]
+        public User? CommittedBy { get; set; }
+
+        [Required]
+        public int? FoundById { get; set; }
+
         [ForeignKey("FoundById")]
-        public User FoundBy { get; set; }
+        public User? FoundBy { get; set; }
 
         [StringLength(100)]
         public string CategoryOfError { get; set; }
@@ -24,7 +29,7 @@ namespace QADraft.Models
         public string NatureOfError { get; set; }
 
         [Range(1, 10)]
-        public int Severity { get; set; } // e.g., from 1-10
+        public int Severity { get; set; }
 
         [StringLength(100)]
         public string CustomerName { get; set; }
@@ -39,5 +44,8 @@ namespace QADraft.Models
         public string Description { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        [NotMapped]
+        public List<SelectListItem>? Users { get; set; }
     }
 }

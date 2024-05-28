@@ -7,44 +7,56 @@
 <h2>Add QA</h2>
 
 <form asp-action="AddQA" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="CommittedById" class="control-label"></label>
-        <input asp-for="CommittedById" class="form-control" />
+        <select asp-for="CommittedById" class="form-control" asp-items="Model.Users"></select>
         <span asp-validation-for="CommittedById" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="FoundById" class="control-label"></label>
-        <input asp-for="FoundById" class="form-control" />
+        <select asp-for="FoundById" class="form-control" asp-items="Model.Users"></select>
         <span asp-validation-for="FoundById" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="CategoryOfError" class="control-label"></label>
-        <input asp-for="CategoryOfError" class="form-control" />
+        <input asp-for="CategoryOfError" class="form-control" placeholder="Enter category of error" />
         <span asp-validation-for="CategoryOfError" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="NatureOfError" class="control-label"></label>
-        <input asp-for="NatureOfError" class="form-control" />
+        <input asp-for="NatureOfError" class="form-control" placeholder="Describe the nature of the error" />
         <span asp-validation-for="NatureOfError" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Severity" class="control-label"></label>
-        <input asp-for="Severity" class="form-control" />
+        <select asp-for="Severity" class="form-control">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+        </select>
         <span asp-validation-for="Severity" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="CustomerName" class="control-label"></label>
-        <input asp-for="CustomerName" class="form-control" />
+        <input asp-for="CustomerName" class="form-control" placeholder="Enter customer name" />
         <span asp-validation-for="CustomerName" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="UnitId" class="control-label"></label>
-        <input asp-for="UnitId" class="form-control" />
+        <input asp-for="UnitId" class="form-control" placeholder="Enter unit ID" />
         <span asp-validation-for="UnitId" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="ErrorDate" class="control-label"></label>
-        <input asp-for="ErrorDate" class="form-control" type="date" />
+        <input asp-for="ErrorDate" class="form-control" type="date" value="@Model.ErrorDate.ToString("yyyy-MM-dd")" />
         <span asp-validation-for="ErrorDate" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -54,7 +66,7 @@
     </div>
     <div class="form-group">
         <label asp-for="Description" class="control-label"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
+        <textarea asp-for="Description" class="form-control" placeholder="Describe the QA"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
     <div class="form-group">

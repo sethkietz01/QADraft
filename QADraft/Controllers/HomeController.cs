@@ -1,18 +1,23 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using QADraft.Data;
 using QADraft.Models;
+using System;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace QADraft.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ApplicationDbContext context)
+        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -57,7 +62,7 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
-            return View(); 
+            return View();
         }
 
         [HttpGet]
@@ -99,19 +104,48 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
-            return View();
+
+            var users = _context.Users.Select(u => new SelectListItem
+            {
+                Value = u.Id.ToString(),
+                Text = $"{u.FirstName} {u.LastName}"
+            }).ToList();
+
+            GeekQA model = new GeekQA
+            {
+                ErrorDate = DateTime.Now,
+                Users = users
+            };
+
+            return View(model);
         }
 
         [HttpPost]
-        public IActionResult AddQA(GeekQA geekQA)
+        public IActionResult AddQA(GeekQA model)
         {
             if (ModelState.IsValid)
             {
-                _context.GeekQAs.Add(geekQA);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    _context.GeekQAs.Add(model);
+                    _context.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error saving GeekQA");
+                    ModelState.AddModelError(string.Empty, "An error occurred while saving the QA. Please try again.");
+                }
             }
-            return View(geekQA);
+
+            // If model state is invalid, repopulate the users list
+            model.Users = _context.Users.Select(u => new SelectListItem
+            {
+                Value = u.Id.ToString(),
+                Text = $"{u.FirstName} {u.LastName}"
+            }).ToList();
+
+            return View(model);
         }
 
         public IActionResult Links()
