@@ -32,10 +32,10 @@ namespace QADraft.Models
         public int Severity { get; set; }
 
         [StringLength(100)]
-        public string CustomerName { get; set; }
+        public string? CustomerName { get; set; }
 
         [StringLength(50)]
-        public string UnitId { get; set; }
+        public string? UnitId { get; set; }
 
         public DateTime ErrorDate { get; set; }
 
