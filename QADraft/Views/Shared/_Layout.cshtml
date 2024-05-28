@@ -1,20 +1,25 @@
 ﻿<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap">
 <style>
-    .navbar {
+    .navbar
+    {
         font-family: 'Barlow', sans-serif;
         font-weight: 100;
         padding: 10px; 
+        vertical-align: middle;
     }
 
-    .navbar-brand {
+    .navbar-brand 
+    {
         margin-right: 20px; 
     }
 
-    .navbar-nav {
+    .navbar-nav
+    {
         margin-left: auto;
     }
 
-    .nav-item {
+    .nav-item 
+    {
         margin-right: 30px;
     }
 </style>
@@ -29,26 +34,34 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/QADraft.styles.css" asp-append-version="true" />
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .navbar {
+        .navbar 
+        {
             background-color: #861F41;
         }
-        .navbar-brand, .nav-link {
+
+        .navbar-brand, .nav-link 
+        {
             color: #ffffff !important;
         }
-        .footer {
+
+        .footer 
+        {
             background-color: #f8f9fa;
             padding: 10px 0;
         }
-        .footer a {
+
+        .footer a 
+        {
             color: #343a40;
         }
-        .container {
+
+        .container 
+        {
             margin-top: 20px;
         }
-        header {
+
+        header 
+        {
             margin-bottom: 20px;
         }
     </style>
@@ -62,9 +75,11 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                <p>asdfasdf</p>
+
                 @{
                     string isAuthenticated = Context.Session.GetString("IsAuthenticated");
-                    var user = Context.Session.GetMessage("username");
+                    //var user = Context.Session.GetMessage("username");
                 }
 
                 @if (isAuthenticated == "true")
@@ -102,7 +117,7 @@
     </div>
     <footer class="footer text-muted border-top" style="padding: 0px; text-align: center;">
         <div >
-            EKU IT Geeks Quality Assurance
+            EKU IT Geeks QA
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
