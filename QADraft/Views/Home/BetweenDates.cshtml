@@ -1,6 +1,49 @@
-﻿@{
-    ViewData["Title"] = "Between Dates";
+﻿@model List<QADraft.Models.GeekQA>
+
+@{
+    ViewData["Title"] = "QAs Between Dates";
 }
 
-<h2>QA Reports Between Dates</h2>
-<p>Reports filtered by date will be displayed here.</p>
+<h2>QAs Between Dates</h2>
+@await Html.PartialAsync("_QaNavigation")
+
+<form method="post" asp-action="BetweenDates">
+    <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <input type="date" id="startDate" name="startDate" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="endDate">End Date</label>
+        <input type="date" id="endDate" name="endDate" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+@if (Model != null && Model.Count > 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Committed By</th>
+                <th>Found By</th>
+                <th>Category</th>
+                <th>Nature</th>
+                <th>Severity</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var qa in Model)
+            {
+                <tr>
+                    <td>@qa.CommittedBy?.FirstName @qa.CommittedBy?.LastName</td>
+                    <td>@qa.FoundBy?.FirstName @qa.FoundBy?.LastName</td>
+                    <td>@qa.CategoryOfError</td>
+                    <td>@qa.NatureOfError</td>
+                    <td>@qa.Severity</td>
+                    <td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
