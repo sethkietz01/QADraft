@@ -1,18 +1,5 @@
 ﻿<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap">
 <style>
-    .navbar
-    {
-        font-family: 'Barlow', sans-serif;
-        font-weight: 100;
-        padding: 10px; 
-        vertical-align: middle;
-    }
-
-    .navbar-brand 
-    {
-        margin-right: 20px; 
-    }
-
     .navbar-nav
     {
         margin-left: auto;
@@ -22,6 +9,13 @@
     {
         margin-right: 30px;
     }
+
+    .settings-dropdown
+    {
+        float: left;
+        overflow: hidden;
+    }
+
 </style>
 
 <!DOCTYPE html>
@@ -37,11 +31,16 @@
         .navbar 
         {
             background-color: #861F41;
+            font-family: 'Barlow', sans-serif;
+            font-weight: 100;
+            padding: 10px; 
+            vertical-align: middle;
         }
 
         .navbar-brand, .nav-link 
         {
             color: #ffffff !important;
+            margin-right: 20px; 
         }
 
         .footer 
@@ -59,6 +58,53 @@
         {
             margin-top: 20px;
         }
+
+        /* Hide the checkbox */
+        .dropdown input[type="checkbox"] {
+            display: none;
+        }
+
+        /* Style the label to look like a button */
+        .dropdown .for-dropdown {
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        /* Style the dropdown container */
+        .settings-dropdown {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            right: 0; /* Align dropdown to the right */
+            text-align: right; /* Right-align dropdown items */
+        }
+
+        /* Show the dropdown when the checkbox is checked */
+        .dropdown input[type="checkbox"]:checked ~ .settings-dropdown {
+            display: block;
+        }
+
+        /* Style the dropdown links */
+        .settings-dropdown a {
+            display: block;
+            padding: 5px 0;
+            text-decoration: none;
+            color: #333;
+        }
+
+        /* Style hover effect on dropdown links */
+        .settings-dropdown a:hover {
+            background-color: #f0f0f0;
+        }
+
 
         header 
         {
@@ -102,7 +148,16 @@
                                 <a class="nav-link" asp-controller="Home" asp-action="Links">Links</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Settings"><img src="~/images/images/settings.png" alt="Settings" style="max-width: 25px; max-height: 25px;"></a>
+                                <div class="dropdown">
+                                    <input type="checkbox" id="dropdown" name="dropdown" class="dropdown">
+                                    <label class="for-dropdown" for="dropdown"><img src="~/images/images/settings.png" alt="Settings" style="max-width: 25px; max-height: 25px;"></label>
+                                    
+                                    <div class="settings-dropdown">
+                                        <a asp-area="" asp-controller="Home" asp-action="Settings">Settings</a>
+                                        <a asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
+                                    </div>  
+
+                                </div>
                             </li>
                         </ul>
                     </div>

@@ -47,6 +47,14 @@ namespace QADraft.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.SetString("IsAuthenticated", "false");
+            HttpContext.Session.SetString("username", "");
+            return RedirectToAction("Login");
+        }
+
         public IActionResult Index()
         {
             if (!IsAuthenticated())
