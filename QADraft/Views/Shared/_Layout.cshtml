@@ -1,24 +1,4 @@
-﻿<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap">
-<style>
-    .navbar-nav
-    {
-        margin-left: auto;
-    }
-
-    .nav-item 
-    {
-        margin-right: 30px;
-    }
-
-    .settings-dropdown
-    {
-        float: left;
-        overflow: hidden;
-    }
-
-</style>
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -28,43 +8,36 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/QADraft.styles.css" asp-append-version="true" />
     <style>
-        .navbar 
-        {
+        .navbar {
             background-color: #861F41;
             font-family: 'Barlow', sans-serif;
             font-weight: 100;
-            padding: 10px; 
+            padding: 10px;
             vertical-align: middle;
         }
 
-        .navbar-brand, .nav-link 
-        {
+        .navbar-brand, .nav-link {
             color: #ffffff !important;
-            margin-right: 20px; 
+            margin-right: 20px;
         }
 
-        .footer 
-        {
+        .footer {
             background-color: #f8f9fa;
             padding: 10px 0;
         }
 
-        .footer a 
-        {
+        .footer a {
             color: #343a40;
         }
 
-        .container 
-        {
+        .container {
             margin-top: 20px;
         }
 
-        /* Hide the checkbox */
         .dropdown input[type="checkbox"] {
             display: none;
         }
 
-        /* Style the label to look like a button */
         .dropdown .for-dropdown {
             cursor: pointer;
             padding: 10px;
@@ -73,7 +46,6 @@
             display: inline-block;
         }
 
-        /* Style the dropdown container */
         .settings-dropdown {
             display: none;
             position: absolute;
@@ -83,16 +55,14 @@
             padding: 10px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 1;
-            right: 0; /* Align dropdown to the right */
-            text-align: right; /* Right-align dropdown items */
+            right: 0;
+            text-align: right;
         }
 
-        /* Show the dropdown when the checkbox is checked */
         .dropdown input[type="checkbox"]:checked ~ .settings-dropdown {
             display: block;
         }
 
-        /* Style the dropdown links */
         .settings-dropdown a {
             display: block;
             padding: 5px 0;
@@ -100,14 +70,11 @@
             color: #333;
         }
 
-        /* Style hover effect on dropdown links */
         .settings-dropdown a:hover {
             background-color: #f0f0f0;
         }
 
-
-        header 
-        {
+        header {
             margin-bottom: 20px;
         }
     </style>
@@ -116,16 +83,15 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/images/logoWhite.png" alt="Geeks Logo" style="max-width: 100px; max-height: 50px;"></a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/images/logoWhite.png" alt="Geeks Logo" style="max-width: 100px; max-height: 50px;">
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <p>asdfasdf</p>
-
                 @{
                     string isAuthenticated = Context.Session.GetString("IsAuthenticated");
-                    //var user = Context.Session.GetMessage("username");
                 }
 
                 @if (isAuthenticated == "true")
@@ -133,16 +99,13 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-auto">
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="QADescriptions">QA Descriptions</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="DetailedQAReports">Detailed QA Reports</a>
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="AddQA">Add QA</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Home" asp-action="AddUser">Add User</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="AddQA">Add QA</a>
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="QAMenu">Reports</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Home" asp-action="Links">Links</a>
@@ -150,13 +113,13 @@
                             <li class="nav-item">
                                 <div class="dropdown">
                                     <input type="checkbox" id="dropdown" name="dropdown" class="dropdown">
-                                    <label class="for-dropdown" for="dropdown"><img src="~/images/images/settings.png" alt="Settings" style="max-width: 25px; max-height: 25px;"></label>
-                                    
+                                    <label class="for-dropdown" for="dropdown">
+                                        <img src="~/images/images/settings.png" alt="Settings" style="max-width: 25px; max-height: 25px;">
+                                    </label>
                                     <div class="settings-dropdown">
                                         <a asp-area="" asp-controller="Home" asp-action="Settings">Settings</a>
                                         <a asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
-                                    </div>  
-
+                                    </div>
                                 </div>
                             </li>
                         </ul>
@@ -171,7 +134,7 @@
         </main>
     </div>
     <footer class="footer text-muted border-top" style="padding: 0px; text-align: center;">
-        <div >
+        <div>
             EKU IT Geeks QA
         </div>
     </footer>

@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using QADraft.Data;
 using QADraft.Models;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace QADraft.Controllers
 {
@@ -19,6 +20,17 @@ namespace QADraft.Controllers
         {
             _context = context;
             _logger = logger;
+        }
+
+        // Action to render the QA Menu
+        [HttpGet]
+        public IActionResult QAMenu()
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+            return View();
         }
 
         [HttpGet]
@@ -45,14 +57,6 @@ namespace QADraft.Controllers
 
             ViewBag.Message = "Invalid login attempt.";
             return View();
-        }
-
-        [HttpGet]
-        public IActionResult Logout()
-        {
-            HttpContext.Session.SetString("IsAuthenticated", "false");
-            HttpContext.Session.SetString("username", "");
-            return RedirectToAction("Login");
         }
 
         public IActionResult Index()
@@ -107,6 +111,80 @@ namespace QADraft.Controllers
         }
 
         [HttpGet]
+        public IActionResult Links()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Settings()
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult BetweenDates()
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+            return PartialView("_BetweenDates");
+        }
+
+        [HttpPost]
+        public IActionResult BetweenDates(DateTime startDate, DateTime endDate)
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+
+            var qas = _context.GeekQAs
+                .Include(q => q.CommittedBy)
+                .Include(q => q.FoundBy)
+                .Where(q => q.ErrorDate >= startDate && q.ErrorDate <= endDate)
+                .ToList();
+            return PartialView("_BetweenDates", qas);
+        }
+
+        [HttpGet]
+        public IActionResult AllGeekQAs()
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+
+            var qas = _context.GeekQAs
+                .Include(q => q.CommittedBy)
+                .Include(q => q.FoundBy)
+                .ToList();
+            return PartialView("_AllGeekQAs", qas);
+        }
+
+        [HttpGet]
+        public IActionResult FlaggedAccounts()
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+
+            var flaggedAccounts = _context.GeekQAs
+                .Include(q => q.CommittedBy)
+                .Include(q => q.FoundBy)
+                .Where(q => q.Severity >= 10) // Example condition for flagged accounts
+                .ToList();
+            return PartialView("_FlaggedAccounts", flaggedAccounts);
+        }
+
+        // Updated AddQA actions to return full views
+        [HttpGet]
         public IActionResult AddQA()
         {
             if (!IsAuthenticated())
@@ -157,84 +235,6 @@ namespace QADraft.Controllers
 
             return View(model);
         }
-
-        public IActionResult Links()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult Settings()
-        {
-            if (!IsAuthenticated())
-            {
-                return RedirectToAction("Login");
-            }
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult BetweenDates()
-        {
-            if (!IsAuthenticated())
-            {
-                return RedirectToAction("Login");
-            }
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult BetweenDates(DateTime startDate, DateTime endDate)
-        {
-            if (!IsAuthenticated())
-            {
-                return RedirectToAction("Login");
-            }
-
-            var qas = _context.GeekQAs
-                .Include(q => q.CommittedBy)
-                .Include(q => q.FoundBy)
-                .Include(q => q.Description) // Include QAComments
-                .Where(q => q.ErrorDate >= startDate && q.ErrorDate <= endDate)
-                .ToList();
-            return View(qas);
-        }
-
-        // Action to view all Geek QAs
-        [HttpGet]
-        public IActionResult AllGeekQAs()
-        {
-            if (!IsAuthenticated())
-            {
-                return RedirectToAction("Login");
-            }
-
-            var qas = _context.GeekQAs
-                .Include(q => q.CommittedBy)
-                .Include(q => q.FoundBy)
-                //.Include(q => q.Description) // Include QAComments
-                .ToList();
-            return View(qas);
-        }
-
-        // Action to view all flagged accounts
-        [HttpGet]
-        public IActionResult FlaggedAccounts()
-        {
-            if (!IsAuthenticated())
-            {
-                return RedirectToAction("Login");
-            }
-
-            var flaggedAccounts = _context.GeekQAs
-                .Include(q => q.CommittedBy)
-                .Include(q => q.FoundBy)
-                //.Include(q => q.Description) // Include QAComments
-                .Where(q => q.Severity >= 10) // Example condition for flagged accounts
-                .ToList();
-            return View(flaggedAccounts);
-        }
-
 
         public bool IsAuthenticated()
         {
