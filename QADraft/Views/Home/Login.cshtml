@@ -3,6 +3,20 @@
 }
 
 <style>
+    .login {
+        background-color: #f5f5f5;
+        border: 2px solid black;
+        width: 300px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .container
+    {
+        width: 250px;
+        text-align: center;
+    }
+
     .form-group {
         margin-bottom: 20px;
     }
@@ -10,11 +24,12 @@
     .btn-primary {
         background-color: #861F41; 
         border-color: #861F41; 
+        bottom-margin: 10px;
     }
 </style>
 
-<div class="row justify-content-center">
-    <div class="col-md-4">
+<div class="login">
+    <div class="container">
         <h2 class="text-center">Login</h2>
         <form asp-action="Login" method="post">
             <div class="form-group">

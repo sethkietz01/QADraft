@@ -48,17 +48,18 @@ namespace QADraft.Controllers
         public IActionResult Login(string username, string password)
         {
             var user = _context.Users.SingleOrDefault(u => u.Username == username);
-
+            
             if (user != null && user.Password == password)
             {
                 HttpContext.Session.SetString("IsAuthenticated", "true");
-                HttpContext.Session.SetString("username", username);
+                HttpContext.Session.SetString("username", user.Username);
+                HttpContext.Session.SetString("FirstName", user.FirstName);
+                HttpContext.Session.SetString("LastName", user.LastName);
                 HttpContext.Session.SetInt32("Id", user.Id);
 
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Message = "Invalid login attempt.";
             return View();
         }
 
