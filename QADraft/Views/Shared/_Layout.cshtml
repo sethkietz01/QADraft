@@ -57,6 +57,7 @@
             z-index: 1;
             right: 0;
             text-align: right;
+            white-space: nowrap;
         }
 
         .dropdown input[type="checkbox"]:checked ~ .settings-dropdown {
@@ -117,7 +118,7 @@
                                         <img src="~/images/images/settings.png" alt="Settings" style="max-width: 25px; max-height: 25px;">
                                     </label>
                                     <div class="settings-dropdown">
-                                        <a asp-area="" asp-controller="Home" asp-action="Settings">Settings</a>
+                                        <a asp-area="" asp-controller="Home" asp-action="Settings">Account Settings</a>
                                         <a asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
                                     </div>
                                 </div>

@@ -52,6 +52,7 @@ namespace QADraft.Controllers
             {
                 HttpContext.Session.SetString("IsAuthenticated", "true");
                 HttpContext.Session.SetString("username", username);
+                HttpContext.Session.SetInt32("Id", user.Id);
 
                 return RedirectToAction("Index");
             }
@@ -65,6 +66,7 @@ namespace QADraft.Controllers
         {
             HttpContext.Session.SetString("IsAuthenticated", "false");
             HttpContext.Session.SetString("username", "");
+            HttpContext.Session.SetInt32("Id", -1);
             return RedirectToAction("Login");
         }
 
@@ -84,7 +86,7 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
-            return View();
+            return PartialView("_QADescriptions");
         }
 
         [HttpGet]
@@ -191,11 +193,41 @@ namespace QADraft.Controllers
         [HttpGet]
         public IActionResult Settings()
         {
-            if (!IsAuthenticated())
+            if (!IsAuthenticated() || GetId() < 0)
             {
                 return RedirectToAction("Login");
             }
+
+            var user = _context.Users.SingleOrDefault(u => u.Id == GetId());
+            if (user != null)
+            {
+                return View(user);
+            }
+
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Settings(User updateUser)
+        {
+            if (!IsAuthenticated() || GetId() < 0)
+            {
+                return RedirectToAction("Login");
+            }
+            else if (ModelState.IsValid)
+            {
+                var user = _context.Users.SingleOrDefault(u => u.Id == GetId());
+                if (user != null)
+                {
+                    user.Username = updateUser.Username;
+                    user.Password = updateUser.Password;
+                    user.FirstName = updateUser.FirstName;
+                    user.LastName = updateUser.LastName;
+                    user.Email = updateUser.Email;
+                    _context.SaveChanges();
+                }
+            }
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -310,6 +342,11 @@ namespace QADraft.Controllers
         public bool IsAuthenticated()
         {
             return HttpContext.Session.GetString("IsAuthenticated") == "true";
+        }
+
+        public int? GetId()
+        {
+            return HttpContext.Session.GetInt32("Id");
         }
     }
 }
