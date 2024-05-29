@@ -1,6 +1,127 @@
-﻿@{
+﻿@model QADraft.Models.GeekQA
+
+@{
     ViewData["Title"] = "QA Descriptions";
 }
 
 <h2>QA Descriptions</h2>
 <p>List of QA Descriptions will be displayed here.</p>
+
+<form>
+    <div class="form-group">
+        <label asp-for="CategoryOfError" class="control-label"></label>
+        <select asp-for="CategoryOfError" class="form-control" id="categorySelect">
+            <option value="">Select Category</option>
+            <!-- Populate categories dynamically with JavaScript -->
+        </select>
+        <span asp-validation-for="CategoryOfError" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group">
+        <label asp-for="NatureOfError" class="control-label"></label>
+        <select asp-for="NatureOfError" class="form-control" id="natureSelect">
+            <option value="">Select Nature</option>
+            <!-- Populate natures dynamically with JavaScript -->
+        </select>
+        <span asp-validation-for="NatureOfError" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Severity" class="control-label"></label>
+        <input asp-for="Severity" class="form-control" id="severityInput" readonly />
+        <span asp-validation-for="Severity" class="text-danger"></span>
+    </div>
+</form>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        var natureMapping = [
+            { nature: "Didn't check out asset at all (Not in SnipeIT)", categories: ["Snipe-It"], severity: "9", involves: "" },
+            { nature: "Didn't update Snipe-It at all (Rechecks/Check ins)", categories: ["Snipe-It"], severity: "9", involves: "" },
+            { nature: "Incorrect due date", categories: ["Snipe-It", "DocuSign"], severity: "6", involves: "" },
+            { nature: "Didn't upload EULA", categories: ["Snipe-It"], severity: "6", involves: "" },
+            { nature: "Didn't update status", categories: ["Snipe-It"], severity: "5", involves: "" },
+            { nature: "Didn't comment in Snipe-It", categories: ["Snipe-It"], severity: "5", involves: "" },
+            { nature: "Clicked edit asset instead of check-in/check-out", categories: ["DocuSign"], severity: "5", involves: "" },
+            { nature: "Gave equipment and didn't start a checkout form", categories: ["DocuSign"], severity: "10", involves: "" },
+            { nature: "Didn't complete EULA", categories: ["DocuSign"], severity: "10", involves: "" },
+            { nature: "Didn't complete paperwork", categories: ["DocuSign"], severity: "7", involves: "" },
+            { nature: "Didn't comment for swap", categories: ["DocuSign"], severity: "6", involves: "" },
+            { nature: "Wrong unit ID", categories: ["DocuSign"], severity: "6", involves: "" },
+            { nature: "Didn't send walk-in form", categories: ["DocuSign"], severity: "4", involves: "" },
+            { nature: "On wrong step", categories: ["DocuSign"], severity: "3", involves: "" },
+            { nature: "Checked out to someone on no checkout list", categories: ["Processes"], severity: "10", involves: "" },
+            { nature: "Charged incorrect fees", categories: ["Processes"], severity: "10", involves: "" },
+            { nature: "Did not check Docusign when setting Late Fees", categories: ["Processes"], severity: "10", involves: "" },
+            { nature: "Checked in/out with missing items", categories: ["Processes"], severity: "8", involves: "" },
+            { nature: "Didn't check ID", categories: ["Processes"], severity: "8", involves: "" },
+            { nature: "Left student personal information open", categories: ["Processes"], severity: "8", involves: "" },
+            { nature: "Didn't check for damages", categories: ["Processes"], severity: "8", involves: "" },
+            { nature: "Checked out same laptop after a recheck", categories: ["Processes"], severity: "7", involves: "" },
+            { nature: "Improper extension", categories: ["Processes"], severity: "7", involves: "" },
+            { nature: "Didn't do reminder emails/courtesy calls", categories: ["Processes"], severity: "7", involves: "" },
+            { nature: "Didn't clear SD card", categories: ["Processes"], severity: "5", involves: "" },
+            { nature: "Didn't give password at checkout", categories: ["Processes"], severity: "5", involves: "" },
+            { nature: "Didn't create footprint", categories: ["Processes"], severity: "4", involves: "" },
+            { nature: "Didn't clean equipment", categories: ["Processes"], severity: "2", involves: "" },
+            { nature: "Improper initials on tasks", categories: ["Processes"], severity: "2", involves: "" },
+            { nature: "Tidiness/Cleanliness issue", categories: ["Processes"], severity: "2", involves: "" },
+            { nature: "Didn't send late Fees", categories: ["Processes"], severity: "10", involves: "" },
+            { nature: "Rechecked Equipment That Can't Be Rechecked", categories: ["Processes"], severity: "10", involves: "" },
+            { nature: "Gross Misconduct", categories: ["Desk Conduct"], severity: "20", involves: "" },
+            { nature: "No call/No show", categories: ["Desk Conduct"], severity: "10", involves: "" },
+            { nature: "Unprofessional behavior", categories: ["Desk Conduct"], severity: "9", involves: "" },
+            { nature: "Didn't Sign out", categories: ["Desk Conduct"], severity: "7", involves: "" },
+            { nature: "Tardy", categories: ["Desk Conduct"], severity: "5", involves: "" },
+            { nature: "Off-Task", categories: ["Desk Conduct"], severity: "4", involves: "" },
+            { nature: "Forgot geek shirt", categories: ["Other"], severity: "5", involves: "" },
+            { nature: "Time card", categories: ["Other"], severity: "5", involves: "" },
+            { nature: "Forgot name tag", categories: ["Other"], severity: "3", involves: "" },
+            { nature: "Improper communication", categories: ["Other"], severity: "1", involves: "" },
+            { nature: "Loitering", categories: ["Other"], severity: "1", involves: "" },
+            { nature: "Removed student from NCL shouldn't have", categories: ["Other"], severity: "10", involves: "Student" }
+        ];
+
+        var categories = Array.from(new Set(natureMapping.flatMap(m => m.categories)));
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            var categorySelect = document.getElementById("categorySelect");
+            var natureSelect = document.getElementById("natureSelect");
+            var severityInput = document.getElementById("severityInput");
+
+            // Populate categories dropdown
+            categories.forEach(function(category) {
+                var option = document.createElement("option");
+                option.value = category;
+                option.textContent = category;
+                categorySelect.appendChild(option);
+            });
+
+            // Update nature options when category changes
+            categorySelect.addEventListener("change", function() {
+                var selectedCategory = categorySelect.value;
+                natureSelect.innerHTML = '<option value="">Select Nature</option>'; // Reset natures
+                severityInput.value = ''; // Reset severity
+
+                if (selectedCategory) {
+                    var natures = natureMapping.filter(m => m.categories.includes(selectedCategory));
+                    natures.forEach(function(nature) {
+                        var option = document.createElement("option");
+                        option.value = nature.nature;
+                        option.textContent = nature.nature;
+                        option.dataset.severity = nature.severity;
+                        natureSelect.appendChild(option);
+                    });
+                }
+            });
+
+            // Update severity when nature changes
+            natureSelect.addEventListener("change", function() {
+                var selectedOption = natureSelect.options[natureSelect.selectedIndex];
+                severityInput.value = selectedOption.dataset.severity || '';
+            });
+        });
+    </script>
+}

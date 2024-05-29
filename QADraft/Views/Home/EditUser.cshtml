@@ -40,7 +40,12 @@
     </div>
     <div class="form-group">
         <label asp-for="Role" class="control-label"></label>
-        <input asp-for="Role" class="form-control" />
+        <select asp-for="Role" class="form-control" id="natureSelect">
+            <option value="">Select Role</option>
+            <option value="Geek">Geek</option>
+            <option value="Coordinator">Coordinator</option>
+            <option value="Admin">Admin</option>
+        </select>
         <span asp-validation-for="Role" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -61,27 +66,12 @@
     </div>
 </div>
 
-<script>
-    function openConfirmationDialog(event) {
-        event.preventDefault(); // Prevent default behavior
-
-        // Show the confirmation dialog
-        document.getElementById('confirmationDialog').style.display = 'block';
-    }
-
-    function closeConfirmationDialog() {
-        document.getElementById('confirmationDialog').style.display = 'none';
-    }
-
-    function confirmDelete() {
-        document.querySelector('input[type="submit"][name="action"][value="Delete User"]').click();
-        closeConfirmationDialog();
-        return false;
-    }
-</script>
-
-
 <style>
+    .form-group select
+    {
+        margin-bottom: 20px;
+    }
+
     .confirmation-dialog {
         display: none;
         position: fixed;
@@ -113,4 +103,23 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        function openConfirmationDialog(event) {
+            event.preventDefault(); // Prevent default behavior
+
+            // Show the confirmation dialog
+            document.getElementById('confirmationDialog').style.display = 'block';
+        }
+
+        function closeConfirmationDialog() {
+            document.getElementById('confirmationDialog').style.display = 'none';
+        }
+
+        function confirmDelete() {
+            document.querySelector('input[type="submit"][name="action"][value="Delete User"]').click();
+            closeConfirmationDialog();
+            return false;
+        }
+    </script>
 }
