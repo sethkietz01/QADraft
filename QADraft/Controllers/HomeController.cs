@@ -7,7 +7,6 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -183,30 +182,6 @@ namespace QADraft.Controllers
             return RedirectToAction("UserOptions");
         }
 
-        [HttpGet]
-        public IActionResult AddQA()
-        {
-            if (!IsAuthenticated())
-            {
-                return RedirectToAction("Login");
-            }
-
-            var users = _context.Users.Select(u => new SelectListItem
-            {
-                Value = u.Id.ToString(),
-                Text = $"{u.FirstName} {u.LastName}"
-            }).ToList();
-
-            GeekQA model = new GeekQA
-            {
-                ErrorDate = DateTime.Now,
-                FoundOn = DateTime.Now,
-                Users = users
-            };
-
-            return View(model);
-        }
-
 
         public IActionResult Links()
         {
@@ -278,6 +253,30 @@ namespace QADraft.Controllers
                 .Where(q => q.Severity >= 10) // Example condition for flagged accounts
                 .ToList();
             return PartialView("_FlaggedAccounts", flaggedAccounts);
+        }
+
+        [HttpGet]
+        public IActionResult AddQA()
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+
+            var users = _context.Users.Select(u => new SelectListItem
+            {
+                Value = u.Id.ToString(),
+                Text = $"{u.FirstName} {u.LastName}"
+            }).ToList();
+
+            GeekQA model = new GeekQA
+            {
+                ErrorDate = DateTime.Now,
+                FoundOn = DateTime.Now,
+                Users = users
+            };
+
+            return View(model);
         }
 
         [HttpPost]

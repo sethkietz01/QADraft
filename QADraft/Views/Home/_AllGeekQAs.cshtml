@@ -1,10 +1,10 @@
 ﻿@model List<QADraft.Models.GeekQA>
 
 @{
-    ViewData["Title"] = "Flagged Accounts";
+    ViewData["Title"] = "All QA's";
 }
 
-<h2>Flagged Accounts</h2>
+<h2>All QA's</h2>
 
 <table class="table table-striped">
     <thead>
@@ -15,6 +15,7 @@
             <th>Nature</th>
             <th>Severity</th>
             <th>Date</th>
+            <th>Actions</th> <!-- Add a new header for actions -->
         </tr>
     </thead>
     <tbody>
@@ -27,6 +28,16 @@
                 <td>@qa.NatureOfError</td>
                 <td>@qa.Severity</td>
                 <td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <form method="post" asp-controller="QA" asp-action="ManageQA"> <!-- Adjust the action as needed -->
+
+                        <input type="hidden" name="qaId" value="@qa.Id" /> <!-- Assuming each QA has a unique Id -->
+                        <div class="form-group">
+                            <input type="submit" name="action" value="Update QA" class="btn btn-primary" />
+                            <input type="submit" name="action" value="Delete QA" class="btn btn-danger" />
+                        </div>
+                    </form>
+                </td>
             </tr>
         }
     </tbody>
