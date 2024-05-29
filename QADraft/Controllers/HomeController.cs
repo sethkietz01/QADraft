@@ -7,7 +7,6 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -194,57 +193,6 @@ namespace QADraft.Controllers
             return View(user);
         }
 
-        [HttpGet]
-        public IActionResult AddQA()
-        {
-            if (!IsAuthenticated())
-            {
-                return RedirectToAction("Login");
-            }
-
-            var users = _context.Users.Select(u => new SelectListItem
-            {
-                Value = u.Id.ToString(),
-                Text = $"{u.FirstName} {u.LastName}"
-            }).ToList();
-
-            GeekQA model = new GeekQA
-            {
-                ErrorDate = DateTime.Now,
-                FoundOn = DateTime.Now,
-                Users = users
-            };
-
-            return View(model);
-        }
-
-        [HttpPost]
-        public IActionResult AddQA(GeekQA model)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.GeekQAs.Add(model);
-                    _context.SaveChanges();
-                    return RedirectToAction("Index");
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error saving GeekQA");
-                    ModelState.AddModelError(string.Empty, "An error occurred while saving the QA. Please try again.");
-                }
-            }
-
-            // If model state is invalid, repopulate the users list
-            model.Users = _context.Users.Select(u => new SelectListItem
-            {
-                Value = u.Id.ToString(),
-                Text = $"{u.FirstName} {u.LastName}"
-            }).ToList();
-
-            return View(model);
-        }
 
         public IActionResult Links()
         {
