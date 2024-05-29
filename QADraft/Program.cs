@@ -6,8 +6,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using QADraft.Data;
 using System.IO;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Load environment variables from .env file
+Env.Load();
 
 // Load configuration files
 builder.Configuration
@@ -20,8 +24,11 @@ builder.Configuration
 builder.Services.AddControllersWithViews();
 
 // Configure Entity Framework to use SQL Server with connection string from appsettings.json
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                     .Replace("your_hashed_password_here", Environment.GetEnvironmentVariable("DefaultConnectionPasswordHash"));
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
 
 // Add session services
 builder.Services.AddSession(options =>
@@ -55,7 +62,14 @@ app.UseSession();
 app.UseAuthorization();
 
 app.MapControllerRoute(
+    name: "test",
+    pattern: "test",
+    defaults: new { controller = "Test", action = "Index" });
+
+app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
 
 app.Run();
