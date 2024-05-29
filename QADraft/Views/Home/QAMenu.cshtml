@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "QA Menu";
+}
+
+<h2>QA Menu</h2>
+@await Html.PartialAsync("_QAMenu")
+
+<div id="qa-content">
+    <!-- Content of the selected tab will be loaded here -->
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const buttons = document.querySelectorAll(".btn-group a");
+            const contentDiv = document.getElementById("qa-content");
+
+            buttons.forEach(button => {
+                button.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    fetch(button.href)
+                        .then(response => response.text())
+                        .then(html => {
+                            contentDiv.innerHTML = html;
+                        });
+                });
+            });
+
+            // Load the first tab content by default
+            buttons[0].click();
+        });
+    </script>
+}

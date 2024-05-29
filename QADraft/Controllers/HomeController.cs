@@ -1,13 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using QADraft.Data;
 using QADraft.Models;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace QADraft.Controllers
 {
@@ -20,6 +22,17 @@ namespace QADraft.Controllers
         {
             _context = context;
             _logger = logger;
+        }
+
+        // Action to render the QA Menu
+        [HttpGet]
+        public IActionResult QAMenu()
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+            return View();
         }
 
         [HttpGet]
@@ -255,7 +268,7 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
-            return View();
+            return PartialView("_BetweenDates");
         }
 
         [HttpPost]
@@ -269,13 +282,11 @@ namespace QADraft.Controllers
             var qas = _context.GeekQAs
                 .Include(q => q.CommittedBy)
                 .Include(q => q.FoundBy)
-                .Include(q => q.Description) // Include QAComments
                 .Where(q => q.ErrorDate >= startDate && q.ErrorDate <= endDate)
                 .ToList();
-            return View(qas);
+            return PartialView("_BetweenDates", qas);
         }
 
-        // Action to view all Geek QAs
         [HttpGet]
         public IActionResult AllGeekQAs()
         {
@@ -287,12 +298,10 @@ namespace QADraft.Controllers
             var qas = _context.GeekQAs
                 .Include(q => q.CommittedBy)
                 .Include(q => q.FoundBy)
-                //.Include(q => q.Description) // Include QAComments
                 .ToList();
-            return View(qas);
+            return PartialView("_AllGeekQAs", qas);
         }
 
-        // Action to view all flagged accounts
         [HttpGet]
         public IActionResult FlaggedAccounts()
         {
@@ -304,12 +313,63 @@ namespace QADraft.Controllers
             var flaggedAccounts = _context.GeekQAs
                 .Include(q => q.CommittedBy)
                 .Include(q => q.FoundBy)
-                //.Include(q => q.Description) // Include QAComments
                 .Where(q => q.Severity >= 10) // Example condition for flagged accounts
                 .ToList();
-            return View(flaggedAccounts);
+            return PartialView("_FlaggedAccounts", flaggedAccounts);
         }
 
+        // Updated AddQA actions to return full views
+        [HttpGet]
+        public IActionResult AddQA()
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+
+            var users = _context.Users.Select(u => new SelectListItem
+            {
+                Value = u.Id.ToString(),
+                Text = $"{u.FirstName} {u.LastName}"
+            }).ToList();
+
+            GeekQA model = new GeekQA
+            {
+                ErrorDate = DateTime.Now,
+                FoundOn = DateTime.Now,
+                Users = users
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult AddQA(GeekQA model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.GeekQAs.Add(model);
+                    _context.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error saving GeekQA");
+                    ModelState.AddModelError(string.Empty, "An error occurred while saving the QA. Please try again.");
+                }
+            }
+
+            // If model state is invalid, repopulate the users list
+            model.Users = _context.Users.Select(u => new SelectListItem
+            {
+                Value = u.Id.ToString(),
+                Text = $"{u.FirstName} {u.LastName}"
+            }).ToList();
+
+            return View(model);
+        }
 
         public bool IsAuthenticated()
         {
