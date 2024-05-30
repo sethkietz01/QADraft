@@ -92,7 +92,8 @@ namespace QADraft.Controllers
 
                     _context.Update(qa);
                     _context.SaveChanges();
-                    return RedirectToAction("Index");
+                    //button refers to the button index used in QAMenu.cshtml
+                    return RedirectToAction("QAMenu", "Home", new { button = 1 });
                 }
                 catch (Exception ex)
                 {
