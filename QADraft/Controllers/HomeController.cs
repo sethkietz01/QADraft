@@ -25,13 +25,22 @@ namespace QADraft.Controllers
 
         // Action to render the QA Menu
         [HttpGet]
-        public IActionResult QAMenu()
+        public IActionResult QAMenu(int? button)
         {
             if (!IsAuthenticated())
             {
                 return RedirectToAction("Login");
             }
-            return View();
+            if (button != null)
+            {
+                ViewBag.button = button;
+            }
+            else
+            {
+                ViewBag.button = 0;
+            }
+
+            return View(ViewBag);
         }
 
         [HttpGet]
@@ -156,7 +165,7 @@ namespace QADraft.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditUser(User user, string username, string action)
+        public IActionResult EditUser(User user, string id, string action)
         {
             if (!IsAuthenticated())
             {
@@ -164,11 +173,14 @@ namespace QADraft.Controllers
             }
             else if (ModelState.IsValid)
             {
-                var existingUser = _context.Users.SingleOrDefault(u => u.Username == username);
+                Debug.WriteLine("Valid ModelState");
+                var existingUser = _context.Users.SingleOrDefault(u => u.Id == int.Parse(id));
                 if (existingUser != null)
                 {
+                    Debug.WriteLine("User Exists");
                     if (action == "Update User")
                     {
+                        Debug.WriteLine("Update User");
                         existingUser.Username = user.Username;
                         existingUser.Password = user.Password;
                         existingUser.FirstName = user.FirstName;
@@ -184,7 +196,7 @@ namespace QADraft.Controllers
                     }
                 }
             }
-
+            Debug.WriteLine("End");
             return RedirectToAction("UserOptions");
         }
 
@@ -267,13 +279,14 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
-
             var qas = _context.GeekQAs
                 .Include(q => q.CommittedBy)
                 .Include(q => q.FoundBy)
                 .ToList();
             return PartialView("_AllGeekQAs", qas);
         }
+
+        
 
         [HttpGet]
         public IActionResult FlaggedAccounts()

@@ -18,6 +18,29 @@ namespace QADraft.Controllers
             _context = context;
             _logger = logger;
         }
+
+        
+
+       
+
+        [HttpPost]
+        public IActionResult ManageQA(int qaId, string action)
+        {
+            if (action == "Update QA")
+            {
+                Debug.WriteLine("Update QA Reached");
+                return RedirectToAction("EditQA", new { id = qaId });
+            }
+            else if (action == "Delete QA")
+            {
+                Debug.WriteLine("Delete QA reached");
+                return RedirectToAction("DeleteQA", new { id = qaId });
+            }
+
+            return RedirectToAction("Index"); // Default redirection
+        }
+
+        [HttpGet]
         public IActionResult EditQA(int id)
         {
             if (!IsAuthenticated())
@@ -41,34 +64,10 @@ namespace QADraft.Controllers
             return View(qa);
         }
 
-       
-
         [HttpPost]
-        public IActionResult ManageQA(int qaId, string action)
-        {
-            if (action == "Update QA")
-            {
-                return RedirectToAction("EditQA", new { id = qaId });
-            }
-            else if (action == "Delete QA")
-            {
-                // Implement the delete logic here
-                var qa = _context.GeekQAs.Find(qaId);
-                if (qa != null)
-                {
-                    _context.GeekQAs.Remove(qa);
-                    _context.SaveChanges();
-                }
-                return RedirectToAction("Index"); // Redirect back to the list after deletion
-            }
-
-            return RedirectToAction("Index"); // Default redirection
-        }
-
-        [HttpGet]
         public IActionResult EditQA(GeekQA model)
         {
-            Debug.WriteLine("Bitch");
+            
             if (ModelState.IsValid)
             {
                 try
@@ -113,6 +112,30 @@ namespace QADraft.Controllers
         }
 
 
+        [HttpGet]
+        public IActionResult DeleteQA(string id)
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+
+            if (ModelState.IsValid)
+            {
+                Debug.WriteLine("Valid ModelState");
+                var findQA = _context.GeekQAs.SingleOrDefault(q => q.Id == int.Parse(id));
+                if (findQA != null)
+                {
+                    Debug.WriteLine("User Exists");
+                    _context.Remove(findQA);
+                    _context.SaveChanges();
+                    Debug.WriteLine("User Deleted");
+                }
+            }
+            Debug.WriteLine("End");
+            return RedirectToAction("QAMenu", "Home", new { button = 1 });
+
+        }
 
 
         public bool IsAuthenticated()

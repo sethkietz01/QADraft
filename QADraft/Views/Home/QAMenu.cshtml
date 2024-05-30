@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "QA Menu";
+    var button = ViewBag.button;
 }
 
 <h2>QA Menu</h2>
@@ -27,7 +28,63 @@
             });
 
             // Load the first tab content by default
-            buttons[0].click();
+            const button = @Html.Raw(Json.Serialize(ViewBag.button));
+            console.log(button);
+            buttons[button].click();
         });
+
+        function openConfirmationDialog(event) {
+            event.preventDefault(); // Prevent default behavior
+
+            // Show the confirmation dialog
+            console.log("openconfirm");
+            var parentForm = event.target.closest('form');
+            window.currentForm = parentForm;
+            document.getElementById('confirmationDialog').style.display = 'block';
+        }
+
+        function closeConfirmationDialog() {
+            console.log("close confirm");
+            document.getElementById('confirmationDialog').style.display = 'none';
+        }
+
+        function confirmDelete() {
+            console.log("confirmdelete");
+            window.currentForm.querySelector('input[type="submit"][name="action"][value="Delete QA"]').click();
+            closeConfirmationDialog();
+            return false;
+        }
     </script>
 }
+
+
+<style>
+    .confirmation-dialog {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #d9f0ff;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 300px;
+    }
+
+    .confirmation-content {
+        text-align: center;
+    }
+
+    .confirmation-buttons {
+        margin-top: 20px;
+    }
+
+    .confirmation-buttons button {
+        padding: 10px 20px;
+        margin: 0 10px;
+        cursor: pointer;
+    }
+
+</style>
