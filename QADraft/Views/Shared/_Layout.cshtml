@@ -7,12 +7,14 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/QADraft.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap">
     <style>
         .navbar {
             background-color: #861F41;
             padding: 10px;
             vertical-align: middle;
             border-bottom: 3px solid rgba(0, 0, 0, 0.3);
+            z-index: 1;
         }
 
         .nav-item {
@@ -30,11 +32,30 @@
         .footer {
             background-color: #f8f9fa;
             padding: 10px 0;
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            height: 60px;
         }
 
         .footer a {
             color: #343a40;
         }
+
+        .role-view {
+            text-align: left;
+            margin-left: 50px;
+            justify-content: flex-start;
+            flex-grow: 1;
+        }
+        
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }   
+
 
         .container {
             margin-top: 20px;
@@ -46,7 +67,7 @@
 
         .dropdown .for-dropdown {
             cursor: pointer;
-            padding: 10px;
+            padding: 5px;
             display: inline-block;
         }
 
@@ -81,13 +102,21 @@
 
         .user-name{
             color: white;
-            font-size: 20px;
-            margin-left: 20px;
+            font-family: 'Barlow';
+            font-size: 18px;
+            margin-left: 10px;
         }
 
         header {
             margin-bottom: 20px;
         }
+
+        #settings-icon {
+            max-height: 20px;
+            max-width: 20px;
+        }
+
+        
     </style>
 </head>
 <body>
@@ -95,7 +124,7 @@
         <nav class="navbar navbar-expand-sm navbar-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img src="~/images/images/logoWhite.png" alt="Geeks Logo" style="max-width: 100px; max-height: 50px;">
+                    <img src="~/images/logoWhite.png" alt="Geeks Logo" style="max-width: 100px; max-height: 50px;">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -115,22 +144,19 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-auto">
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="AddQA">Add QA</a>
+                                <a id="add-qa-link" class="nav-link" asp-area="" asp-controller="Home" asp-action="AddQA">Add QA</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="UserOptions">User Options</a>
+                                <a id="user-options-link" class="nav-link" asp-area="" asp-controller="Home" asp-action="UserOptions">User Options</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="QAMenu">Reports</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Home" asp-action="Links">Links</a>
+                                <a id="qa-menu-link" class="nav-link" asp-area="" asp-controller="Home" asp-action="QAMenu">Reports</a>
                             </li>
                             <li class="nav-item">
                                 <div class="dropdown">
                                     <input type="checkbox" id="dropdown" name="dropdown" class="dropdown">
                                     <label class="for-dropdown" for="dropdown">
-                                        <img src="~/images/images/settings.png" alt="Settings" style="max-width: 25px; max-height: 25px;">
+                                        <img id="settings-icon" src="~/images/settings.png" alt="Settings">
                                     </label>
                                     <div class="settings-dropdown">
                                         <a asp-area="" asp-controller="Home" asp-action="Settings">Account Settings</a>
@@ -150,8 +176,17 @@
         </main>
     </div>
     <footer class="footer text-muted border-top" style="padding: 0px; text-align: center;">
-        <div>
+        <div class="role-view">
+            @if (isAuthenticated == "true")
+            {
+                var userRole = Context.Session.GetString("Role");
+                @userRole @(" View")
+            }
+        </div>
+        <div class="watermark">
             EKU IT Geeks QA
+        </div>
+        <div class="whitespace">
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

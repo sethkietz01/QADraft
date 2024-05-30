@@ -4,22 +4,54 @@
     ViewData["Title"] = "Add QA";
 }
 
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    <h2> {
+        font-family: 'Barlow', sans-serif;
+    }
+
+    .control-label {
+        margin-top: 20px;
+    }
+    #submit-qa {
+        margin-top: 10px;
+        margin-bottom: 20px;
+        background-color: #861F41;
+        border-color: #861F41;
+        color: #fff;
+    }
+
+    #add-qa-link {
+        padding-bottom: 1px;
+        border-bottom: 1px solid #fff;
+    }
+</style>
+
 <h2>Add QA</h2>
 
 <form asp-action="AddQA" method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
-        <label asp-for="CommittedById" class="control-label"></label>
-        <select asp-for="CommittedById" class="form-control" asp-items="Model.Users"></select>
+        <label asp-for="CommittedById" class="control-label">Committed By</label>
+        <select asp-for="CommittedById" class="form-control" asp-items="Model.Users">
+            <option class="placeholder" value="" disabled selected>Select user</option>
+        </select>
         <span asp-validation-for="CommittedById" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="FoundById" class="control-label"></label>
-        <select asp-for="FoundById" class="form-control" asp-items="Model.Users"></select>
+        <label asp-for="FoundById" class="control-label">Found By</label>
+        <select asp-for="FoundById" class="form-control" asp-items="Model.Users">
+            <option class="placeholder" value="" disabled selected>Select user</option>
+        </select>
         <span asp-validation-for="FoundById" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="CategoryOfError" class="control-label"></label>
+        <label asp-for="CategoryOfError" class="control-label">Category of Error</label>
         <select asp-for="CategoryOfError" class="form-control" id="categorySelect">
             <option value="">Select Category</option>
             <!-- Populate categories dynamically with JavaScript -->
@@ -27,7 +59,7 @@
         <span asp-validation-for="CategoryOfError" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="NatureOfError" class="control-label"></label>
+        <label asp-for="NatureOfError" class="control-label">Nature of Error</label>
         <select asp-for="NatureOfError" class="form-control" id="natureSelect">
             <option value="">Select Nature</option>
             <!-- Populate natures dynamically with JavaScript -->
@@ -35,37 +67,37 @@
         <span asp-validation-for="NatureOfError" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Severity" class="control-label"></label>
-        <input type="text" asp-for="Severity" class="form-control" id="severityInput" readonly />
+        <label asp-for="Severity" class="control-label">Severity</label>
+        <input asp-for="Severity" class="form-control" id="severityInput" readonly />
         <span asp-validation-for="Severity" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="CustomerName" class="control-label"></label>
+        <label asp-for="CustomerName" class="control-label">Customer Name</label>
         <input asp-for="CustomerName" class="form-control" placeholder="If none, type N/A" />
         <span asp-validation-for="CustomerName" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="UnitId" class="control-label"></label>
+        <label asp-for="UnitId" class="control-label">Unit ID</label>
         <input asp-for="UnitId" class="form-control" placeholder="If none, type N/A" />
         <span asp-validation-for="UnitId" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ErrorDate" class="control-label"></label>
+        <label asp-for="ErrorDate" class="control-label">Error Date</label>
         <input asp-for="ErrorDate" class="form-control" type="date" value="@Model.ErrorDate.ToString("yyyy-MM-dd")" />
         <span asp-validation-for="ErrorDate" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="FoundOn" class="control-label"></label>
+        <label asp-for="FoundOn" class="control-label">Found On</label>
         <input asp-for="FoundOn" class="form-control" type="date" />
         <span asp-validation-for="FoundOn" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Description" class="control-label"></label>
+        <label asp-for="Description" class="control-label">Description</label>
         <textarea asp-for="Description" class="form-control" placeholder="Describe the QA"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <input type="submit" value="Add QA" class="btn btn-primary" />
+        <input id="submit-qa" type="submit" value="Add QA" class="btn btn-primary" />
     </div>
 </form>
 

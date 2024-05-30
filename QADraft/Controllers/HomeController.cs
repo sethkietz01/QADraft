@@ -65,6 +65,7 @@ namespace QADraft.Controllers
                 HttpContext.Session.SetString("FirstName", user.FirstName);
                 HttpContext.Session.SetString("LastName", user.LastName);
                 HttpContext.Session.SetInt32("Id", user.Id);
+                HttpContext.Session.SetString("Role", user.Role);
 
                 return RedirectToAction("Index");
             }
