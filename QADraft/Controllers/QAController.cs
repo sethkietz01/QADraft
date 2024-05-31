@@ -1,27 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using QADraft.Data;
 using QADraft.Models;
 using System.Diagnostics;
+using System.IO;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 
 namespace QADraft.Controllers
 {
     public class QAController : Controller
     {
-
         private readonly ApplicationDbContext _context;
         private readonly ILogger<QAController> _logger;
+        private readonly ICompositeViewEngine _viewEngine;
 
-        public QAController(ApplicationDbContext context, ILogger<QAController> logger)
+        public QAController(ApplicationDbContext context, ILogger<QAController> logger, ICompositeViewEngine viewEngine)
         {
             _context = context;
             _logger = logger;
+            _viewEngine = viewEngine;
         }
-
-        
-
-       
 
         [HttpPost]
         public IActionResult ManageQA(int qaId, string action)
@@ -48,7 +50,7 @@ namespace QADraft.Controllers
                 return RedirectToAction("Login");
             }
 
-            var qa = _context.GeekQAs.Find(id); // Assuming your context name is _context and the table is GeekQAs
+            var qa = _context.GeekQAs.Find(id);
             if (qa == null)
             {
                 return NotFound();
@@ -67,7 +69,6 @@ namespace QADraft.Controllers
         [HttpPost]
         public IActionResult EditQA(GeekQA model)
         {
-            
             if (ModelState.IsValid)
             {
                 try
@@ -78,7 +79,6 @@ namespace QADraft.Controllers
                         return NotFound();
                     }
 
-                    // Update the QA properties
                     qa.CommittedById = model.CommittedById;
                     qa.FoundById = model.FoundById;
                     qa.CategoryOfError = model.CategoryOfError;
@@ -92,7 +92,6 @@ namespace QADraft.Controllers
 
                     _context.Update(qa);
                     _context.SaveChanges();
-                    //button refers to the button index used in QAMenu.cshtml
                     return RedirectToAction("QAMenu", "Home", new { button = 1 });
                 }
                 catch (Exception ex)
@@ -102,7 +101,6 @@ namespace QADraft.Controllers
                 }
             }
 
-            // If model state is invalid, repopulate the users list
             model.Users = _context.Users.Select(u => new SelectListItem
             {
                 Value = u.Id.ToString(),
@@ -111,7 +109,6 @@ namespace QADraft.Controllers
 
             return View(model);
         }
-
 
         [HttpGet]
         public IActionResult DeleteQA(string id)
@@ -123,27 +120,55 @@ namespace QADraft.Controllers
 
             if (ModelState.IsValid)
             {
-                Debug.WriteLine("Valid ModelState");
                 var findQA = _context.GeekQAs.SingleOrDefault(q => q.Id == int.Parse(id));
                 if (findQA != null)
                 {
-                    Debug.WriteLine("User Exists");
                     _context.Remove(findQA);
                     _context.SaveChanges();
-                    Debug.WriteLine("User Deleted");
                 }
             }
-            Debug.WriteLine("End");
             return RedirectToAction("QAMenu", "Home", new { button = 1 });
-
         }
 
+        public async Task<IActionResult> Filter()
+        {
+            ViewBag.Users = _context.Users.ToList();
+            var model = _context.GeekQAs.ToList();
+
+            // Set initial content for the first tab
+            ViewBag.InitialContent = await RenderViewAsync("Filter", model);
+            return View(model);
+        }
+
+        private async Task<string> RenderViewAsync(string viewName, object model)
+        {
+            ViewData.Model = model;
+            using (var writer = new StringWriter())
+            {
+                var viewResult = _viewEngine.FindView(ControllerContext, viewName, false);
+
+                if (viewResult.View == null)
+                {
+                    throw new ArgumentNullException($"{viewName} does not match any available view");
+                }
+
+                var viewContext = new ViewContext(
+                    ControllerContext,
+                    viewResult.View,
+                    ViewData,
+                    TempData,
+                    writer,
+                    new HtmlHelperOptions()
+                );
+
+                await viewResult.View.RenderAsync(viewContext);
+                return writer.GetStringBuilder().ToString();
+            }
+        }
 
         public bool IsAuthenticated()
         {
             return HttpContext.Session.GetString("IsAuthenticated") == "true";
         }
-
-
     }
 }

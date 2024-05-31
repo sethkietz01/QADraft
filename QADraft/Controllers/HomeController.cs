@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using QADraft.Data;
 using QADraft.Models;
+using QADraft.Utilities;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -43,6 +44,7 @@ namespace QADraft.Controllers
             return View(ViewBag);
         }
 
+        // This is the initial login referencer
         [HttpGet]
         public IActionResult Login()
         {
@@ -53,27 +55,40 @@ namespace QADraft.Controllers
             return View();
         }
 
+        // This is the actual function to see if the user has the correct login credentials, if not it redirects back to the login screen.
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
+            Debug.WriteLine("Login attempt");
             var user = _context.Users.SingleOrDefault(u => u.Username == username);
-            
-            if (user != null && user.Password == password)
-            {
-                HttpContext.Session.SetString("IsAuthenticated", "true");
-                HttpContext.Session.SetString("username", user.Username);
-                HttpContext.Session.SetString("FirstName", user.FirstName);
-                HttpContext.Session.SetString("LastName", user.LastName);
-                HttpContext.Session.SetInt32("Id", user.Id);
-                HttpContext.Session.SetString("Role", user.Role);
 
-                return RedirectToAction("Index");
+            if (user != null)
+            {
+                Debug.WriteLine($"User found: {username}");
+                if (PasswordHasher.VerifyPassword(password, user.Password))
+                {
+                    Debug.WriteLine("Password verified");
+                    HttpContext.Session.SetString("IsAuthenticated", "true");
+                    HttpContext.Session.SetString("username", user.Username);
+                    HttpContext.Session.SetString("FirstName", user.FirstName);
+                    HttpContext.Session.SetString("LastName", user.LastName);
+                    HttpContext.Session.SetInt32("Id", user.Id);
+                    HttpContext.Session.SetString("Role", user.Role);
+
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    Debug.WriteLine("Password verification failed");
+                }
+            }
+            else
+            {
+                Debug.WriteLine("User not found");
             }
 
             return View();
         }
-
-
 
         [HttpGet]
         public IActionResult Logout()
@@ -141,6 +156,7 @@ namespace QADraft.Controllers
         {
             if (ModelState.IsValid)
             {
+                user.Password = PasswordHasher.HashPassword(user.Password);
                 _context.Users.Add(user);
                 _context.SaveChanges();
                 return RedirectToAction("UserOptions");
@@ -183,7 +199,7 @@ namespace QADraft.Controllers
                     {
                         Debug.WriteLine("Update User");
                         existingUser.Username = user.Username;
-                        existingUser.Password = user.Password;
+                        existingUser.Password = PasswordHasher.HashPassword(user.Password);
                         existingUser.FirstName = user.FirstName;
                         existingUser.LastName = user.LastName;
                         existingUser.Email = user.Email;
@@ -200,7 +216,6 @@ namespace QADraft.Controllers
             Debug.WriteLine("End");
             return RedirectToAction("UserOptions");
         }
-
 
         public IActionResult Links()
         {
@@ -237,7 +252,7 @@ namespace QADraft.Controllers
                 if (user != null)
                 {
                     user.Username = updateUser.Username;
-                    user.Password = updateUser.Password;
+                    user.Password = PasswordHasher.HashPassword(updateUser.Password);
                     user.FirstName = updateUser.FirstName;
                     user.LastName = updateUser.LastName;
                     user.Email = updateUser.Email;
@@ -286,8 +301,6 @@ namespace QADraft.Controllers
                 .ToList();
             return PartialView("_AllGeekQAs", qas);
         }
-
-        
 
         [HttpGet]
         public IActionResult FlaggedAccounts()

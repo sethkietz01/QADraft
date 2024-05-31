@@ -14,5 +14,11 @@ namespace QADraft.Utilities
                 return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
             }
         }
+
+        public static bool VerifyPassword(string password, string hashedPassword)
+        {
+            var hashedInputPassword = HashPassword(password);
+            return string.Equals(hashedInputPassword, hashedPassword, StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

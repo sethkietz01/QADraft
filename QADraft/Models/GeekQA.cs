@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QADraft.Models
-{
+{   //What creates the QA Tables and what keeps the references for them
     public class GeekQA
     {
         public int Id { get; set; }

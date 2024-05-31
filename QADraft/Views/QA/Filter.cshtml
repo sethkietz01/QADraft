@@ -1,10 +1,10 @@
 ﻿@model List<QADraft.Models.GeekQA>
 
 @{
-    ViewData["Title"] = "All QA's";
+    ViewData["Title"] = "Filter QA's";
 }
 
-<h2>All QA's</h2>
+<h2>Filter QA's</h2>
 
 <div class="filter-section">
     <h3>Filter Options</h3>
@@ -120,13 +120,6 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            // Load the QAMenu partial view content
-            fetch('@Url.Action("QAMenu", "Home")')
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById("qa-content").innerHTML = html;
-                });
-
             // Initialize date pickers
             $('.datepicker').datepicker();
         });

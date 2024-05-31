@@ -5,6 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using QADraft.Data;
+using QADraft.Utilities;
+using System;
+using System.Linq;
 using System.IO;
 using DotNetEnv;
 
@@ -40,6 +43,28 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
+// Password Migration
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var users = context.Users.ToList();
+    foreach (var user in users)
+    {
+        if (!IsPasswordHashed(user.Password))
+        {
+            user.Password = PasswordHasher.HashPassword(user.Password);
+        }
+    }
+    context.SaveChanges();
+}
+
+bool IsPasswordHashed(string password)
+{
+    // Implement logic to check if the password is already hashed
+    // For simplicity, assume that a hashed password length is 64 characters
+    return password.Length == 64;
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -69,7 +94,5 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-
 
 app.Run();

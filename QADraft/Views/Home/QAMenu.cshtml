@@ -1,20 +1,14 @@
 ﻿@{
     ViewData["Title"] = "QA Menu";
-    var button = ViewBag.button;
+    var button = ViewBag.button ?? 0; // Default to the first button if not specified
+    string initialContent = ViewBag.InitialContent as string;
 }
-
-<style>
-    #qa-menu-link {
-        padding-bottom: 1px;
-        border-bottom: 1px solid #fff;
-    }
-</style>
 
 <h2>QA Menu</h2>
 @await Html.PartialAsync("_QAMenu")
 
 <div id="qa-content">
-    <!-- Content of the selected tab will be loaded here -->
+    @Html.Raw(initialContent)
 </div>
 
 @section Scripts {
@@ -35,35 +29,30 @@
             });
 
             // Load the first tab content by default
-            const button = @Html.Raw(Json.Serialize(ViewBag.button));
-            console.log(button);
-            buttons[button].click();
+            const buttonIndex = @Html.Raw(Json.Serialize(button));
+            if (buttons[buttonIndex]) {
+                buttons[buttonIndex].click();
+            }
         });
 
         function openConfirmationDialog(event) {
-            event.preventDefault(); // Prevent default behavior
-
-            // Show the confirmation dialog
-            console.log("openconfirm");
+            event.preventDefault();
             var parentForm = event.target.closest('form');
             window.currentForm = parentForm;
             document.getElementById('confirmationDialog').style.display = 'block';
         }
 
         function closeConfirmationDialog() {
-            console.log("close confirm");
             document.getElementById('confirmationDialog').style.display = 'none';
         }
 
         function confirmDelete() {
-            console.log("confirmdelete");
             window.currentForm.querySelector('input[type="submit"][name="action"][value="Delete QA"]').click();
             closeConfirmationDialog();
             return false;
         }
     </script>
 }
-
 
 <style>
     .confirmation-dialog {
@@ -93,5 +82,4 @@
         margin: 0 10px;
         cursor: pointer;
     }
-
 </style>
