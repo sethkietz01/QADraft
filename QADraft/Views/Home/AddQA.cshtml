@@ -6,6 +6,7 @@
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap">
 <style>
+    /* Reset default margins and padding for all elements */
     * {
         margin: 0;
         padding: 0;
@@ -15,9 +16,12 @@
         font-family: 'Barlow', sans-serif;
     }
 
+    /* Styles for the input box labels */
     .control-label {
         margin-top: 20px;
     }
+
+    /* Styles for the submit button */
     #submit-qa {
         margin-top: 10px;
         margin-bottom: 20px;
@@ -25,15 +29,11 @@
         border-color: #861F41;
         color: #fff;
     }
-
-    #add-qa-link {
-        padding-bottom: 1px;
-        border-bottom: 1px solid #fff;
-    }
 </style>
 
 <h2>Add QA</h2>
 
+<!-- Form to get details about the QA being added -->
 <form asp-action="AddQA" method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">

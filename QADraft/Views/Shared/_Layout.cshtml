@@ -127,17 +127,16 @@
                     <img src="~/images/logoWhite.png" alt="Geeks Logo" style="max-width: 100px; max-height: 50px;">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                    aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 @{
                     string? isAuthenticated = Context.Session.GetString("IsAuthenticated");
                     string? firstName = Context.Session.GetString("FirstName");
                     string? lastName = Context.Session.GetString("LastName");
-
+ 
                     string name = lastName + ", " + firstName;
                 }
-
                 @if (isAuthenticated == "true")
                 {   
                     <label class="user-name nav-item">@name</label>

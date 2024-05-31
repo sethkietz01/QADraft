@@ -4,9 +4,17 @@
     ViewData["Title"] = "Add User";
 }
 
+<style>
+    .form-group select
+    {
+        margin-bottom: 20px;
+    }
+</style>
+
 <h2>Add User</h2>
 @await Html.PartialAsync("_UserOptionsNavigation")
 
+<!-- Form to get details of the user being added -->
 <form asp-action="AddUser" method="post">
     <div class="form-group">
         <label asp-for="Username" class="control-label"></label>
@@ -52,13 +60,6 @@
         <input type="submit" value="Add User" class="btn btn-primary" />
     </div>
 </form>
-
-<style>
-    .form-group select
-    {
-        margin-bottom: 20px;
-    }
-</style>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

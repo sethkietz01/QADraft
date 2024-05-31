@@ -6,6 +6,7 @@
 
 <h2>All QA's</h2>
 
+<!-- Table used to output QAs -->
 <table class="table table-striped">
     <thead>
         <tr>
@@ -15,10 +16,11 @@
             <th>Nature</th>
             <th>Severity</th>
             <th>Date</th>
-            <th>Actions</th> <!-- Add a new header for actions -->
+            <th>Actions</th> 
         </tr>
     </thead>
     <tbody>
+        <!-- Populate the table with all QAs form the database -->
         @foreach (var qa in Model)
         {
             <tr>
@@ -29,9 +31,9 @@
                 <td>@qa.Severity</td>
                 <td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
                 <td>
-                    <form method="post" asp-controller="QA" asp-action="ManageQA"> <!-- Adjust the action as needed -->
+                    <form method="post" asp-controller="QA" asp-action="ManageQA">
 
-                        <input type="hidden" name="qaId" value="@qa.Id" /> <!-- Assuming each QA has a unique Id -->
+                        <input type="hidden" name="qaId" value="@qa.Id" />
                         <div class="form-group">
                             <input type="submit" name="action" value="Update QA" class="btn btn-primary" />
                             <input type="submit" name="action" value="Delete QA" class="btn btn-danger" hidden/>
@@ -45,6 +47,7 @@
     </tbody>
 </table>
 
+<!-- Configure delete QA confirmation popup -->
 <div id="confirmationDialog" class="confirmation-dialog">
     <div class="confirmation-content">
         <p>Are you sure you want to delete this QA?</p>
