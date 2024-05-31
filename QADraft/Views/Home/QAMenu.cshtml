@@ -4,13 +4,42 @@
 }
 
 <style>
+    .confirmation-dialog {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #d9f0ff;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 300px;
+    }
+
+    .confirmation-content {
+        text-align: center;
+    }
+
+    .confirmation-buttons {
+        margin-top: 20px;
+    }
+
+    .confirmation-buttons button {
+        padding: 10px 20px;
+        margin: 0 10px;
+        cursor: pointer;
+    }
+
     #qa-menu-link {
         padding-bottom: 1px;
         border-bottom: 1px solid #fff;
     }
 </style>
 
-<h2>QA Menu</h2>
+<!-- File name will be updated to "Reports" -->
+<h2>Reports</h2>
 @await Html.PartialAsync("_QAMenu")
 
 <div id="qa-content">
@@ -63,35 +92,3 @@
         }
     </script>
 }
-
-
-<style>
-    .confirmation-dialog {
-        display: none;
-        position: fixed;
-        z-index: 9999;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #d9f0ff;
-        border: 1px solid #ccc;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        max-width: 300px;
-    }
-
-    .confirmation-content {
-        text-align: center;
-    }
-
-    .confirmation-buttons {
-        margin-top: 20px;
-    }
-
-    .confirmation-buttons button {
-        padding: 10px 20px;
-        margin: 0 10px;
-        cursor: pointer;
-    }
-
-</style>

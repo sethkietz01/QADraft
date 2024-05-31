@@ -4,9 +4,45 @@
     ViewData["Title"] = "Edit User";
 }
 
+<style>
+    .form-group select
+    {
+        margin-bottom: 20px;
+    }
+
+    .confirmation-dialog {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #d9f0ff;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 300px;
+    }
+
+    .confirmation-content {
+        text-align: center;
+    }
+
+    .confirmation-buttons {
+        margin-top: 20px;
+    }
+
+    .confirmation-buttons button {
+        padding: 10px 20px;
+        margin: 0 10px;
+        cursor: pointer;
+    }
+</style>
+
 <h2>Edit User</h2>
 @await Html.PartialAsync("_UserOptionsNavigation")
 
+<!-- Form to get updated information on the user being edited -->
 <form asp-action="EditUser" method="post">
     <div class="form-group">
         <label asp-for="Id" class="control-label">ID</label>
@@ -56,6 +92,7 @@
     </div>
 </form>
 
+<!-- Configure delete user confirmation (will likely be removed) -->
 <div id="confirmationDialog" class="confirmation-dialog">
     <div class="confirmation-content">
         <p>Are you sure you want to delete this user?</p>
@@ -65,41 +102,6 @@
         </div>
     </div>
 </div>
-
-<style>
-    .form-group select
-    {
-        margin-bottom: 20px;
-    }
-
-    .confirmation-dialog {
-        display: none;
-        position: fixed;
-        z-index: 9999;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #d9f0ff;
-        border: 1px solid #ccc;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        max-width: 300px;
-    }
-
-    .confirmation-content {
-        text-align: center;
-    }
-
-    .confirmation-buttons {
-        margin-top: 20px;
-    }
-
-    .confirmation-buttons button {
-        padding: 10px 20px;
-        margin: 0 10px;
-        cursor: pointer;
-    }
-</style>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

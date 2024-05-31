@@ -5,8 +5,9 @@
 }
 
 <h2>QA Descriptions</h2>
-<p>List of QA Descriptions will be displayed here.</p>
+<p>List of QA Descriptions will be displayed here.</p> <!-- Placeholder -->
 
+<!-- Placeholder form to get the category and nature -->
 <form method="post">
     <div class="form-group">
         <label asp-for="CategoryOfError" class="control-label"></label>
@@ -33,6 +34,8 @@
         <span asp-validation-for="Severity" class="text-danger"></span>
     </div>
 </form>
+
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 

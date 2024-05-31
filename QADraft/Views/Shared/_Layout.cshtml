@@ -1,4 +1,114 @@
-﻿<!DOCTYPE html>
+﻿<style>
+    /* Styles for the website navigation bar */
+    .navbar {
+        background-color: #861F41;
+        padding: 10px;
+        vertical-align: middle;
+        border-bottom: 3px solid rgba(0, 0, 0, 0.3);
+        z-index: 1;
+    }
+ 
+    /* Styles for all items in the nav bar */
+    .nav-item {
+        font-family: 'Barlow', sans-serif;
+        font-weight: 100;
+        text-align: center;
+        padding-top: 10px;
+    }
+ 
+    /* Styles for the Geeks Logo and links in the navigation bar */
+    .navbar-brand, .nav-link {
+        color: #ffffff !important;
+        margin-right: 20px;
+    }
+ 
+    /* Styles for the page footer */
+    .footer {
+        background-color: #f8f9fa;
+        padding: 10px 0;
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        height: 60px;
+    }
+ 
+    /* Styles for the current user role in the footer */
+    .role-view {
+        text-align: left;
+        margin-left: 50px;
+        justify-content: flex-start;
+        flex-grow: 1;
+    }
+
+    /* Styles for the EKU IT Geeks watermark in the footer */
+    .watermark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }   
+ 
+    .container {
+        margin-top: 20px;
+    }
+ 
+    .dropdown input[type="checkbox"] {
+        display: none;
+    }
+ 
+    .dropdown .for-dropdown {
+        cursor: pointer;
+        padding: 5px;
+        display: inline-block;
+    }
+ 
+    .settings-dropdown {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        right: 0;
+        text-align: right;
+        white-space: nowrap;
+    }
+ 
+    .dropdown input[type="checkbox"]:checked ~ .settings-dropdown {
+        display: block;
+    }
+ 
+    .settings-dropdown a {
+        display: block;
+        padding: 5px 0;
+        text-decoration: none;
+        color: #333;
+    }
+ 
+    .settings-dropdown a:hover {
+        background-color: #f0f0f0;
+    }
+ 
+    .user-name{
+        color: white;
+        font-family: 'Barlow';
+        font-size: 18px;
+        margin-left: 10px;
+    }
+ 
+    header {
+        margin-bottom: 20px;
+    }
+ 
+    #settings-icon {
+        max-height: 20px;
+        max-width: 20px;
+    }
+</style>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -8,170 +118,6 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/QADraft.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap">
-    <style>
-        .navbar {
-            background-color: #861F41;
-            padding: 10px;
-            vertical-align: middle;
-            border-bottom: 3px solid rgba(0, 0, 0, 0.3);
-            z-index: 1;
-        }
-
-        .nav-item {
-            font-family: 'Barlow', sans-serif;
-            font-weight: 100;
-            text-align: center;
-            padding-top: 10px;
-        }
-
-        .navbar-brand, .nav-link {
-            color: #ffffff !important;
-            margin-right: 20px;
-        }
-
-        .footer {
-            background-color: #f8f9fa;
-            padding: 10px 0;
-            display: flex;
-            align-items: center;
-            flex-grow: 1;
-            height: 60px;
-        }
-
-            .footer a {
-                color: #343a40;
-            }
-
-        .role-view {
-            text-align: left;
-            margin-left: 50px;
-            justify-content: flex-start;
-            flex-grow: 1;
-        }
-
-        .watermark {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .container {
-            margin-top: 20px;
-        }
-
-        .dropdown input[type="checkbox"] {
-            display: none;
-        }
-
-        .dropdown .for-dropdown {
-            cursor: pointer;
-            padding: 5px;
-            display: inline-block;
-        }
-
-        .settings-dropdown {
-            display: none;
-            position: absolute;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            right: 0;
-            text-align: right;
-            white-space: nowrap;
-        }
-
-        .dropdown input[type="checkbox"]:checked ~ .settings-dropdown {
-            display: block;
-        }
-
-        .settings-dropdown a {
-            display: block;
-            padding: 5px 0;
-            text-decoration: none;
-            color: #333;
-        }
-
-            .settings-dropdown a:hover {
-                background-color: #f0f0f0;
-            }
-
-        .user-name {
-            color: white;
-            font-family: 'Barlow';
-            font-size: 18px;
-            margin-left: 10px;
-        }
-
-        header {
-            margin-bottom: 20px;
-        }
-
-        #settings-icon {
-            max-height: 20px;
-            max-width: 20px;
-        }
-
-        /* Sidebar styles */
-        .sidebar {
-            position: fixed;
-            top: 80px;
-            left: 0;
-            width: 200px;
-            height: calc(100% - 80px);
-            background-color: #f8f9fa;
-            border-right: 1px solid #ddd;
-            padding: 15px;
-            overflow-y: auto;
-            z-index: 1000;
-        }
-
-            .sidebar a {
-                display: block;
-                padding: 10px;
-                color: #333;
-                text-decoration: none;
-            }
-
-                .sidebar a:hover {
-                    background-color: #e9ecef;
-                }
-
-        /* Popup styles */
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            background-color: white;
-            border: 1px solid #ccc;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            z-index: 1050;
-        }
-
-        .popup-header {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        .popup-content {
-            margin-bottom: 20px;
-        }
-
-        .popup-close {
-            display: block;
-            text-align: right;
-            cursor: pointer;
-            color: #333;
-            text-decoration: none;
-        }
-    </style>
 </head>
 <body>
     <header>
@@ -181,19 +127,18 @@
                     <img src="~/images/logoWhite.png" alt="Geeks Logo" style="max-width: 100px; max-height: 50px;">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                    aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 @{
                     string? isAuthenticated = Context.Session.GetString("IsAuthenticated");
                     string? firstName = Context.Session.GetString("FirstName");
                     string? lastName = Context.Session.GetString("LastName");
-
+ 
                     string name = lastName + ", " + firstName;
                 }
-
                 @if (isAuthenticated == "true")
-                {
+                {   
                     <label class="user-name nav-item">@name</label>
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-auto">
@@ -224,20 +169,11 @@
             </div>
         </nav>
     </header>
-
-    <div class="sidebar">
-        <a href="#" class="sidebar-link" data-popup="popup1">Didn't check out asset at all (Not in SnipeIT)</a>
-        <a href="#" class="sidebar-link" data-popup="popup2">Didn't update Snipe-It at all (Rechecks/Check ins)</a>
-        <a href="#" class="sidebar-link" data-popup="popup3">Incorrect due date</a>
-        <!-- Add more items as needed -->
-    </div>
-
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-
     <footer class="footer text-muted border-top" style="padding: 0px; text-align: center;">
         <div class="role-view">
             @if (isAuthenticated == "true")
@@ -252,55 +188,9 @@
         <div class="whitespace">
         </div>
     </footer>
-
-    <!-- Popups -->
-    <div class="popup" id="popup1">
-        <a href="#" class="popup-close" data-popup="popup1">&times;</a>
-        <div class="popup-header">Didn't check out asset at all (Not in SnipeIT)</div>
-        <div class="popup-content">Severity: 9</div>
-    </div>
-
-    <div class="popup" id="popup2">
-        <a href="#" class="popup-close" data-popup="popup2">&times;</a>
-        <div class="popup-header">Didn't update Snipe-It at all (Rechecks/Check ins)</div>
-        <div class="popup-content">Severity: 9</div>
-    </div>
-
-    <div class="popup" id="popup3">
-        <a href="#" class="popup-close" data-popup="popup3">&times;</a>
-        <div class="popup-header">Incorrect due date</div>
-        <div class="popup-content">Severity: 6</div>
-    </div>
-
-    <!-- Add more popups as needed -->
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script>
-        $(document).ready(function () {
-            $('.sidebar-link').click(function (e) {
-                e.preventDefault();
-                // Hide all popups
-                $('.popup').hide();
-                // Show the clicked popup
-                var popupId = $(this).data('popup');
-                $('#' + popupId).show();
-            });
-
-            $('.popup-close').click(function (e) {
-                e.preventDefault();
-                var popupId = $(this).data('popup');
-                $('#' + popupId).hide();
-            });
-
-            $(document).click(function (event) {
-                if (!$(event.target).closest('.popup, .sidebar-link').length) {
-                    $('.popup').hide();
-                }
-            });
-        });
-    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
