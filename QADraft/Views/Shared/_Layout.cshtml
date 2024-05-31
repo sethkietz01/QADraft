@@ -38,9 +38,9 @@
             height: 60px;
         }
 
-        .footer a {
-            color: #343a40;
-        }
+            .footer a {
+                color: #343a40;
+            }
 
         .role-view {
             text-align: left;
@@ -48,14 +48,13 @@
             justify-content: flex-start;
             flex-grow: 1;
         }
-        
+
         .watermark {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-        }   
-
+        }
 
         .container {
             margin-top: 20px;
@@ -96,11 +95,11 @@
             color: #333;
         }
 
-        .settings-dropdown a:hover {
-            background-color: #f0f0f0;
-        }
+            .settings-dropdown a:hover {
+                background-color: #f0f0f0;
+            }
 
-        .user-name{
+        .user-name {
             color: white;
             font-family: 'Barlow';
             font-size: 18px;
@@ -116,7 +115,62 @@
             max-width: 20px;
         }
 
-        
+        /* Sidebar styles */
+        .sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 200px;
+            height: calc(100% - 80px);
+            background-color: #f8f9fa;
+            border-right: 1px solid #ddd;
+            padding: 15px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+            .sidebar a {
+                display: block;
+                padding: 10px;
+                color: #333;
+                text-decoration: none;
+            }
+
+                .sidebar a:hover {
+                    background-color: #e9ecef;
+                }
+
+        /* Popup styles */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            z-index: 1050;
+        }
+
+        .popup-header {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .popup-content {
+            margin-bottom: 20px;
+        }
+
+        .popup-close {
+            display: block;
+            text-align: right;
+            cursor: pointer;
+            color: #333;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -139,7 +193,7 @@
                 }
 
                 @if (isAuthenticated == "true")
-                {   
+                {
                     <label class="user-name nav-item">@name</label>
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-auto">
@@ -170,11 +224,20 @@
             </div>
         </nav>
     </header>
+
+    <div class="sidebar">
+        <a href="#" class="sidebar-link" data-popup="popup1">Didn't check out asset at all (Not in SnipeIT)</a>
+        <a href="#" class="sidebar-link" data-popup="popup2">Didn't update Snipe-It at all (Rechecks/Check ins)</a>
+        <a href="#" class="sidebar-link" data-popup="popup3">Incorrect due date</a>
+        <!-- Add more items as needed -->
+    </div>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
+
     <footer class="footer text-muted border-top" style="padding: 0px; text-align: center;">
         <div class="role-view">
             @if (isAuthenticated == "true")
@@ -189,9 +252,55 @@
         <div class="whitespace">
         </div>
     </footer>
+
+    <!-- Popups -->
+    <div class="popup" id="popup1">
+        <a href="#" class="popup-close" data-popup="popup1">&times;</a>
+        <div class="popup-header">Didn't check out asset at all (Not in SnipeIT)</div>
+        <div class="popup-content">Severity: 9</div>
+    </div>
+
+    <div class="popup" id="popup2">
+        <a href="#" class="popup-close" data-popup="popup2">&times;</a>
+        <div class="popup-header">Didn't update Snipe-It at all (Rechecks/Check ins)</div>
+        <div class="popup-content">Severity: 9</div>
+    </div>
+
+    <div class="popup" id="popup3">
+        <a href="#" class="popup-close" data-popup="popup3">&times;</a>
+        <div class="popup-header">Incorrect due date</div>
+        <div class="popup-content">Severity: 6</div>
+    </div>
+
+    <!-- Add more popups as needed -->
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            $('.sidebar-link').click(function (e) {
+                e.preventDefault();
+                // Hide all popups
+                $('.popup').hide();
+                // Show the clicked popup
+                var popupId = $(this).data('popup');
+                $('#' + popupId).show();
+            });
+
+            $('.popup-close').click(function (e) {
+                e.preventDefault();
+                var popupId = $(this).data('popup');
+                $('#' + popupId).hide();
+            });
+
+            $(document).click(function (event) {
+                if (!$(event.target).closest('.popup, .sidebar-link').length) {
+                    $('.popup').hide();
+                }
+            });
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
