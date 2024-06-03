@@ -80,7 +80,176 @@ namespace QADraft.Controllers
             }
         }
 
-        // Other action methods...
+        [HttpPost]
+        public IActionResult ManageQA(int qaId, string action)
+        {
+            if (action == "Update QA")
+            {
+                Debug.WriteLine("Update QA Reached");
+                return RedirectToAction("EditQA", new { id = qaId });
+            }
+            else if (action == "Delete QA")
+            {
+                Debug.WriteLine("Delete QA reached");
+                return RedirectToAction("DeleteQA", new { id = qaId });
+            }
+
+            return RedirectToAction("Index"); // Default redirection
+        }
+
+        [HttpGet]
+        public IActionResult EditQA(int id)
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+
+            var qa = _context.GeekQAs.Find(id);
+            if (qa == null)
+            {
+                return NotFound();
+            }
+
+            var users = _context.Users.Select(u => new SelectListItem
+            {
+                Value = u.Id.ToString(),
+                Text = $"{u.FirstName} {u.LastName}"
+            }).ToList();
+
+            qa.Users = users;
+            return View(qa);
+        }
+
+        [HttpPost]
+        public IActionResult EditQA(GeekQA model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var qa = _context.GeekQAs.Find(model.Id);
+                    if (qa == null)
+                    {
+                        return NotFound();
+                    }
+
+                    qa.CommittedById = model.CommittedById;
+                    qa.FoundById = model.FoundById;
+                    qa.CategoryOfError = model.CategoryOfError;
+                    qa.NatureOfError = model.NatureOfError;
+                    qa.Severity = model.Severity;
+                    qa.CustomerName = model.CustomerName;
+                    qa.UnitId = model.UnitId;
+                    qa.ErrorDate = model.ErrorDate;
+                    qa.FoundOn = model.FoundOn;
+                    qa.Description = model.Description;
+
+                    _context.Update(qa);
+                    _context.SaveChanges();
+                    return RedirectToAction("QAMenu", new { button = 0 });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error updating GeekQA");
+                    ModelState.AddModelError(string.Empty, "An error occurred while updating the QA. Please try again.");
+                }
+            }
+
+            model.Users = _context.Users.Select(u => new SelectListItem
+            {
+                Value = u.Id.ToString(),
+                Text = $"{u.FirstName} {u.LastName}"
+            }).ToList();
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult DeleteQA(int id)
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+
+            var findQA = _context.GeekQAs.SingleOrDefault(q => q.Id == id);
+            if (findQA != null)
+            {
+                _context.Remove(findQA);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("QAMenu", new { button = 0 });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Filter(string dateFilter, DateTime? startDate, DateTime? endDate, int? committedBy, int? loggedBy, string category)
+        {
+            ViewBag.Users = _context.Users.ToList();
+            ViewBag.Categories = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "Category1", Text = "Category1" },
+                new SelectListItem { Value = "Category2", Text = "Category2" },
+                new SelectListItem { Value = "Category3", Text = "Category3" },
+                new SelectListItem { Value = "Category4", Text = "Category4" },
+                new SelectListItem { Value = "DocuSign", Text = "DocuSign" }
+            };
+
+            var qas = _context.GeekQAs.AsQueryable();
+
+            if (!string.IsNullOrEmpty(dateFilter) && startDate.HasValue && endDate.HasValue)
+            {
+                qas = qas.Where(q => q.ErrorDate >= startDate.Value && q.ErrorDate <= endDate.Value);
+            }
+
+            if (committedBy.HasValue)
+            {
+                qas = qas.Where(q => q.CommittedById == committedBy.Value);
+            }
+
+            if (loggedBy.HasValue)
+            {
+                qas = qas.Where(q => q.FoundById == loggedBy.Value);
+            }
+
+            if (!string.IsNullOrEmpty(category))
+            {
+                qas = qas.Where(q => q.CategoryOfError == category);
+            }
+
+            var model = await qas.ToListAsync();
+
+            ViewBag.InitialContent = await RenderViewAsync("_Filter", model);
+            return PartialView("_Filter", model);
+        }
+
+        private async Task<string> RenderViewAsync(string viewName, object model)
+        {
+            ViewData.Model = model;
+            using (var writer = new StringWriter())
+            {
+                var viewResult = _viewEngine.FindView(ControllerContext, viewName, false);
+
+                if (viewResult.View == null)
+                {
+                    throw new ArgumentNullException($"{viewName} does not match any available view");
+                }
+
+                var viewContext = new ViewContext(
+                    ControllerContext,
+                    viewResult.View,
+                    ViewData,
+                    TempData,
+                    writer,
+                    new HtmlHelperOptions()
+                );
+
+                await viewResult.View.RenderAsync(viewContext);
+                return writer.GetStringBuilder().ToString();
+            }
+        }
+
         public bool IsAuthenticated()
         {
             return HttpContext.Session.GetString("IsAuthenticated") == "true";
