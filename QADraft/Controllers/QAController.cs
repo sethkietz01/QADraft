@@ -150,7 +150,7 @@ namespace QADraft.Controllers
         [HttpPost]
         public IActionResult ManageQA(int qaId, string action, string source)
         {
-            if (action == "Update QA")
+            if (action == "Update")
             {
                 Debug.WriteLine("Update QA Reached");
                 return RedirectToAction("EditQA", new { id = qaId });
@@ -257,11 +257,11 @@ namespace QADraft.Controllers
             ViewBag.Users = _context.Users.ToList();
             ViewBag.Categories = new List<SelectListItem>
             {
-                new SelectListItem { Value = "Category1", Text = "Category1" },
-                new SelectListItem { Value = "Category2", Text = "Category2" },
-                new SelectListItem { Value = "Category3", Text = "Category3" },
-                new SelectListItem { Value = "Category4", Text = "Category4" },
-                new SelectListItem { Value = "DocuSign", Text = "DocuSign" }
+                new SelectListItem { Value = "Snipe-It", Text = "Snipe-It" },
+                new SelectListItem { Value = "DocuSign", Text = "DocuSign" },
+                new SelectListItem { Value = "Processes", Text = "Processes" },
+                new SelectListItem { Value = "Desk Conduct", Text = "Desk Conduct" },
+                new SelectListItem { Value = "Other", Text = "Other" }
             };
 
             var qas = _context.GeekQAs.AsQueryable();

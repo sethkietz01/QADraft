@@ -7,10 +7,9 @@
 }
 
 <partial name="_ReportsMenu" />
-<h2>Filter QA's</h2>
+<h2>Filter QAs</h2>
 
 <div class="filter-section">
-    <h3>Filter Options</h3>
     <form id="filterForm" method="get" asp-controller="QA" asp-action="Filter">
         <div class="form-group">
             <input type="checkbox" id="dateFilter" name="dateFilter" onchange="toggleDatePicker(this)">
@@ -85,8 +84,8 @@
                         <form method="post" asp-controller="QA" asp-action="ManageQA">
                             <input type="hidden" name="qaId" value="@qa.Id" />
                             <div class="form-group">
-                                <input type="submit" name="action" value="Update QA" class="btn btn-primary" />
-                                <input type="submit" name="action" value="Delete QA"class="btn btn-danger" hidden />
+                                <input type="submit" name="action" value="Update" class="btn btn-primary" />
+                                <input type="submit" name="action" value="Delete QA" class="btn btn-danger" hidden />
                                 <input type="hidden" name="source" value="Filter" />
 
                                 <button id="deleteButton" onclick="openConfirmationDialog(event)" class="btn btn-danger">Delete</button>
