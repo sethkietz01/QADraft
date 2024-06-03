@@ -138,7 +138,7 @@ namespace QADraft.Controllers
         }
 
         [HttpPost]
-        public IActionResult ManageQA(int qaId, string action)
+        public IActionResult ManageQA(int qaId, string action, string source)
         {
             if (action == "Update QA")
             {
@@ -148,7 +148,7 @@ namespace QADraft.Controllers
             else if (action == "Delete QA")
             {
                 Debug.WriteLine("Delete QA reached");
-                return RedirectToAction("DeleteQA", new { id = qaId });
+                return RedirectToAction("DeleteQA", new { id = qaId, src = source });
             }
 
             return RedirectToAction("Index"); // Default redirection
@@ -223,21 +223,22 @@ namespace QADraft.Controllers
         }
 
         [HttpGet]
-        public IActionResult DeleteQA(int id)
+        public IActionResult DeleteQA(int id, string src)
         {
             if (!IsAuthenticated())
             {
                 return RedirectToAction("Login");
             }
-
             var findQA = _context.GeekQAs.SingleOrDefault(q => q.Id == id);
             if (findQA != null)
             {
                 _context.Remove(findQA);
                 _context.SaveChanges();
             }
+            if (src == "Filter")
+                return RedirectToAction("Filter");
 
-            return RedirectToAction("QAMenu", new { button = 0 });
+            return RedirectToAction("AllGeekQAs");
         }
 
         [HttpGet]

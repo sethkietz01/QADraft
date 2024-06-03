@@ -86,7 +86,9 @@
                             <input type="hidden" name="qaId" value="@qa.Id" />
                             <div class="form-group">
                                 <input type="submit" name="action" value="Update QA" class="btn btn-primary" />
-                                <input type="submit" name="action" value="Delete QA" class="btn btn-danger" hidden />
+                                <input type="submit" name="action" value="Delete QA"class="btn btn-danger" hidden />
+                                <input type="hidden" name="source" value="Filter" />
+
                                 <button id="deleteButton" onclick="openConfirmationDialog(event)" class="btn btn-danger">Delete</button>
                             </div>
                         </form>
@@ -145,6 +147,28 @@
                 dateFormat: 'yy-mm-dd'
             });
         });
+
+        function openConfirmationDialog(event) {
+            event.preventDefault(); // Prevent default behavior
+
+            // Show the confirmation dialog
+            console.log("openconfirm");
+            var parentForm = event.target.closest('form');
+            window.currentForm = parentForm;
+            document.getElementById('confirmationDialog').style.display = 'block';
+        }
+
+        function closeConfirmationDialog() {
+            console.log("close confirm");
+            document.getElementById('confirmationDialog').style.display = 'none';
+        }
+
+        function confirmDelete() {
+            console.log("confirmdelete");
+            window.currentForm.querySelector('input[type="submit"][name="action"][value="Delete QA"]').click();
+            closeConfirmationDialog();
+            return false;
+        }
     </script>
 }
 

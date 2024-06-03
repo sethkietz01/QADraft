@@ -120,7 +120,9 @@
         }
 
         function confirmDelete() {
-            document.querySelector('input[type="submit"][name="action"][value="Delete User"]').click();
+            var form = document.getElementById('deleteButton').closest('form');
+
+            form.querySelector('input[type="submit"][name="action"][value="Delete User"]').click();
             closeConfirmationDialog();
             return false;
         }
