@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using QADraft.Data;
 using QADraft.Models;
@@ -9,6 +7,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using System;
 
 namespace QADraft.Controllers
 {
@@ -25,147 +27,60 @@ namespace QADraft.Controllers
             _viewEngine = viewEngine;
         }
 
-        [HttpPost]
-        public IActionResult ManageQA(int qaId, string action)
-        {
-            if (action == "Update QA")
-            {
-                Debug.WriteLine("Update QA Reached");
-                return RedirectToAction("EditQA", new { id = qaId });
-            }
-            else if (action == "Delete QA")
-            {
-                Debug.WriteLine("Delete QA reached");
-                return RedirectToAction("DeleteQA", new { id = qaId });
-            }
-
-            return RedirectToAction("Index"); // Default redirection
-        }
-
         [HttpGet]
-        public IActionResult EditQA(int id)
+        public IActionResult QAMenu(int? button)
         {
             if (!IsAuthenticated())
             {
                 return RedirectToAction("Login");
             }
 
-            var qa = _context.GeekQAs.Find(id);
-            if (qa == null)
-            {
-                return NotFound();
-            }
+            ViewBag.button = button ?? 0;
 
-            var users = _context.Users.Select(u => new SelectListItem
-            {
-                Value = u.Id.ToString(),
-                Text = $"{u.FirstName} {u.LastName}"
-            }).ToList();
-
-            qa.Users = users;
-            return View(qa);
-        }
-
-        [HttpPost]
-        public IActionResult EditQA(GeekQA model)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var qa = _context.GeekQAs.Find(model.Id);
-                    if (qa == null)
-                    {
-                        return NotFound();
-                    }
-
-                    qa.CommittedById = model.CommittedById;
-                    qa.FoundById = model.FoundById;
-                    qa.CategoryOfError = model.CategoryOfError;
-                    qa.NatureOfError = model.NatureOfError;
-                    qa.Severity = model.Severity;
-                    qa.CustomerName = model.CustomerName;
-                    qa.UnitId = model.UnitId;
-                    qa.ErrorDate = model.ErrorDate;
-                    qa.FoundOn = model.FoundOn;
-                    qa.Description = model.Description;
-
-                    _context.Update(qa);
-                    _context.SaveChanges();
-                    return RedirectToAction("QAMenu", "Home", new { button = 1 });
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error updating GeekQA");
-                    ModelState.AddModelError(string.Empty, "An error occurred while updating the QA. Please try again.");
-                }
-            }
-
-            model.Users = _context.Users.Select(u => new SelectListItem
-            {
-                Value = u.Id.ToString(),
-                Text = $"{u.FirstName} {u.LastName}"
-            }).ToList();
-
-            return View(model);
+            return View();
         }
 
         [HttpGet]
-        public IActionResult DeleteQA(string id)
-        {
-            if (!IsAuthenticated())
-            {
-                return RedirectToAction("Login");
-            }
-
-            if (ModelState.IsValid)
-            {
-                var findQA = _context.GeekQAs.SingleOrDefault(q => q.Id == int.Parse(id));
-                if (findQA != null)
-                {
-                    _context.Remove(findQA);
-                    _context.SaveChanges();
-                }
-            }
-            return RedirectToAction("QAMenu", "Home", new { button = 1 });
-        }
-
-        public async Task<IActionResult> Filter()
+        public async Task<IActionResult> LoadContent(int button)
         {
             ViewBag.Users = _context.Users.ToList();
-            var model = _context.GeekQAs.ToList();
-
-            // Set initial content for the first tab
-            ViewBag.InitialContent = await RenderViewAsync("Filter", model);
-            return View(model);
-        }
-
-        private async Task<string> RenderViewAsync(string viewName, object model)
-        {
-            ViewData.Model = model;
-            using (var writer = new StringWriter())
+            ViewBag.Categories = new List<SelectListItem>
             {
-                var viewResult = _viewEngine.FindView(ControllerContext, viewName, false);
+                new SelectListItem { Value = "Category1", Text = "Category1" },
+                new SelectListItem { Value = "Category2", Text = "Category2" },
+                new SelectListItem { Value = "Category3", Text = "Category3" },
+                new SelectListItem { Value = "Category4", Text = "Category4" },
+                new SelectListItem { Value = "DocuSign", Text = "DocuSign" }
+            };
 
-                if (viewResult.View == null)
-                {
-                    throw new ArgumentNullException($"{viewName} does not match any available view");
-                }
+            var model = new List<GeekQA>();
 
-                var viewContext = new ViewContext(
-                    ControllerContext,
-                    viewResult.View,
-                    ViewData,
-                    TempData,
-                    writer,
-                    new HtmlHelperOptions()
-                );
-
-                await viewResult.View.RenderAsync(viewContext);
-                return writer.GetStringBuilder().ToString();
+            switch (button)
+            {
+                case 0:
+                    model = await _context.GeekQAs.ToListAsync();
+                    return PartialView("_Filter", model);
+                case 1:
+                    return PartialView("_BetweenDates");
+                case 2:
+                    model = await _context.GeekQAs.Include(q => q.CommittedBy).Include(q => q.FoundBy).ToListAsync();
+                    return PartialView("_AllGeekQAs", model);
+                case 3:
+                    var flaggedAccounts = await _context.GeekQAs
+                        .Include(q => q.CommittedBy)
+                        .Include(q => q.FoundBy)
+                        .Where(q => q.Severity >= 10)
+                        .ToListAsync();
+                    return PartialView("_FlaggedAccounts", flaggedAccounts);
+                case 4:
+                    return PartialView("_QADescriptions");
+                default:
+                    model = await _context.GeekQAs.ToListAsync();
+                    return PartialView("_Filter", model);
             }
         }
 
+        // Other action methods...
         public bool IsAuthenticated()
         {
             return HttpContext.Session.GetString("IsAuthenticated") == "true";
