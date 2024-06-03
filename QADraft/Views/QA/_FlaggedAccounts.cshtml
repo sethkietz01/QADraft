@@ -1,9 +1,11 @@
-﻿@* @model List<QADraft.Models.GeekQA>
+﻿@model List<QADraft.Models.GeekQA>
 
 @{
     ViewData["Title"] = "Flagged Accounts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<partial name="_ReportsMenu" />
 <h2>Flagged Accounts</h2>
 
 <!-- Table that displays all 'flagged' accounts -->
@@ -32,4 +34,3 @@
         }
     </tbody>
 </table>
- *@

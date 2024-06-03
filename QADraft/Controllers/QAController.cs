@@ -137,6 +137,16 @@ namespace QADraft.Controllers
             return PartialView("_FlaggedAccounts", flaggedAccounts);
         }
 
+        [HttpGet]
+        public IActionResult QADescriptions()
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+            return View("_QADescriptions");
+        }
+
         [HttpPost]
         public IActionResult ManageQA(int qaId, string action, string source)
         {
@@ -204,7 +214,7 @@ namespace QADraft.Controllers
 
                     _context.Update(qa);
                     _context.SaveChanges();
-                    return RedirectToAction("QAMenu", new { button = 0 });
+                    return RedirectToAction("AllGeekQAs");
                 }
                 catch (Exception ex)
                 {
