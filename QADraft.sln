@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QADraft", "QADraft\QADraft.csproj", "{DF3F2852-2A21-4A6D-85A0-97CD9A58166B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QADraft", "QADraft\QADraft.csproj", "{DF3F2852-2A21-4A6D-85A0-97CD9A58166B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
