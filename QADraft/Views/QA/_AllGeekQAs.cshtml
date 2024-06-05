@@ -96,7 +96,7 @@
 
                         <input type="hidden" name="qaId" value="@qa.Id" />
                         <div class="form-group">
-                            <button id="descriptionButton" class="btn action-btn" onclick="showDescription()"> <img id="description-icon" src="~/images/descriptionIconWhite.png"> </button>
+                            <button id="descriptionButton" type="button" class="btn action-btn" onclick="showDescription()"> <img id="description-icon" src="~/images/descriptionIconWhite.png"> </button>
 
                             <input id="updateButton" type="submit" name="action" value="Update" class="btn btn-primary action-btn" />
                             <input id="deleteButton" type="submit" name="action" value="Delete QA" class="btn btn-danger action-btn" hidden/>
@@ -148,7 +148,7 @@
 
         function showDescription() {
             console.log("Show Description");
-            document.getElementbyId('descriptionDialog').style.display = 'block';
+            document.getElementById('descriptionDialog').style.display = 'block';
         }
 
         function closeDescription() {
