@@ -1,7 +1,7 @@
 ﻿@model List<QADraft.Models.User>
 
 @{
-    ViewData["Title"] = "User Options";
+    ViewData["Title"] = "Geek Accounts";
 }
 
 <style>
@@ -11,8 +11,8 @@
     }
 </style>
 
-<h2>User Settings</h2>
-@await Html.PartialAsync("_UserOptionsNavigation")
+<partial name="_GeeksMenu" />
+<h2>Geek Accounts</h2>
 
 <!-- Table to output a list off all users -->
 <table class="table table-striped">

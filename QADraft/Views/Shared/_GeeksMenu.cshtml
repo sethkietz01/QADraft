@@ -1,0 +1,25 @@
+﻿<style>
+    .nav-button {
+        color: #fff;
+        background-color: #861F41;
+        border-color: #861F41;
+    }
+        
+    .nav-button:hover {
+        color: #fff;
+        background-color: #b31f4f;
+        border-color: #E6A65D;
+    }
+
+    #nav-buttons {
+        margin-bottom: 50px;
+    }
+</style>
+
+<h1>Reports Menu</h1>
+
+<div id="nav-buttons">
+    <!--Links for User Settings page-->
+    <a class="btn nav-button" asp-area="" asp-controller="Home" asp-action="GeekAccounts">Geek Accounts</a>
+    <a class="btn nav-button" asp-area="" asp-controller="Home" asp-action="AddUser">Add User</a>
+</div>

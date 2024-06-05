@@ -29,13 +29,46 @@
         border-color: #861F41;
         color: #fff;
     }
+
+    .confirmation-dialog {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #d9f0ff;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 300px;
+    }
+
+    .confirmation-content {
+        text-align: center;
+    }
+
+    .add-qa-button
+    {
+        margin-top: 10px;
+
+    }
+
+    .confirmation-buttons {
+        margin-top: 20px;
+    }
+
+    .confirmation-buttons button {
+        padding: 10px 20px;
+        margin: 0 10px;
+        cursor: pointer;
+    }
 </style>
 
 <h2>Add QA</h2>
 
 <!-- Form to get details about the QA being added -->
 <form asp-action="AddQA" method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="CommittedById" class="control-label">Committed By</label>
         <select asp-for="CommittedById" class="form-control" asp-items="Model.Users">
@@ -96,10 +129,27 @@
         <textarea asp-for="Description" class="form-control" placeholder="Describe the QA"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <input id="submit-qa" type="submit" value="Add QA" class="btn btn-primary" />
-    </div>
+
+    <!-- Form Submit -->
+    <input type="submit" value="Add QA" hidden/>
+
 </form>
+
+<div>
+    <button onclick="openConfirmation()" class="btn btn-primary add-qa-button">Add QA</button>
+</div>
+
+
+<!-- Add QA Complete Popup -->
+<div id="confirmationDialog" class="confirmation-dialog">
+    <div class="confirmation-content">
+        <p>Press Confirm to submit the QA Report</p>
+        <div class="confirmation-buttons">
+            <button class="btn btn-danger" onclick="confirmAdd()">Confirm</button>
+            <button class="btn btn-secondary" onclick="closeConfirmation()">Cancel</button>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
@@ -191,5 +241,25 @@
                 severityInput.value = selectedOption.dataset.severity || '';
             });
         });
+
+
+        function openConfirmation() {
+            console.log("OpenConfirmation");
+
+            // Show the confirmation dialog
+            document.getElementById('confirmationDialog').style.display = 'block';
+        }
+
+        function closeConfirmation() {
+            document.getElementById('confirmationDialog').style.display = 'none';
+        }
+
+        function confirmAdd() {
+            closeConfirmation();
+            document.querySelector('input[type="submit"][value="Add QA"]').click();
+            console.log("Clicked");
+            closeConfirmationDialog();
+            return false;
+        }
     </script>
 }

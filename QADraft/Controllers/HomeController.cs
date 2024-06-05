@@ -129,7 +129,7 @@ namespace QADraft.Controllers
         }
 
         [HttpGet]
-        public IActionResult UserOptions()
+        public IActionResult GeekAccounts()
         {
             if (!IsAuthenticated())
             {
@@ -159,7 +159,7 @@ namespace QADraft.Controllers
                 user.Password = PasswordHasher.HashPassword(user.Password);
                 _context.Users.Add(user);
                 _context.SaveChanges();
-                return RedirectToAction("UserOptions");
+                return RedirectToAction("GeekAccounts");
             }
             return View(user);
         }
@@ -195,26 +195,20 @@ namespace QADraft.Controllers
                 if (existingUser != null)
                 {
                     Debug.WriteLine("User Exists");
-                    if (action == "Update User")
-                    {
-                        Debug.WriteLine("Update User");
-                        existingUser.Username = user.Username;
+
+                    Debug.WriteLine("Edit User");
+                    existingUser.Username = user.Username;
+                    if (user.Password != "-")
                         existingUser.Password = PasswordHasher.HashPassword(user.Password);
-                        existingUser.FirstName = user.FirstName;
-                        existingUser.LastName = user.LastName;
-                        existingUser.Email = user.Email;
-                        existingUser.Role = user.Role;
-                        _context.SaveChanges();
-                    }
-                    else if (action == "Delete User")
-                    {
-                        _context.Remove(existingUser);
-                        _context.SaveChanges();
-                    }
+                    existingUser.FirstName = user.FirstName;
+                    existingUser.LastName = user.LastName;
+                    existingUser.Email = user.Email;
+                    existingUser.Role = user.Role;
+                    _context.SaveChanges();
                 }
             }
             Debug.WriteLine("End");
-            return RedirectToAction("UserOptions");
+            return RedirectToAction("GeekAccounts");
         }
 
         public IActionResult Links()
@@ -223,7 +217,7 @@ namespace QADraft.Controllers
         }
 
         [HttpGet]
-        public IActionResult Settings()
+        public IActionResult UserInfo()
         {
             if (!IsAuthenticated() || GetId() < 0)
             {
@@ -237,29 +231,6 @@ namespace QADraft.Controllers
             }
 
             return View();
-        }
-
-        [HttpPost]
-        public IActionResult Settings(User updateUser)
-        {
-            if (!IsAuthenticated() || GetId() < 0)
-            {
-                return RedirectToAction("Login");
-            }
-            else if (ModelState.IsValid)
-            {
-                var user = _context.Users.SingleOrDefault(u => u.Id == GetId());
-                if (user != null)
-                {
-                    user.Username = updateUser.Username;
-                    user.Password = PasswordHasher.HashPassword(updateUser.Password);
-                    user.FirstName = updateUser.FirstName;
-                    user.LastName = updateUser.LastName;
-                    user.Email = updateUser.Email;
-                    _context.SaveChanges();
-                }
-            }
-            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -295,7 +266,7 @@ namespace QADraft.Controllers
                 {
                     _context.GeekQAs.Add(model);
                     _context.SaveChanges();
-                    return RedirectToAction("Index");
+                    return RedirectToAction("AddQA");
                 }
                 catch (Exception ex)
                 {
@@ -316,9 +287,6 @@ namespace QADraft.Controllers
 
         public bool IsAuthenticated()
         {
-            //REMOVE - USED TO BYPASS LOGIN FOR TESTING
-            return true;
-
             return HttpContext.Session.GetString("IsAuthenticated") == "true";
         }
 
