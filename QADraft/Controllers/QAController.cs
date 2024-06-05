@@ -280,9 +280,23 @@ namespace QADraft.Controllers
 
             var qas = _context.GeekQAs.AsQueryable();
 
-            if (!string.IsNullOrEmpty(dateFilter) && startDate.HasValue && endDate.HasValue)
+            if (!string.IsNullOrEmpty(dateFilter))
             {
-                qas = qas.Where(q => q.ErrorDate >= startDate.Value && q.ErrorDate <= endDate.Value);
+                if (startDate.HasValue && endDate.HasValue)
+                {
+                    // Both start date and end date are provided
+                    qas = qas.Where(q => q.ErrorDate >= startDate.Value && q.ErrorDate <= endDate.Value);
+                }
+                else if (startDate.HasValue)
+                {
+                    // Only start date is provided, filter from start date to current date
+                    qas = qas.Where(q => q.ErrorDate >= startDate.Value && q.ErrorDate <= DateTime.Now);
+                }
+                else if (endDate.HasValue)
+                {
+                    // Only end date is provided, filter from the minimum date to current date
+                    qas = qas.Where(q => q.ErrorDate >= DateTime.MinValue && q.ErrorDate <= endDate.Value);
+                }
             }
 
             if (committedBy.HasValue)

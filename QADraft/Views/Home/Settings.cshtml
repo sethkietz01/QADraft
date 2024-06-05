@@ -4,8 +4,34 @@
     ViewData["Title"] = "Settings";
 }
 
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap">
+<style>
+    /* Reset default margins and padding for all elements */
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    <h2> {
+        font-family: 'Barlow', sans-serif;
+    }
+
+    /* Styles for the input box labels */
+    .control-label {
+        margin-top: 20px;
+    }
+
+    /* Styles for the submit button */
+    #submit-settings {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        background-color: #861F41;
+        border-color: #861F41;
+        color: #fff;
+    }
+</style>
+
 <h2>Settings</h2>
-<p>Edit your User information.</p>
 
 <!-- From to get details on the updated user information -->
 <form asp-action="Settings" method="post">
@@ -47,6 +73,6 @@
     </div>
 
     <div class="form-group">
-        <input type="submit" name="action" value="Update Settings" class="btn btn-primary" />
+        <input id="submit-settings" type="submit" name="action" value="Update Settings" class="btn btn-primary" />
     </div>
 </form>

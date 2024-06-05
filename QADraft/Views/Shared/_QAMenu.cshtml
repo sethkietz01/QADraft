@@ -1,7 +1,25 @@
-﻿<div class="btn-group" role="group" aria-label="Detailed QA Reports Options">
-    <a class="btn btn-secondary" asp-area="" asp-controller="QA" asp-action="Filter">Filter</a>
-    <a class="btn btn-secondary" asp-area="" asp-controller="Home" asp-action="BetweenDates">Between Dates</a>
-    <a class="btn btn-secondary" asp-area="" asp-controller="Home" asp-action="AllGeekQAs">All Geek QAs</a>
-    <a class="btn btn-secondary" asp-area="" asp-controller="Home" asp-action="FlaggedAccounts">View All Flagged Accounts</a>
-    <a class="btn btn-secondary" asp-area="" asp-controller="Home" asp-action="QADescriptions">QA Descriptions</a>
+﻿<style>
+    .test {
+        color: #fff;
+        background-color: #861F41;
+        border-color: #861F41;
+    }
+        
+        .test:hover {
+            color: #fff;
+            background-color: #b31f4f;
+            border-color: #E6A65D;
+        }
+
+    #nav-buttons {
+        margin-bottom: 50px;
+    }
+</style>
+
+<div class="btn-group" role="group" aria-label="Detailed QA Reports Options">
+    <a class="btn test" asp-area="" asp-controller="QA" asp-action="Filter">Filter</a>
+    <a class="btn test" asp-area="" asp-controller="Home" asp-action="BetweenDates">Between Dates</a>
+    <a class="btn test" asp-area="" asp-controller="Home" asp-action="AllGeekQAs">All Geek QAs</a>
+    <a class="btn test" asp-area="" asp-controller="Home" asp-action="FlaggedAccounts">View All Flagged Accounts</a>
+    <a class="btn test" asp-area="" asp-controller="Home" asp-action="QADescriptions">QA Descriptions</a>
 </div>
