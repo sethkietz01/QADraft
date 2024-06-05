@@ -150,6 +150,8 @@ namespace QADraft.Controllers
         [HttpPost]
         public IActionResult ManageQA(int qaId, string action, string source)
         {
+            Debug.WriteLine("ManagQA reached");
+            Debug.WriteLine("Action: ", action);
             if (action == "Update")
             {
                 Debug.WriteLine("Update QA Reached");
@@ -162,6 +164,18 @@ namespace QADraft.Controllers
             }
 
             return RedirectToAction("Index"); // Default redirection
+        }
+
+
+        [HttpGet]
+        public IActionResult DescriptionQA(int id)
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+            Debug.WriteLine("DescriptionQA");
+            return View();
         }
 
         [HttpGet]

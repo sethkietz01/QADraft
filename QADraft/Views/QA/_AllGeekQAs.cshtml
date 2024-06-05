@@ -6,6 +6,60 @@
 
 }
 
+<style>
+    .action-btn {
+        color: #fff;
+        background-color: #861F41;
+        border-color: #861F41;
+    }
+
+        .action-btn:hover {
+            background-color: #b31f4f;
+            border-color: #E6A65D;
+        }
+
+    .confirmation-dialog {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #d9f0ff;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 300px;
+    }
+
+    .confirmation-content {
+        text-align: center;
+    }
+
+    .confirmation-buttons {
+        margin-top: 20px;
+    }
+
+    .confirmation-buttons button {
+        padding: 10px 20px;
+        margin: 0 10px;
+        cursor: pointer;
+    }
+
+    #descriptionButton {
+
+        padding: 5px 8px;
+    }
+
+    #description-icon {
+        width: 22px;
+        height: 22px;
+    }
+
+
+
+</style>
+
 <partial name="_ReportsMenu" />
 <h2>All QAs</h2>
 
@@ -38,10 +92,12 @@
 
                         <input type="hidden" name="qaId" value="@qa.Id" />
                         <div class="form-group">
-                            <input type="submit" name="action" value="Update" class="btn btn-primary" />
-                            <input type="submit" name="action" value="Delete QA" class="btn btn-danger" hidden/>
+                            <button id="descriptionButton" class="btn action-btn" onclick="showDescription()"> <img id="description-icon" src="~/images/descriptionIconWhite.png"> </button>
 
-                            <button id="deleteButton" onclick="openConfirmationDialog(event)" class="btn btn-danger">Delete</button>
+                            <input id="updateButton" type="submit" name="action" value="Update" class="btn btn-primary action-btn" />
+                            <input id="deleteButton" type="submit" name="action" value="Delete QA" class="btn btn-danger action-btn" hidden/>
+
+                            <button id="deleteButton" onclick="openConfirmationDialog(event)" class="btn btn-danger action-btn">Delete</button>
                         </div>
                     </form>
                 </td>
@@ -61,35 +117,19 @@
     </div>
 </div>
 
-<style>
-    .confirmation-dialog {
-        display: none;
-        position: fixed;
-        z-index: 9999;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #d9f0ff;
-        border: 1px solid #ccc;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        max-width: 300px;
-    }
 
-    .confirmation-content {
-        text-align: center;
-    }
+<!-- QA Description Popup -->
+<div id="descriptionDialog" class="confirmation-dialog">
+    <div id="confirmation-content">
+        <h>QA Description</h>
+        <p id="description-text"></p>
+        <div class="confirmation-buttons">
+            <button id="description-close" onclick="closeDescription()">Close</button>
+        </div>
+    </div>
+</div>
 
-    .confirmation-buttons {
-        margin-top: 20px;
-    }
 
-    .confirmation-buttons button {
-        padding: 10px 20px;
-        margin: 0 10px;
-        cursor: pointer;
-    }
-</style>
 
 @section Scripts {
     <script>
@@ -101,6 +141,16 @@
                     document.getElementById("qa-content").innerHTML = html;
                 });
         });
+
+        function showDescription() {
+            console.log("Show Description");
+            document.getElementbyId('descriptionDialog').style.display = 'block';
+        }
+
+        function closeDescription() {
+            console.log("Close Description");
+            document.getElementById('descriptionDialog').style.display = 'none';
+        }
 
         function openConfirmationDialog(event) {
             event.preventDefault(); // Prevent default behavior
