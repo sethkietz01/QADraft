@@ -9,6 +9,18 @@
         padding-bottom: 1px;
         border-bottom: 1px solid #fff;
     }
+
+    .edit-user-btn {
+        color: #fff;
+        background-color: #861F41;
+        border-color: #861F41;
+    }
+
+        .edit-user-btn:hover {
+            background-color: #b31f4f;
+            border-color: #E6A65D;
+        }
+
 </style>
 
 <partial name="_GeeksMenu" />
@@ -38,7 +50,7 @@
                 <td>@qa.Role</td>
                 <td>@qa.CreatedAt.ToString("yyyy-MM-dd")</td>
                 <td>
-                    <a class="btn btn-info" asp-area="" asp-controller="Home" asp-action="EditUser" asp-route-Id="@qa.Id">Edit</a>
+                    <a class="btn edit-user-btn" asp-area="" asp-controller="User" asp-action="EditUser" asp-route-Id="@qa.Id">Edit</a>
                 </td>
             </tr>
         }
