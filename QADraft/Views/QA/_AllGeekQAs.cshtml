@@ -7,17 +7,6 @@
 }
 
 <style>
-    .action-btn {
-        color: #fff;
-        background-color: #861F41;
-        border-color: #861F41;
-    }
-
-        .action-btn:hover {
-            background-color: #b31f4f;
-            border-color: #E6A65D;
-        }
-
     .confirmation-dialog {
         display: none;
         position: fixed;
@@ -96,12 +85,12 @@
 
                         <input type="hidden" name="qaId" value="@qa.Id" />
                         <div class="form-group">
-                            <button id="descriptionButton" type="button" class="btn action-btn" onclick="showDescription()"> <img id="description-icon" src="~/images/descriptionIconWhite.png"> </button>
+                            <button id="descriptionButton" type="button" class="btn buttons" onclick="showDescription()"> <img id="description-icon" src="~/images/descriptionIconWhite.png"> </button>
 
-                            <input id="updateButton" type="submit" name="action" value="Update" class="btn btn-primary action-btn" />
-                            <input id="deleteButton" type="submit" name="action" value="Delete QA" class="btn action-btn" hidden/>
+                            <input id="updateButton" type="submit" name="action" value="Update" class="btn buttons" />
+                            <input id="deleteButton" type="submit" name="action" value="Delete QA" class="btn buttons" hidden/>
 
-                            <button id="deleteButton" onclick="openConfirmationDialog(event)" class="btn action-btn">Delete</button>
+                            <button id="deleteButton" onclick="openConfirmationDialog(event)" class="btn buttons">Delete</button>
                         </div>
                         <p id="qaDescription" hidden>@qa.Description</p>
                     </form>
