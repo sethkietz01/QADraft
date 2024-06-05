@@ -316,6 +316,9 @@ namespace QADraft.Controllers
 
         public bool IsAuthenticated()
         {
+            //REMOVE - USED TO BYPASS LOGIN FOR TESTING
+            return true;
+
             return HttpContext.Session.GetString("IsAuthenticated") == "true";
         }
 
