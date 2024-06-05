@@ -96,7 +96,7 @@
 
                         <input type="hidden" name="qaId" value="@qa.Id" />
                         <div class="form-group">
-                            <button id="descriptionButton" class="btn action-btn" onclick="showDescription(event)"> <img id="description-icon" src="~/images/descriptionIconWhite.png"> </button>
+                            <button id="descriptionButton" type="button" class="btn action-btn" onclick="showDescription()"> <img id="description-icon" src="~/images/descriptionIconWhite.png"> </button>
 
                             <input id="updateButton" type="submit" name="action" value="Update" class="btn btn-primary action-btn" />
                             <input id="deleteButton" type="submit" name="action" value="Delete QA" class="btn action-btn" hidden/>
@@ -147,19 +147,8 @@
                 });
         });
 
-        function showDescription(event) {
-            event.preventDefault(); // Prevent default behavior
-
-            // Show the confirmation dialog
-            console.log("openconfirm");
-
-            // get the description
-            var parentForm = $(event.target).closest('form');
-
-            var description = parentForm.find('#qaDescription').text();
-            $('#description-text').text(description);
-            console.log( parentForm.find('#qaDescription').text() );
-
+        function showDescription() {
+            console.log("Show Description");
             document.getElementById('descriptionDialog').style.display = 'block';
         }
 
