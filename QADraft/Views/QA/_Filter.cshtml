@@ -128,11 +128,11 @@
                         <form method="post" asp-controller="QA" asp-action="ManageQA">
                             <input type="hidden" name="qaId" value="@qa.Id" />
                             <div class="form-group">
-                                <input type="submit" name="action" value="Update" class="btn btn-primary" />
-                                <input type="submit" name="action" value="Delete QA" class="btn btn-danger" hidden />
+                                <input type="submit" name="action" value="Update" class="btn buttons" />
+                                <input type="submit" name="action" value="Delete QA" class="btn buttons" hidden />
                                 <input type="hidden" name="source" value="Filter" />
 
-                                <button id="deleteButton" onclick="openConfirmationDialog(event)" class="btn btn-danger">Delete</button>
+                                <button id="deleteButton" onclick="openConfirmationDialog(event)" class="btn buttons">Delete</button>
                             </div>
                         </form>
                     </td>
