@@ -11,6 +11,12 @@ namespace QADraft.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Role { get; set; } // e.g., coordinator, geek
+        public bool isFlagged { get; set; }
+        public bool isActive { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime startDate { get; set;}
+        public DateTime endDate { get; set;}
+
+
     }
 }
