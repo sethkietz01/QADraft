@@ -12,6 +12,7 @@ namespace QADraft.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<GeekQA> GeekQAs { get; set; }
+        public DbSet<Events> Events { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
