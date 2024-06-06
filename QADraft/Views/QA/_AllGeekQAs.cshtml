@@ -147,6 +147,7 @@
         });
 
         function showDescription() {
+            event.preventDefault(); // Prevent default behavior
             console.log("Show Description");
             document.getElementbyId('descriptionDialog').style.display = 'block';
         }

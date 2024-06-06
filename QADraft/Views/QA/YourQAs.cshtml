@@ -1,0 +1,141 @@
+﻿@model List<QADraft.Models.GeekQA>
+
+@{
+    ViewData["Title"] = "Your QAs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<style>
+    .action-btn {
+        color: #fff;
+        background-color: #861F41;
+        border-color: #861F41;
+    }
+
+        .action-btn:hover {
+            background-color: #b31f4f;
+            border-color: #E6A65D;
+        }
+
+    .confirmation-dialog {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #d9f0ff;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 300px;
+    }
+
+    .confirmation-content {
+        text-align: center;
+    }
+
+    .confirmation-buttons {
+        margin-top: 20px;
+    }
+
+    .confirmation-buttons button {
+        padding: 10px 20px;
+        margin: 0 10px;
+        cursor: pointer;
+    }
+
+    #descriptionButton {
+
+        padding: 5px 8px;
+    }
+
+    #description-icon {
+        width: 22px;
+        height: 22px;
+    }
+
+    /* Underlines the current page's link in the nav bar */
+    #qa-menu-link {
+        padding-bottom: 1px;
+        border-bottom: 1px solid #fff;
+    }
+
+</style>
+
+
+<partial name="_ReportsMenu" />
+<h2>Your QAs</h2>
+
+<!-- Table used to output QAs -->
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Committed By</th>
+            <th>Found By</th>
+            <th>Category</th>
+            <th>Nature</th>
+            <th>Severity</th>
+            <th>Date</th>
+            <th>Actions</th> 
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Populate the table with all QAs form the database -->
+        @foreach (var qa in Model)
+        {
+            <tr>
+                <td>@qa.CommittedBy?.FirstName @qa.CommittedBy?.LastName</td>
+                <td>@qa.FoundBy?.FirstName @qa.FoundBy?.LastName</td>
+                <td>@qa.CategoryOfError</td>
+                <td>@qa.NatureOfError</td>
+                <td>@qa.Severity</td>
+                <td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <form>
+                        <button id="descriptionButton" class="btn action-btn" onclick="showDescription(event)"> <img id="description-icon" src="~/images/descriptionIconWhite.png"> </button>
+                        <p id="qaDescription" hidden>@qa.Description</p>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<!-- Configure delete QA confirmation popup -->
+<div id="descriptionDialog" class="confirmation-dialog">
+    <div class="confirmation-content">
+        <h>QA Description</h>
+        <p id="description-text"></p>
+        <div class="confirmation-buttons">
+            <button class="btn btn-primary" onclick="closeDescription()">Close</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function showDescription(event) {
+        event.preventDefault(); // Prevent default behavior
+
+        // Show the confirmation dialog
+        console.log("openconfirm");
+
+        // get the description
+        var parentForm = $(event.target).closest('form');
+
+        var description = parentForm.find('#qaDescription').text();
+        $('#description-text').text(description);
+        console.log( parentForm.find('#qaDescription').text() );
+
+        document.getElementById('descriptionDialog').style.display = 'block';
+    }
+
+    function closeDescription() {
+        console.log("Close Description");
+        document.getElementById('descriptionDialog').style.display = 'none';
+    }
+
+</script>

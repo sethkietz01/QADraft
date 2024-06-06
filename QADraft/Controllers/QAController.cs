@@ -141,6 +141,20 @@ namespace QADraft.Controllers
 
 
 
+        [HttpGet]
+        public IActionResult YourQAs()
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+            var id = GetId();
+            var user = _context.Users.SingleOrDefault(u => u.Id == id);
+            var qa = _context.GeekQAs.Where(q => q.CommittedById == user.Id).Include(q => q.FoundBy).ToList();
+
+            return View(qa);
+        }
+
 
 
         [HttpGet]
@@ -338,5 +352,13 @@ namespace QADraft.Controllers
         {
             return HttpContext.Session.GetString("IsAuthenticated") == "true";
         }
+
+        public int? GetId()
+        {
+            return HttpContext.Session.GetInt32("Id");
+        }
+
+
+
     }
 }
