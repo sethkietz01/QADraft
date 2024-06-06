@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - QADraft</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/QADraft.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap">
+    <style>
+        .navbar {
+            background-color: #861F41;
+            padding: 10px;
+            vertical-align: middle;
+            border-bottom: 3px solid rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        .nav-item {
+            font-family: 'Barlow', sans-serif;
+            font-weight: 100;
+            text-align: center;
+            padding-top: 10px;
+        }
+
+        .navbar-brand, .nav-link {
+            color: #ffffff !important;
+            margin-right: 20px;
+        }
+
+        .footer {
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            height: 60px;
+        }
+
+        .footer a {
+            color: #343a40;
+        }
+
+        .role-view {
+            text-align: left;
+            margin-left: 50px;
+            justify-content: flex-start;
+            flex-grow: 1;
+        }
+        
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }   
+
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .dropdown input[type="checkbox"] {
+            display: none;
+        }
+
+        .dropdown .for-dropdown {
+            cursor: pointer;
+            padding: 5px;
+            display: inline-block;
+        }
+
+        .settings-dropdown {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            right: 0;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .dropdown input[type="checkbox"]:checked ~ .settings-dropdown {
+            display: block;
+        }
+
+        .settings-dropdown a {
+            display: block;
+            padding: 5px 0;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .settings-dropdown a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .user-name{
+            color: white;
+            font-family: 'Barlow';
+            font-size: 18px;
+            margin-left: 10px;
+        }
+
+        header {
+            margin-bottom: 20px;
+        }
+
+        #settings-icon {
+            max-height: 20px;
+            max-width: 20px;
+        }
+
+    </style>
+</head>
+    <link rel="icon" type="image/x-icon" href="~/images/whiteIcon.ico" />
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logoWhite.png" alt="Geeks Logo" style="max-width: 100px; max-height: 50px;">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                @{
+                    string? isAuthenticated = Context.Session.GetString("IsAuthenticated");
+                    string? firstName = Context.Session.GetString("FirstName");
+                    string? lastName = Context.Session.GetString("LastName");
+ 
+                    string name = lastName + ", " + firstName;
+                }
+                @if (isAuthenticated == "true")
+                {   
+                    <label class="user-name nav-item">@name</label>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a id="qa-menu-link" class="nav-link" asp-area="" asp-controller="QA" asp-action="YourQAs">Reports</a>
+                            </li>
+                            <li class="nav-item">
+                                <div class="dropdown">
+                                    <input type="checkbox" id="dropdown" name="dropdown" class="dropdown">
+                                    <label class="for-dropdown" for="dropdown">
+                                        <img id="settings-icon" src="~/images/settings.png" alt="Settings">
+                                    </label>
+                                    <div class="settings-dropdown">
+                                        <a asp-area="" asp-controller="User" asp-action="UserInfo">Account Info</a>
+                                        <a asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                }
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <footer class="footer text-muted border-top" style="padding: 0px; text-align: center;">
+        <div class="role-view">
+            @if (isAuthenticated == "true")
+            {
+                var userRole = Context.Session.GetString("Role");
+                @userRole @(" View")
+            }
+        </div>
+        <div class="watermark">
+            EKU IT Geeks QA
+        </div>
+        <div class="whitespace">
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

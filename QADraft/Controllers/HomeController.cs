@@ -30,6 +30,9 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
+
+            ViewBag.Layout = GetLayout();
+
             return View();
         }
 
@@ -42,6 +45,8 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Index");
             }
+            ViewBag.Layout = GetLayout();
+
             return View();
         }
 
@@ -77,6 +82,7 @@ namespace QADraft.Controllers
                 Debug.WriteLine("User not found");
             }
 
+            ViewBag.Layout = GetLayout();
             return View();
         }
 
@@ -89,6 +95,13 @@ namespace QADraft.Controllers
             return RedirectToAction("Login");
         }
 
+        [HttpGet]
+        public IActionResult PermissionsDenied()
+        {
+            return View();
+        }
+
+
         public bool IsAuthenticated()
         {
             return HttpContext.Session.GetString("IsAuthenticated") == "true";
@@ -98,5 +111,21 @@ namespace QADraft.Controllers
         {
             return HttpContext.Session.GetInt32("Id");
         }
+
+        public string GetRole()
+        {
+            return HttpContext.Session.GetString("Role");
+        }
+
+        public string GetLayout()
+        {
+            string role = HttpContext.Session.GetString("Role");
+            if (role == "Geek")
+                return "~/Views/Shared/_LayoutGeek.cshtml";
+
+            else
+                return "~/Views/Shared/_Layout.cshtml";
+        }
+
     }
 }
