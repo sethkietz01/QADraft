@@ -7,6 +7,18 @@
 }
 
 <style>
+    .filter-options-button {
+        color: #fff;
+        background-color: #861F41;
+        border-color: #861F41;
+    }
+        
+        .filter-options-button:hover {
+            color: #fff;
+            background-color: #b31f4f;
+            border-color: #E6A65D;
+        }
+
     #table
     {
         margin-bottom: 55px;
@@ -101,8 +113,8 @@
             </select>
         </div>
         <div class="button-group">
-            <button type="submit" class="btn menu-button">Apply Filters</button>
-            <button type="button" class="btn menu-button" onclick="resetFilters()">Reset Filters</button>
+            <button type="submit" class="btn filter-options-button">Apply Filters</button>
+            <button type="button" class="btn filter-options-button" onclick="resetFilters()">Reset Filters</button>
         </div>
     </form>
 </div>
@@ -135,11 +147,11 @@
                         <form method="post" asp-controller="QA" asp-action="ManageQA">
                             <input type="hidden" name="qaId" value="@qa.Id" />
                             <div class="form-group">
-                                <input type="submit" name="action" value="Update" class="btn btn-primary" />
-                                <input type="submit" name="action" value="Delete QA" class="btn btn-danger" hidden />
+                                <input type="submit" name="action" value="Update" class="btn filter-options-button" />
+                                <input type="submit" name="action" value="Delete QA" class="btn filter-options-button" hidden />
                                 <input type="hidden" name="source" value="Filter" />
 
-                                <button id="deleteButton" onclick="openConfirmationDialog(event)" class="btn btn-danger">Delete</button>
+                                <button id="deleteButton" onclick="openConfirmationDialog(event)" class="btn filter-options-button">Delete</button>
                             </div>
                         </form>
                     </td>
