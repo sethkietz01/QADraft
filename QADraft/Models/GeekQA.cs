@@ -44,6 +44,7 @@ namespace QADraft.Models
         public string Description { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public string? SubmittedBy { get; set; } 
 
         [NotMapped]
         public List<SelectListItem>? Users { get; set; }
