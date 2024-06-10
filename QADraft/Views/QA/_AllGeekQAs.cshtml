@@ -83,7 +83,7 @@
     </thead>
     <tbody>
         <!-- Populate the table with all QAs form the database -->
-        @foreach (var qa in Model)
+        @foreach (var qa in Model.OrderByDescending(q => q.ErrorDate))
         {
             <tr>
                 <td>@qa.CommittedBy?.FirstName @qa.CommittedBy?.LastName</td>
@@ -97,7 +97,7 @@
 
                         <input type="hidden" name="qaId" value="@qa.Id" />
                         <div class="form-group">
-                            <button id="descriptionButton" type="button" class="btn buttons" onclick="showDescription()"> <img id="description-icon" src="~/images/descriptionIconWhite.png"> </button>
+                            <button id="descriptionButton" type="button" class="btn buttons" onclick="showDescription(event)"> <img id="description-icon" src="~/images/descriptionIconWhite.png"> </button>
 
                             <input id="updateButton" type="submit" name="action" value="Update" class="btn buttons" />
                             <input id="deleteButton" type="submit" name="action" value="Delete QA" class="btn buttons" hidden/>

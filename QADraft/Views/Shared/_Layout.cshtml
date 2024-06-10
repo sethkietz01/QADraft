@@ -130,6 +130,21 @@
             max-width: 20px;
         }
 
+        /* Styles for all labels across the website */
+        .control-label {
+            margin-top: 20px;
+        }
+
+        /* Styles for all h2 elements across the website */
+        <h2> {
+            font-family: 'Barlow', sans-serif;
+        }
+
+        /* Styles for all buttons at the end of forms across the website */
+        .form-buttons
+        {
+            margin-top: 10px;
+        }
         
     </style>
 </head>
@@ -165,6 +180,9 @@
                             </li>
                             <li class="nav-item">
                                 <a id="qa-menu-link" class="nav-link" asp-area="" asp-controller="QA" asp-action="YourQAs">Reports</a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="outages-link" class="nav-link" asp-area="" asp-controller="Home" asp-action="Outages">Outages</a>
                             </li>
                             <li class="nav-item">
                                 <div class="dropdown">

@@ -83,7 +83,7 @@
     </thead>
     <tbody>
         <!-- Populate the table with all QAs form the database -->
-        @foreach (var qa in Model)
+        @foreach (var qa in Model.OrderByDescending(q => q.ErrorDate))
         {
             <tr>
                 <td>@qa.CommittedBy?.FirstName @qa.CommittedBy?.LastName</td>
