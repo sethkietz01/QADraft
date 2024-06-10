@@ -5,7 +5,7 @@
 
 }
 
-<h2>Settings</h2>
+<h2>Account Info</h2>
 <p>View your User Information.</p>
 
 <!-- From to get details on the updated user information -->
@@ -37,13 +37,6 @@
     <span asp-validation-for="Role" class="text-danger"></span>
 </div>
 
-<form class="close" asp-action="Index" method="get">
-    <input type="submit" name="action" value="Close" class="btn buttons" />
+<form class="close" asp-controller="Home" asp-action="Index" method="get">
+    <input type="submit" name="action" value="Close" class="btn buttons form-buttons" />
 </form>
-
-<style>
-    .close
-    {
-        margin-top: 10px;
-    }
-</style>
