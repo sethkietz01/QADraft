@@ -14,8 +14,10 @@ namespace QADraft.Models
         public bool isFlagged { get; set; }
         public bool isActive { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime? LastLogin { get; set; }
         public DateTime startDate { get; set;}
         public DateTime endDate { get; set;}
+
 
 
     }

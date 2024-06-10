@@ -12,8 +12,8 @@ using QADraft.Data;
 namespace QADraft.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240610132551_newColumn")]
-    partial class newColumn
+    [Migration("20240610133628_newColumns")]
+    partial class newColumns
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
