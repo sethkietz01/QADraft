@@ -15,7 +15,7 @@ namespace QADraft.Services
             _context = context;
         }
 
-        public List<GeekQA> GetFilteredQAs(DateTime? startDate, DateTime? endDate, string category = null)
+        public List<GeekQA> GetFilteredQAs(DateTime? startDate, DateTime? endDate, string category)
         {
             var query = _context.GeekQAs.AsQueryable();
 

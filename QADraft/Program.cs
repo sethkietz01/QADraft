@@ -1,15 +1,8 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using QADraft.Data;
+using QADraft.Services;
 using QADraft.Utilities;
-using System;
-using System.Linq;
-using System.IO;
-using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +18,7 @@ builder.Configuration
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<GeekQAService>();
 
 // Configure Entity Framework to use SQL Server with connection string from appsettings.json
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -85,11 +79,6 @@ app.UseRouting();
 app.UseSession();
 
 app.UseAuthorization();
-
-app.MapControllerRoute(
-    name: "test",
-    pattern: "test",
-    defaults: new { controller = "Test", action = "Index" });
 
 app.MapControllerRoute(
     name: "default",

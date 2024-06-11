@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "QA Charts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>QA Charts</h2>
+
+<div>
+    <canvas id="qaChart" width="400" height="200"></canvas>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/api/chart?startDate=2022-01-01&endDate=2022-12-31&category=Critical')
+                .then(response => response.json())
+                .then(data => {
+                    const labels = data.map(item => item.errorDate.split('T')[0]);
+                    const severityData = data.map(item => item.severity);
+
+                    const ctx = document.getElementById('qaChart').getContext('2d');
+                    const qaChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'QA Errors',
+                                data: severityData,
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                });
+        });
+    </script>
+}

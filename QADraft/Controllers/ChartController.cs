@@ -17,8 +17,18 @@ namespace QADraft.Controllers
             _geekQAService = geekQAService;
         }
 
+        public IActionResult Charts()
+        {
+            return View();
+        }
+
+        private IActionResult View()
+        {
+            throw new NotImplementedException();
+        }
+
         [HttpGet]
-        public IActionResult GetFilteredQAs([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate, [FromQuery] string category)
+        public IActionResult GetFilteredQAs([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate, [FromQuery] string category = null)
         {
             var data = _geekQAService.GetFilteredQAs(startDate, endDate, category);
             return Ok(data);

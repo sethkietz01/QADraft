@@ -55,7 +55,6 @@
             transform: translate(-50%, -50%);
         }   
 
-
         .container {
             margin-top: 20px;
         }
@@ -143,8 +142,7 @@
         }
 
         /* Styles for all buttons at the end of forms across the website */
-        .form-buttons
-        {
+        .form-buttons {
             margin-top: 10px;
         }
         
@@ -187,6 +185,10 @@
                                 <a id="outages-link" class="nav-link" asp-area="" asp-controller="Home" asp-action="Outages">Outages</a>
                             </li>
                             <li class="nav-item">
+                                <a id="Chart" class="nav-link" asp-area="" asp-controller="Chart" asp-action="Charts">Charts</a>
+                            </li>
+
+                            <li class="nav-item">
                                 <div class="dropdown">
                                     <input type="checkbox" id="dropdown" name="dropdown" class="dropdown">
                                     <label class="for-dropdown" for="dropdown">
@@ -223,6 +225,7 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
