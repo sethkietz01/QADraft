@@ -69,10 +69,13 @@
 <h2>All QAs</h2>
 
 <!-- Table used to output QAs -->
-<table class="table table-striped">
+<table class="table table-striped" id="QATable">
     <thead>
-        <tr>
-            <th>Committed By</th>
+        <tr id="TD">
+            <th>
+                <a href="#" onclick="sortTable('Committed By')">Committed By</a>
+            </th>
+            <th onclick="sortTable(0)">Committed By</th>
             <th>Found By</th>
             <th>Category</th>
             <th>Nature</th>
@@ -180,6 +183,46 @@
             closeConfirmationDialog();
             return false;
         }
+
+
+        //table sorting
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("QATable");
+            switching = true;
+            
+            //default sort direction to ascending
+            dir = "asc"; 
+
+            while (switching){
+                //assume that table is sorted already
+                switching  = false;
+                rows = table.rows;
+
+                //loop through rows
+                for (i = 1; i < (rows.length - 1); i++) {
+                    //assume sorted
+                    shouldSwitch = false;
+
+                    x = rows[i].getElementsByTagName("TD")[0];
+                    y = rows[i+1].getElementsByTagName("TD")[0]
+
+
+                    //check if they should swap
+                    if (x.innerHTML.toLowerCase() > Y.innerHTML.toLowerCase() ){
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i+1], rows[i])
+                    switching = true;
+                }
+            }
+
+        }
+
     </script>
 }
 
