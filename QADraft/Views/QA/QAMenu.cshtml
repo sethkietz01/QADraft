@@ -4,31 +4,15 @@
     string initialContent = ViewBag.InitialContent as string;
 }
 
-<style>
-    .test {
-        color: #fff;
-        background-color: #861F41;
-        border-color: #861F41;
-    }
-        
-        .test:hover {
-            color: #fff;
-            background-color: #b31f4f;
-            border-color: #E6A65D;
-        }
 
-    #nav-buttons {
-        margin-bottom: 50px;
-    }
-</style>
 
 <h2>QA Menu</h2>
 <div class="btn-group" role="group" aria-label="Detailed QA Reports Options">
-    <a class="btn test" asp-area="" asp-controller="QA" asp-action="QAMenu" asp-route-button="0">Filter</a>
-    <a class="btn test" asp-area="" asp-controller="QA" asp-action="QAMenu" asp-route-button="1">Between Dates</a>
-    <a class="btn test" asp-area="" asp-controller="QA" asp-action="QAMenu" asp-route-button="2">All Geek QAs</a>
-    <a class="btn test" asp-area="" asp-controller="QA" asp-action="QAMenu" asp-route-button="3">View All Flagged Accounts</a>
-    <a class="btn test" asp-area="" asp-controller="QA" asp-action="QAMenu" asp-route-button="4">QA Descriptions</a>
+    <a class="btn buttons" asp-area="" asp-controller="QA" asp-action="QAMenu" asp-route-button="0">Filter</a>
+    <a class="btn buttons" asp-area="" asp-controller="QA" asp-action="QAMenu" asp-route-button="1">Between Dates</a>
+    <a class="btn buttons" asp-area="" asp-controller="QA" asp-action="QAMenu" asp-route-button="2">All Geek QAs</a>
+    <a class="btn buttons" asp-area="" asp-controller="QA" asp-action="QAMenu" asp-route-button="3">View All Flagged Accounts</a>
+    <a class="btn buttons" asp-area="" asp-controller="QA" asp-action="QAMenu" asp-route-button="4">QA Descriptions</a>
 </div>
 
 <div id="qa-content">

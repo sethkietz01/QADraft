@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Login";
+    Layout = ViewBag.Layout;
 }
 
 <style>
@@ -11,6 +12,7 @@
         margin: 0 auto;
         text-align: center
     }
+        
 
     /* Styles for the login container */
     .container {
@@ -22,13 +24,6 @@
     /* Styles for input forms (username and password) */
     .form-group {
         margin-bottom: 20px;
-    }
-
-    /* Styles for login button */
-    .btn-primary {
-        background-color: #861F41; 
-        border-color: #861F41; 
-        margin-bottom: 10px;
     }
 </style>
 
@@ -44,7 +39,7 @@
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Login</button>
+            <button type="submit" class="btn buttons">Login</button>
         </form>
     </div>
 </div>

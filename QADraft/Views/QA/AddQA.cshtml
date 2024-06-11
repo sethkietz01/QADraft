@@ -4,23 +4,7 @@
     ViewData["Title"] = "Add QA";
 }
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap">
 <style>
-    /* Reset default margins and padding for all elements */
-    * {
-        margin: 0;
-        padding: 0;
-    }
-
-    <h2> {
-        font-family: 'Barlow', sans-serif;
-    }
-
-    /* Styles for the input box labels */
-    .control-label {
-        margin-top: 20px;
-    }
-
     /* Underlines the current page's link in the nav bar */
     #add-qa-link {
         padding-bottom: 1px;
@@ -54,12 +38,6 @@
         text-align: center;
     }
 
-    .add-qa-button
-    {
-        margin-top: 10px;
-
-    }
-
     .confirmation-buttons {
         margin-top: 20px;
     }
@@ -69,6 +47,17 @@
         margin: 0 10px;
         cursor: pointer;
     }
+
+    .add-qa-button{
+        color: #fff;
+        background-color: #861F41;
+        border-color: #861F41;
+    }
+        .add-qa-button:hover{
+            color: #fff;
+            background-color: #b31f4f;
+            border-color: #E6A65D
+        }
 </style>
 
 <h2>Add QA</h2>
@@ -142,7 +131,7 @@
 </form>
 
 <div>
-    <button onclick="openConfirmation()" class="btn buttons add-qa-button">Add QA</button>
+    <button onclick="openConfirmation()" class="btn buttons form-buttons">Add QA</button>
 </div>
 
 

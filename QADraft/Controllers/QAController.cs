@@ -62,6 +62,15 @@ namespace QADraft.Controllers
                 {
                     _context.GeekQAs.Add(model);
                     _context.SaveChanges();
+
+                    //Get user and flag if QA severity is 10
+                    var user = _context.Users.FirstOrDefault(u => u.Id == model.CommittedById);
+                    if (user != null)
+                    {
+                        AutomaticFlag(user, model);
+                    }
+
+
                     return RedirectToAction("AddQA");
                 }
                 catch (Exception ex)
@@ -82,6 +91,18 @@ namespace QADraft.Controllers
         }
 
 
+        /*
+         *      UTIL FLAG FUNCTION
+         */ 
+        public void AutomaticFlag(User user, GeekQA model)
+        {
+            if (model.Severity == 10)
+            {
+                user.isFlagged = true;
+                _context.SaveChanges();
+            }
+
+        }
 
 
         [HttpGet]

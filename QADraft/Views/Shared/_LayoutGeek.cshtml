@@ -25,7 +25,7 @@
         }
 
         .navbar-brand, .nav-link {
-            color: #fff !important;
+            color: #ffffff !important;
             margin-right: 20px;
         }
 
@@ -36,9 +36,10 @@
             align-items: center;
             flex-grow: 1;
             height: 60px;
-            position: fixed !important;
-            bottom: 0;
-            width: 100%;
+        }
+
+        .footer a {
+            color: #343a40;
         }
 
         .role-view {
@@ -106,30 +107,8 @@
             margin-left: 10px;
         }
 
-        /* Styles for all buttons across the website */
-        .buttons {
-            color: #fff;
-            background-color: #861F41;
-            border-color: #861F41;
-        }
-        
-            .buttons:hover {
-                color: #fff;
-                background-color: #b31f4f;
-                border-color: #E6A65D;
-                box-shadow: 0 0 5px rgba(230, 168, 93, 0.7);
-            }
-            .buttons:active {
-                transform: translateY(1px) translateX(1px);
-            }
-        }
-
         header {
             margin-bottom: 20px;
-        }
-
-        body {
-            background-color: #f5f5f5;
         }
 
         #settings-icon {
@@ -137,17 +116,6 @@
             max-width: 20px;
         }
 
-        /* Styles for all labels across the website */
-        .control-label {
-            margin-top: 20px;
-        }
-
-        /* Styles for all buttons at the end of forms across the website */
-        .form-buttons
-        {
-            margin-top: 10px;
-        }
-        
     </style>
 </head>
     <link rel="icon" type="image/x-icon" href="~/images/whiteIcon.ico" />
@@ -175,16 +143,7 @@
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-auto">
                             <li class="nav-item">
-                                <a id="add-qa-link" class="nav-link" asp-area="" asp-controller="QA" asp-action="AddQA">Add QA</a>
-                            </li>
-                            <li class="nav-item">
-                                <a id="user-options-link" class="nav-link" asp-area="" asp-controller="User" asp-action="GeekAccounts">Geek Accounts</a>
-                            </li>
-                            <li class="nav-item">
                                 <a id="qa-menu-link" class="nav-link" asp-area="" asp-controller="QA" asp-action="YourQAs">Reports</a>
-                            </li>
-                            <li class="nav-item">
-                                <a id="outages-link" class="nav-link" asp-area="" asp-controller="Home" asp-action="Outages">Outages</a>
                             </li>
                             <li class="nav-item">
                                 <div class="dropdown">
@@ -219,6 +178,8 @@
         </div>
         <div class="watermark">
             EKU IT Geeks QA
+        </div>
+        <div class="whitespace">
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

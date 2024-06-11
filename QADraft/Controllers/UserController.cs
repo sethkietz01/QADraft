@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.Design;
 
 namespace QADraft.Controllers
 {
@@ -36,6 +37,7 @@ namespace QADraft.Controllers
 
             var qas = _context.Users
                 .ToList();
+            
             return View(qas);
         }
 
@@ -48,6 +50,15 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
+
+            /*
+            if (!CheckPermissions("Admin") )
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+            */
+
+            ViewBag.layout = GetLayout();
             return View();
         }
 
@@ -150,5 +161,49 @@ namespace QADraft.Controllers
         {
             return HttpContext.Session.GetInt32("Id");
         }
+
+        public bool CheckPermissions(string clearance)
+        {
+            string userRole = HttpContext.Session.GetString("Role");
+            Debug.WriteLine(userRole);
+            Debug.WriteLine(userRole == clearance);
+
+            if (clearance == "Geek")
+            {
+                if (userRole == "Geek" || userRole == "Coordinator" || userRole == "Admin")
+                {
+                    return true;
+                }
+            }
+            else if (clearance == "Coordinator")
+            {
+                if (userRole == "Coordinator" || userRole == "Admin")
+                {
+                    return true;
+                }
+            }
+            else if (clearance == "Admin")
+            {
+                if (userRole == "Admin")
+                {
+                    return true;
+                }
+            }
+                
+            return false;
+        }
+
+
+        public string GetLayout()
+        {
+            string role = HttpContext.Session.GetString("role");
+            if (role == "Geek")
+                return "~/Views/Shared/_LayoutGeek.cshtml";
+
+            else
+                return "~/Views/Shared/_Layout.cshtml";
+        }
+
+
     }
 }

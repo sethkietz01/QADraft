@@ -6,6 +6,18 @@
 }
 
 <style>
+    .action-btn {
+        color: #fff;
+        background-color: #861F41;
+        border-color: #861F41;
+    }
+
+        .action-btn:hover {
+            color: #fff;
+            background-color: #b31f4f;
+            border-color: #E6A65D;
+        }
+
     .confirmation-dialog {
         display: none;
         position: fixed;
@@ -48,19 +60,6 @@
         padding-bottom: 1px;
         border-bottom: 1px solid #fff;
     }
-
-    .bar {
-        fill: steelblue;
-    }
-
-    .bar:hover {
-        fill: orange;
-    }
-
-    .axis-label {
-        font-size: 12px;
-        font-weight: bold;
-    }
 </style>
 
 <partial name="_ReportsMenu" />
@@ -96,7 +95,8 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var qa in Model)
+        <!-- Populate the table with all QAs form the database -->
+        @foreach (var qa in Model.OrderByDescending(q => q.ErrorDate))
         {
             <tr>
                 <td>@qa.CommittedBy?.FirstName @qa.CommittedBy?.LastName</td>
@@ -109,7 +109,8 @@
                     <form method="post" asp-controller="QA" asp-action="ManageQA">
                         <input type="hidden" name="qaId" value="@qa.Id" />
                         <div class="form-group">
-                            <button id="descriptionButton" type="button" class="btn buttons" onclick="showDescription()"> <img id="description-icon" src="~/images/descriptionIconWhite.png"> </button>
+                            <button id="descriptionButton" type="button" class="btn buttons" onclick="showDescription(event)"> <img id="description-icon" src="~/images/descriptionIconWhite.png"> </button>
+
                             <input id="updateButton" type="submit" name="action" value="Update" class="btn buttons" />
                             <input id="deleteButton" type="submit" name="action" value="Delete QA" class="btn buttons" hidden/>
                             <button id="deleteButton" onclick="openConfirmationDialog(event)" class="btn buttons">Delete</button>
