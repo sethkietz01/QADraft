@@ -82,12 +82,18 @@
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
     <div class="form-group">
+        <label asp-for="isActive" class="control-label">Currently Employed</label>
+        <input type="checkbox" asp-for="isActive" />
+        <span asp-validation-for="isActive" class="text-danger"></span>
+    </div>
+    <div class="form-group">
         <label asp-for="Role" class="control-label">Role</label>
         <select asp-for="Role" class="form-control" id="natureSelect">
             <option value="">Select Role</option>
             <option value="Geek">Geek</option>
             <option value="Coordinator">Coordinator</option>
             <option value="Admin">Admin</option>
+            <option value="PreviouslyEmployed">Previously Employed</option>
         </select>
         <span asp-validation-for="Role" class="text-danger"></span>
     </div>
@@ -131,28 +137,36 @@
         function confirmEdit() {
             closeConfirmation();
             password = document.getElementById("password-field").value.trim();
-            if (password.value == "")
-                password.value = "-";
+            console.log("'");
+            console.log(password);
+            console.log("'");
 
-             if (password.length < 8) {
-                alert("Password must be at least 8 characters long.");
-                return false;
-            } else if (!/[A-Z]/.test(password))
-            {
-                alert("Password must contain at least one uppercase letter.");
-                return false;   
-            } else if (!/[^A-Za-z0-9]/.test(password)) {
-                alert("Password must contain at least one special character.");
-                return false;
-            } else if (!/\d/.test(password)) {
-                alert("Password must contain at least one numeric character.");
-                return false;
-            } else {
-                closeConfirmation();
-                // If password meets criteria, proceed with form submission
-                document.querySelector('input[type="submit"][value="Edit User"]').click();
-                return true;
+            if (password == "") {
+                document.getElementById("password-field").value = "-";
             }
+            else {
+                if (password.length < 8) {
+                    alert("Password must be at least 8 characters long.");
+                    return false;
+                } else if (!/[A-Z]/.test(password))
+                {
+                    alert("Password must contain at least one uppercase letter.");
+                    return false;   
+                } else if (!/[^A-Za-z0-9]/.test(password)) {
+                    alert("Password must contain at least one special character.");
+                    return false;
+                } else if (!/\d/.test(password)) {
+                    alert("Password must contain at least one numeric character.");
+                    return false;
+                } else {
+                    closeConfirmation();
+                    // If password meets criteria, proceed with form submission
+                    document.querySelector('input[type="submit"][value="Edit User"]').click();
+                    return true;
+                }
+            }
+
+            
 
             console.log(password.value);
             document.querySelector('input[type="submit"][value="Edit User"]').click();

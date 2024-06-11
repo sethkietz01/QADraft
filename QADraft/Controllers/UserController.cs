@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.Design;
+using Microsoft.AspNetCore.Identity;
 
 namespace QADraft.Controllers
 {
@@ -68,15 +69,13 @@ namespace QADraft.Controllers
             if (ModelState.IsValid)
             {
                 user.Password = PasswordHasher.HashPassword(user.Password);
+
                 _context.Users.Add(user);
                 _context.SaveChanges();
                 return RedirectToAction("GeekAccounts");
             }
             return View(user);
         }
-
-
-
 
 
         [HttpGet]
@@ -118,6 +117,7 @@ namespace QADraft.Controllers
                     existingUser.FirstName = user.FirstName;
                     existingUser.LastName = user.LastName;
                     existingUser.Email = user.Email;
+                    existingUser.isActive = user.isActive;
                     existingUser.Role = user.Role;
                     _context.SaveChanges();
                 }
