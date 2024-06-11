@@ -1,8 +1,8 @@
-﻿using System;
+﻿using QADraft.Data;
+using QADraft.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using QADraft.Data;
-using QADraft.Models;
 
 namespace QADraft.Services
 {
@@ -15,7 +15,7 @@ namespace QADraft.Services
             _context = context;
         }
 
-        public List<GeekQA> GetFilteredQAs(DateTime? startDate, DateTime? endDate, string category)
+        public IEnumerable<GeekQA> GetFilteredQAs(DateTime? startDate, DateTime? endDate, string categoryOfError)
         {
             var query = _context.GeekQAs.AsQueryable();
 
@@ -29,9 +29,9 @@ namespace QADraft.Services
                 query = query.Where(qa => qa.ErrorDate <= endDate.Value);
             }
 
-            if (!string.IsNullOrEmpty(category))
+            if (!string.IsNullOrWhiteSpace(categoryOfError))
             {
-                query = query.Where(qa => qa.CategoryOfError == category);
+                query = query.Where(qa => qa.CategoryOfError == categoryOfError);
             }
 
             return query.ToList();

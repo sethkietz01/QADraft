@@ -2,13 +2,13 @@
 using QADraft.Models;
 using QADraft.Services;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace QADraft.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ChartController : ControllerBase
+    public class ChartController : Controller
     {
         private readonly GeekQAService _geekQAService;
 
@@ -17,21 +17,40 @@ namespace QADraft.Controllers
             _geekQAService = geekQAService;
         }
 
+        [HttpGet("Charts")]
         public IActionResult Charts()
         {
-            return View();
+            if (IsAuthenticated())
+            {
+                return View();
+            }
+            return RedirectToAction("Login", "Home");
         }
 
-        private IActionResult View()
+        [HttpGet("GetFilteredQAs")]
+        public IActionResult GetFilteredQAs([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate, [FromQuery] string categoryOfError)
         {
-            throw new NotImplementedException();
+            var data = _geekQAService.GetFilteredQAs(startDate, endDate, categoryOfError);
+            var chartData = data.Select(qa => new
+            {
+                ErrorDate = qa.ErrorDate.ToString("yyyy-MM-dd"),
+                CategoryOfError = qa.CategoryOfError,
+                Count = 1 // assuming each record represents one occurrence
+            });
+
+            return Ok(chartData);
         }
 
-        [HttpGet]
-        public IActionResult GetFilteredQAs([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate, [FromQuery] string category = null)
+        private bool IsAuthenticated()
         {
-            var data = _geekQAService.GetFilteredQAs(startDate, endDate, category);
-            return Ok(data);
+            // Implement your authentication check logic here
+            return HttpContext.Session.GetString("IsAuthenticated") == "true";
+        }
+
+        private string GetLayout()
+        {
+            // Implement your logic to get the layout
+            return "_Layout";
         }
 
     }
