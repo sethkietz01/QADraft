@@ -96,7 +96,7 @@
     </div>
     <div class="form-group">
         <label asp-for="Severity" class="control-label">Severity</label>
-        <input asp-for="Severity" class="form-control" id="severityInput" readonly />
+        <input type="textfield" asp-for="Severity" class="form-control" id="severityInput" readonly />
         <span asp-validation-for="Severity" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -217,6 +217,7 @@
                 var selectedCategory = categorySelect.value;
                 natureSelect.innerHTML = '<option value="">Select Nature</option>'; // Reset natures
                 severityInput.value = ''; // Reset severity
+                severityInput.style.backgroundColor = "#fff";
 
                 if (selectedCategory) {
                     var natures = natureMapping.filter(m => m.categories.includes(selectedCategory));
@@ -233,7 +234,44 @@
             // Update severity when nature changes
             natureSelect.addEventListener("change", function() {
                 var selectedOption = natureSelect.options[natureSelect.selectedIndex];
-                severityInput.value = selectedOption.dataset.severity || '';
+                severity = selectedOption.dataset.severity || '';
+                severityInput.value = severity;
+
+                switch (severity)
+                {
+                    case '1':
+                        severityInput.style.background = "#ffe000";
+                        break;
+                    case '2':
+                        severityInput.style.background = "#ffce00";
+                        break;
+                    case '3':
+                        severityInput.style.background = "#ffb700";
+                        break;
+                    case '4':
+                        severityInput.style.background = "#ffb000";
+                        break;
+                    case '5':
+                        severityInput.style.background = "#ffa500";
+                        break;
+                    case '6':
+                        severityInput.style.background = "#ff9900";
+                        break;
+                    case '7':
+                        severityInput.style.background = "#ff8e00";
+                        break;
+                    case '8':
+                        severityInput.style.background = "#ff7b00";
+                        break;
+                    case '9':
+                        severityInput.style.background = "#dc0505";
+                        break;
+                    case '10':
+                        severityInput.style.background = "#dc0542";
+                        break;
+                    default:
+                        severityInput.style.background = "#fff";
+                }
             });
         });
 

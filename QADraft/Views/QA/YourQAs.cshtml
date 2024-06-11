@@ -90,8 +90,9 @@
                 <td>@qa.FoundBy?.FirstName @qa.FoundBy?.LastName</td>
                 <td>@qa.CategoryOfError</td>
                 <td>@qa.NatureOfError</td>
-                <td>@qa.Severity</td>
+                <td style="background-color: #fff;" data-severity="@qa.Severity">@qa.Severity</td>
                 <td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
+                <td>@qa.FoundOn.ToString("yyyy-MM-dd")</td>
                 <td>
                     <form>
                         <button id="descriptionButton" class="btn action-btn" onclick="showDescription(event)"> <img id="description-icon" src="~/images/descriptionIconWhite.png"> </button>
@@ -137,5 +138,62 @@
         console.log("Close Description");
         document.getElementById('descriptionDialog').style.display = 'none';
     }
+
+    function getSeverityColor(severity)
+        {
+            let color = "";
+
+            switch (severity)
+            {
+                case '1':
+                    color = "#ffe000";
+                    break;
+                case '2':
+                    color = "#ffce00";
+                    break;
+                case '3':
+                    color = "#ffb700";
+                    break;
+                case '4':
+                    color = "#ffb000";
+                    break;
+                case '5':
+                    color = "#ffa500";
+                    break;
+                case '6':
+                    color = "#ff9900";
+                    break;
+                case '7':
+                    color = "#ff8e00";
+                    break;
+                case '8':
+                    color = "#ff7b00";
+                    break;
+                case '9':
+                    color = "#dc0505";
+                    break;
+                case '10':
+                    color = "#dc0542";
+                    break;
+                default:
+                    color = "#fff";
+                    break;
+            }
+            return color;
+        }
+        
+
+        function applySeverityColors() {
+            var severityCells = document.querySelectorAll('td[data-severity]');
+            severityCells.forEach(function(cell) {
+                var severity = cell.getAttribute('data-severity');
+                var color = getSeverityColor(severity);
+                cell.style.backgroundColor = color;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            applySeverityColors();
+        });
 
 </script>

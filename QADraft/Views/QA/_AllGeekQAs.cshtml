@@ -86,16 +86,16 @@
         <!-- Populate the table with all QAs form the database -->
         @foreach (var qa in Model.OrderByDescending(q => q.ErrorDate))
         {
-<tr>
-<td>@qa.CommittedBy?.FirstName @qa.CommittedBy?.LastName</td>
-<td>@qa.FoundBy?.FirstName @qa.FoundBy?.LastName</td>
-<td>@qa.CategoryOfError</td>
-<td>@qa.NatureOfError</td>
-<td>@qa.Severity</td>
-<td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
-<td>
-<form method="post" asp-controller="QA" asp-action="ManageQA">
- 
+            <tr>
+                <td>@qa.CommittedBy?.FirstName @qa.CommittedBy?.LastName</td>
+                <td>@qa.FoundBy?.FirstName @qa.FoundBy?.LastName</td>
+                <td>@qa.CategoryOfError</td>
+                <td>@qa.NatureOfError</td>
+                <td style="background-color: #fff;" data-severity="@qa.Severity">@qa.Severity</td>
+                <td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
+                <td>@qa.FoundOn.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <form method="post" asp-controller="QA" asp-action="ManageQA">
                         <input type="hidden" name="qaId" value="@qa.Id" />
 <div class="form-group">
 <button id="descriptionButton" type="button" class="btn buttons" onclick="showDescription(event)"> <img id="description-icon" src="~/images/descriptionIconWhite.png"> </button>
