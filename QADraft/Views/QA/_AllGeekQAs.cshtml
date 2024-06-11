@@ -62,25 +62,24 @@
         padding-bottom: 1px;
         border-bottom: 1px solid #fff;
     }
+
+
 </style>
 
 <partial name="_ReportsMenu" />
 <h2>All QAs</h2>
 
 <!-- Table used to output QAs -->
-<table class="table table-striped" id="QATable">
+<table class="table table-striped" id="table">
     <thead>
-        <tr id="TD">
-            <th>
-                <a href="#" onclick="sortTable('Committed By')">Committed By</a>
-            </th>
-            <th onclick="sortTable(0)">Committed By</th>
-            <th>Found By</th>
-            <th>Category</th>
-            <th>Nature</th>
-            <th>Severity</th>
-            <th>Date</th>
-            <th>Actions</th> 
+        <tr>
+            <th onclick="sortTable(0)">Committed By<span class="arrow"></th>
+            <th onclick="sortTable(1)">Found By<span class="arrow"></th>
+            <th onclick="sortTable(2)">Category<span class="arrow"></th>
+            <th onclick="sortTable(3)">Nature<span class="arrow"></th>
+            <th onclick="sortTable(4)">Severity<span class="arrow"></th>
+            <th onclick="sortTable(5)">Date<span class="arrow"></th>
+            <th class="noSort">Actions</th> 
         </tr>
     </thead>
     <tbody>
@@ -181,45 +180,6 @@
             window.currentForm.querySelector('input[type="submit"][name="action"][value="Delete QA"]').click();
             closeConfirmationDialog();
             return false;
-        }
-
-
-        //table sorting
-        function sortTable(n) {
-            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-            table = document.getElementById("QATable");
-            switching = true;
-            
-            //default sort direction to ascending
-            dir = "asc"; 
-
-            while (switching){
-                //assume that table is sorted already
-                switching  = false;
-                rows = table.rows;
-
-                //loop through rows
-                for (i = 1; i < (rows.length - 1); i++) {
-                    //assume sorted
-                    shouldSwitch = false;
-
-                    x = rows[i].getElementsByTagName("TD")[0];
-                    y = rows[i+1].getElementsByTagName("TD")[0]
-
-
-                    //check if they should swap
-                    if (x.innerHTML.toLowerCase() > Y.innerHTML.toLowerCase() ){
-                        shouldSwitch = true;
-                        break;
-                    }
-                }
-
-                if (shouldSwitch) {
-                    rows[i].parentNode.insertBefore(rows[i+1], rows[i])
-                    switching = true;
-                }
-            }
-
         }
 
     </script>
