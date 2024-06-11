@@ -33,5 +33,6 @@ namespace QADraft.Controllers
             var data = _geekQAService.GetFilteredQAs(startDate, endDate, category);
             return Ok(data);
         }
+
     }
 }
