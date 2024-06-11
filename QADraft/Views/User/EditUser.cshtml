@@ -55,14 +55,14 @@
 <h2>Edit User</h2>
 
 <!-- Form to get updated information on the user being edited -->
-<form asp-action="EditUser" method="post">
+<form asp-controller="User" asp-action="EditUser" method="post">
     <div class="form-group">
         <label asp-for="Username" class="control-label">Username</label>
         <input asp-for="Username" class="form-control" />
         <span asp-validation-for="Username" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Password" class="control-label">Password</label>
+        <label asp-for="Password" class="control-label">New Password</label>
         <input id="password-field" asp-for="Password" class="form-control" value=""/>
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
@@ -98,7 +98,7 @@
 </form>
 
 <div>
-    <button onclick="openConfirmation()" class="btn buttons">Edit User</button>
+    <button onclick="openConfirmation()" class="btn buttons form-buttons">Save Changes</button>
 </div>
 
 <!-- Edit User Confirm Popup -->
@@ -130,9 +130,30 @@
 
         function confirmEdit() {
             closeConfirmation();
-            password = document.getElementById("password-field");
+            password = document.getElementById("password-field").value.trim();
             if (password.value == "")
                 password.value = "-";
+
+             if (password.length < 8) {
+                alert("Password must be at least 8 characters long.");
+                return false;
+            } else if (!/[A-Z]/.test(password))
+            {
+                alert("Password must contain at least one uppercase letter.");
+                return false;   
+            } else if (!/[^A-Za-z0-9]/.test(password)) {
+                alert("Password must contain at least one special character.");
+                return false;
+            } else if (!/\d/.test(password)) {
+                alert("Password must contain at least one numeric character.");
+                return false;
+            } else {
+                closeConfirmation();
+                // If password meets criteria, proceed with form submission
+                document.querySelector('input[type="submit"][value="Edit User"]').click();
+                return true;
+            }
+
             console.log(password.value);
             document.querySelector('input[type="submit"][value="Edit User"]').click();
             console.log("Clicked");

@@ -101,6 +101,11 @@ namespace QADraft.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Outages()
+        {
+            return View();
+        }
 
         public bool IsAuthenticated()
         {
@@ -126,6 +131,5 @@ namespace QADraft.Controllers
             else
                 return "~/Views/Shared/_Layout.cshtml";
         }
-
     }
 }
