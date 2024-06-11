@@ -69,16 +69,16 @@
 <h2>Your QAs</h2>
 
 <!-- Table used to output QAs -->
-<table class="table table-striped">
+<table id="table" class="table table-striped">
     <thead>
         <tr>
-            <th>Committed By</th>
-            <th>Found By</th>
-            <th>Category</th>
-            <th>Nature</th>
-            <th>Severity</th>
-            <th>Date</th>
-            <th>Description</th> 
+            <th onclick="sortTable(0)">Committed By<span class="arrow"></th>
+            <th onclick="sortTable(1)">Found By<span class="arrow"></th>
+            <th onclick="sortTable(2)">Category<span class="arrow"></th>
+            <th onclick="sortTable(3)">Nature<span class="arrow"></th>
+            <th onclick="sortTable(4)">Severity<span class="arrow"></th>
+            <th onclick="sortTable(5)">Date<span class="arrow">▼</span></th>
+            <th class="noSort">Description</th> 
         </tr>
     </thead>
     <tbody>

@@ -15,6 +15,16 @@
         margin-bottom: 50px;
     }
 
+    th {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .noSort {
+        cursor: default;
+        user-select: none;
+    }
+
 </style>
 
 <h1>Reports Menu</h1>
@@ -25,5 +35,100 @@
     <a class="btn buttons" asp-area="" asp-controller="QA" asp-action="AllGeekQAs">All Geek QAs</a>
     <a class="btn buttons" asp-area="" asp-controller="QA" asp-action="FlaggedAccounts">View All Flagged Accounts</a>
     <a class="btn buttons" asp-area="" asp-controller="QA" asp-action="QADescriptions">QA Descriptions</a>
-    <a class="btn buttons" asp-area="" asp-controller="Chart" asp-action="Charts">QA Charts</a>
 </div>
+
+<script>
+    //table sorting
+    function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("table");
+        switching = true;
+            
+        // Set the sorting direction to ascending:
+        dir = "asc";
+            
+            
+        //loop until end is reached
+        while (switching) {
+            // assume sorted
+            switching = false;
+            rows = table.rows;
+
+            // Loop through all rows
+            for (i = 1; i < (rows.length - 1); i++) {
+                // assume no switching:
+                shouldSwitch = false;
+
+                // Get the current and next row
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+
+                let xContent = x.innerHTML.trim();
+                let yContent = y.innerHTML.trim();
+
+                // Check if column content is numeric
+                let xVal = isNaN(xContent) ? xContent.toLowerCase() : parseFloat(xContent);
+                let yVal = isNaN(yContent) ? yContent.toLowerCase() : parseFloat(yContent);
+
+                // Check if they should switch
+                if (dir == "asc") {
+                    if (xVal > yVal) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } 
+                else if (dir == "desc") {
+                    if (xVal < yVal) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+
+            if (shouldSwitch) {
+                /* If a switch has been marked, make the switch
+                and mark that a switch has been done: */
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                // Each time a switch is done, increase this count by 1:
+                switchcount ++;
+            } 
+            else {
+                /* If no switching has been done AND the direction is "asc",
+                set the direction to "desc" and run the while loop again. */
+                if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+
+        }
+
+        console.log("start arrows");
+
+        // Reset all arrows
+        let headers = table.getElementsByTagName("TH");
+        console.log(headers.length);
+        for (let header of headers) {
+            let arrow = header.querySelector(".arrow");
+            if (arrow) {
+                arrow.innerHTML = "";
+            }
+        }
+        console.log("reset arrows");
+        // Add arrow to the current sorted column
+        if (dir == "asc") {
+            console.log("asc");
+            headers[n].querySelector(".arrow").innerHTML = "▲";
+        } else {
+            console.log("desc");
+            headers[n].querySelector(".arrow").innerHTML = "▼";
+        }
+
+        // Toggle the direction for the next click
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+
+        console.log("end");
+
+    }
+</script>

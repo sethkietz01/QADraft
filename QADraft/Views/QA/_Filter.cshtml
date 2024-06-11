@@ -65,6 +65,7 @@
     {
         margin-top: 10px; 
     }
+
 </style>
 
 <partial name="_ReportsMenu" />
@@ -122,13 +123,13 @@
 <table id="table" class="table table-striped">
     <thead>
         <tr>
-            <th>Committed By</th>
-            <th>Found By</th>
-            <th>Category</th>
-            <th>Nature</th>
-            <th>Severity</th>
-            <th>Date</th>
-            <th>Actions</th>
+            <th onclick="sortTable(0)">Committed By<span class="arrow"></th>
+            <th onclick="sortTable(1)">Found By<span class="arrow"></th>
+            <th onclick="sortTable(2)">Category<span class="arrow"></th>
+            <th onclick="sortTable(3)">Nature<span class="arrow"></th>
+            <th onclick="sortTable(4)">Severity<span class="arrow"></th>
+            <th onclick="sortTable(5)">Date<span class="arrow"></th>
+            <th class="noSort">Actions</th>
         </tr>
     </thead>
     <tbody>

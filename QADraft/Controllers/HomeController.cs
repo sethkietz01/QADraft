@@ -70,6 +70,11 @@ namespace QADraft.Controllers
                     HttpContext.Session.SetInt32("Id", user.Id);
                     HttpContext.Session.SetString("Role", user.Role);
 
+                    // Set the current DateTime as LastLogin for user in DB
+                    user.LastLogin = DateTime.Now;
+                    _context.SaveChanges();
+
+
                     return RedirectToAction("Index");
                 }
                 else

@@ -60,6 +60,8 @@ namespace QADraft.Controllers
             {
                 try
                 {
+                    // Set the currently logged in User for the "CommitedBy" field
+                    model.SubmittedBy = GetFullName();
                     _context.GeekQAs.Add(model);
                     _context.SaveChanges();
 
@@ -372,6 +374,15 @@ namespace QADraft.Controllers
         public bool IsAuthenticated()
         {
             return HttpContext.Session.GetString("IsAuthenticated") == "true";
+        }
+
+        public string GetFullName()
+        {
+            string? firstName = HttpContext.Session.GetString("FirstName");
+            string? lastName = HttpContext.Session.GetString("LastName");
+            string? name = firstName + " " + lastName;
+
+            return name;
         }
 
         public int? GetId()
