@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "All QA's";
     Layout = "~/Views/Shared/_Layout.cshtml";
-
 }
 
 <style>
@@ -48,7 +47,6 @@
     }
 
     #descriptionButton {
-
         padding: 5px 8px;
     }
 
@@ -68,6 +66,22 @@
 
 <partial name="_ReportsMenu" />
 <h2>All QAs</h2>
+
+<!-- Filters for data -->
+<div>
+    <input type="text" id="startDate" placeholder="Start Date">
+    <input type="text" id="endDate" placeholder="End Date">
+    <select id="categoryFilter">
+        <option value="">All Categories</option>
+        <!-- Add your categories here -->
+        <option value="Category1">Category1</option>
+        <option value="Category2">Category2</option>
+    </select>
+    <button onclick="filterData()">Filter</button>
+</div>
+
+<!-- Chart container -->
+<div id="chart"></div>
 
 <!-- Table used to output QAs -->
 <table class="table table-striped" id="table">
@@ -95,14 +109,12 @@
                 <td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
                 <td>
                     <form method="post" asp-controller="QA" asp-action="ManageQA">
-
                         <input type="hidden" name="qaId" value="@qa.Id" />
                         <div class="form-group">
                             <button id="descriptionButton" type="button" class="btn buttons" onclick="showDescription(event)"> <img id="description-icon" src="~/images/descriptionIconWhite.png"> </button>
 
                             <input id="updateButton" type="submit" name="action" value="Update" class="btn buttons" />
                             <input id="deleteButton" type="submit" name="action" value="Delete QA" class="btn buttons" hidden/>
-
                             <button id="deleteButton" onclick="openConfirmationDialog(event)" class="btn buttons">Delete</button>
                         </div>
                         <p id="qaDescription" hidden>@qa.Description</p>
@@ -124,7 +136,6 @@
     </div>
 </div>
 
-
 <!-- Description Dialog popup -->
 <div id="descriptionDialog" class="confirmation-dialog">
     <div class="confirmation-content">
@@ -136,47 +147,99 @@
     </div>
 </div>
 
-
-
 @section Scripts {
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Load the QAMenu partial view content
-            fetch('@Url.Action("QAMenu", "Home")')
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById("qa-content").innerHTML = html;
-                });
+            flatpickr("#startDate", { dateFormat: "Y-m-d" });
+            flatpickr("#endDate", { dateFormat: "Y-m-d" });
+            renderChart(); // Initial load
         });
 
+        async function fetchData(startDate, endDate, category) {
+            const url = new URL('/api/Chart', window.location.origin);
+            const params = { startDate, endDate, category };
+            Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+            const response = await fetch(url);
+            const data = await response.json();
+            return data;
+        }
+
+        async function renderChart(startDate, endDate, category) {
+            const data = await fetchData(startDate, endDate, category);
+
+            const margin = { top: 20, right: 30, bottom: 40, left: 40 };
+            const width = 800 - margin.left - margin.right;
+            const height = 400 - margin.top - margin.bottom;
+
+            d3.select("#chart").select("svg").remove();
+
+            const svg = d3.select("#chart")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            const x = d3.scaleBand()
+                .domain(data.map(d => d.CommittedBy.Username))
+                .range([0, width])
+                .padding(0.2);
+
+            svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x))
+                .selectAll("text")
+                .attr("transform", "translate(-10,0)rotate(-45)")
+                .style("text-anchor", "end");
+
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(data, d => d.Severity)])
+                .range([height, 0]);
+
+            svg.append("g")
+                .call(d3.axisLeft(y));
+
+            svg.selectAll(".bar")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr("x", d => x(d.CommittedBy.Username))
+                .attr("y", d => y(d.Severity))
+                .attr("width", x.bandwidth())
+                .attr("height", d => height - y(d.Severity))
+                .attr("class", "bar");
+        }
+
+        function filterData() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const category = document.getElementById('categoryFilter').value;
+            renderChart(startDate, endDate, category);
+        }
+
         function showDescription() {
-            console.log("Show Description");
             document.getElementById('descriptionDialog').style.display = 'block';
         }
 
         function closeDescription() {
-            console.log("Close Description");
             document.getElementById('descriptionDialog').style.display = 'none';
         }
-
 
         function openConfirmationDialog(event) {
             event.preventDefault(); // Prevent default behavior
 
-            // Show the confirmation dialog
-            console.log("openconfirm");
             var parentForm = event.target.closest('form');
             window.currentForm = parentForm;
             document.getElementById('confirmationDialog').style.display = 'block';
         }
 
         function closeConfirmationDialog() {
-            console.log("close confirm");
             document.getElementById('confirmationDialog').style.display = 'none';
         }
 
         function confirmDelete() {
-            console.log("confirmdelete");
             window.currentForm.querySelector('input[type="submit"][name="action"][value="Delete QA"]').click();
             closeConfirmationDialog();
             return false;
@@ -184,4 +247,3 @@
 
     </script>
 }
-
