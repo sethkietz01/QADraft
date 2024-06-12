@@ -10,25 +10,26 @@ namespace QADraft.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Please select the user who committed the QA")]
         public int? CommittedById { get; set; }
 
         [ForeignKey("CommittedById")]
         public User? CommittedBy { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Please select the user who found the QA")]
         public int? FoundById { get; set; }
 
         [ForeignKey("FoundById")]
         public User? FoundBy { get; set; }
 
+        [Required(ErrorMessage = "Please select the category of error")]
         [StringLength(100)]
         public string CategoryOfError { get; set; }
 
+        [Required(ErrorMessage = "Please select the nature of error")]
         [StringLength(255)]
         public string NatureOfError { get; set; }
 
-        [Range(1, 10)]
         public int Severity { get; set; }
 
         [StringLength(100)]
