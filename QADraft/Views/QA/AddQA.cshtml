@@ -58,6 +58,26 @@
             background-color: #b31f4f;
             border-color: #E6A65D
         }
+
+    .form-control,
+    select,
+    select option {
+        background-color: #f8f9fa;
+    }
+
+    select:focus,
+    select option:focus,
+    select option:hover {
+        background-color: #f8f9fa;
+    }
+
+    #teststyle {
+        background-color: #f8f9fa;
+    }
+
+    .placeholder {
+        background-color: #f8f9fa;
+    }
 </style>
 
 <h2>Add QA</h2>
@@ -67,7 +87,7 @@
     <div class="form-group">
         <label asp-for="CommittedById" class="control-label">Committed By</label>
         <select asp-for="CommittedById" class="form-control" asp-items="Model.Users">
-            <option class="placeholder" value="" disabled selected>Select user</option>
+            <option id="teststyle" class="placeholder" value="" disabled selected>Select user</option>
         </select>
         <span asp-validation-for="CommittedById" class="text-danger"></span>
     </div>
@@ -81,7 +101,7 @@
     <div class="form-group">
         <label asp-for="CategoryOfError" class="control-label">Category of Error</label>
         <select asp-for="CategoryOfError" class="form-control" id="categorySelect">
-            <option value="">Select Category</option>
+            <option class="placeholder" value="" disabled selected>Select Category</option>
             <!-- Populate categories dynamically with JavaScript -->
         </select>
         <span asp-validation-for="CategoryOfError" class="text-danger"></span>
@@ -89,7 +109,8 @@
     <div class="form-group">
         <label asp-for="NatureOfError" class="control-label">Nature of Error</label>
         <select asp-for="NatureOfError" class="form-control" id="natureSelect">
-            <option value="">Select Nature</option>
+            <option class="placeholder" value="" disabled selected>Select Natures</option>
+            <option class="placeholder" value="" disabled>Please select a category to see natures</option>
             <!-- Populate natures dynamically with JavaScript -->
         </select>
         <span asp-validation-for="NatureOfError" class="text-danger"></span>
@@ -110,13 +131,13 @@
         <span asp-validation-for="UnitId" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ErrorDate" class="control-label">Error Date</label>
-        <input asp-for="ErrorDate" class="form-control" type="date" value="@Model.ErrorDate.ToString("yyyy-MM-dd")" />
+        <label asp-for="ErrorDate" class="control-label">Commited On</label>
+        <input id="commited-on" asp-for="ErrorDate" class="form-control" type="date" value="@Model.ErrorDate.ToString("yyyy-MM-dd")" />
         <span asp-validation-for="ErrorDate" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="FoundOn" class="control-label">Found On</label>
-        <input asp-for="FoundOn" class="form-control" type="date" />
+        <input id="found-on" asp-for="FoundOn" class="form-control" type="date" />
         <span asp-validation-for="FoundOn" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -132,18 +153,6 @@
 
 <div>
     <button onclick="openConfirmation()" class="btn buttons form-buttons">Add QA</button>
-</div>
-
-
-<!-- Add QA Complete Popup -->
-<div id="confirmationDialog" class="confirmation-dialog">
-    <div class="confirmation-content">
-        <p>Press Confirm to submit the QA Report</p>
-        <div class="confirmation-buttons">
-            <button class="btn btn-danger" onclick="confirmAdd()">Confirm</button>
-            <button class="btn btn-secondary" onclick="closeConfirmation()">Cancel</button>
-        </div>
-    </div>
 </div>
 
 @section Scripts {
@@ -215,9 +224,9 @@
             // Update nature options when category changes
             categorySelect.addEventListener("change", function() {
                 var selectedCategory = categorySelect.value;
-                natureSelect.innerHTML = '<option value="">Select Nature</option>'; // Reset natures
+                natureSelect.innerHTML = '<option class="placeholder" value="" disabled selected>Select Nature</option>'; // Reset natures
                 severityInput.value = ''; // Reset severity
-                severityInput.style.backgroundColor = "#fff";
+                severityInput.style.backgroundColor = "#f5f5f5";
 
                 if (selectedCategory) {
                     var natures = natureMapping.filter(m => m.categories.includes(selectedCategory));
@@ -280,19 +289,32 @@
             console.log("OpenConfirmation");
 
             // Show the confirmation dialog
-            document.getElementById('confirmationDialog').style.display = 'block';
+            var confirmed = confirm("Press OK to submit the QA Report");
+
+            if (confirmed) {
+                // If 'Confirm' is clicked, submit the form
+                document.querySelector('input[type="submit"][value="Add QA"]').click();
+                console.log("Clicked");
+            }
         }
 
-        function closeConfirmation() {
-            document.getElementById('confirmationDialog').style.display = 'none';
+        function validateDates() {
+            var committedOnDate = new Date(document.getElementById("commited-on").value);
+            var foundOnDate = new Date(document.getElementById("found-on").value);
+
+            if (committedOnDate > foundOnDate) {
+                alert("Committed on date cannot be after the found on date."); // Show error message
+                return false; // Prevent form submission
+            }
+            return true; // Allow form submission
         }
 
-        function confirmAdd() {
-            closeConfirmation();
-            document.querySelector('input[type="submit"][value="Add QA"]').click();
-            console.log("Clicked");
-            closeConfirmationDialog();
-            return false;
-        }
+        // Add event listener for form submission
+        document.querySelector('form').addEventListener('submit', function(event) {
+            // Validate dates before form submission
+            if (!validateDates()) {
+                event.preventDefault(); // Prevent form submission
+            }
+        });
     </script>
 }
