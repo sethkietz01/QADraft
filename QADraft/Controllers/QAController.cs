@@ -191,7 +191,10 @@ namespace QADraft.Controllers
                 .Include(q => q.CommittedBy)
                 .Include(q => q.FoundBy)
                 .ToList();
-            
+
+            ViewBag.categoryDict = GetQADict("category");
+            ViewBag.natureDict = GetQADict("nature");
+
             return View("_AllGeekQAs", qas);
         }
 
@@ -390,7 +393,37 @@ namespace QADraft.Controllers
             return HttpContext.Session.GetInt32("Id");
         }
 
+        /*
+         * TEST
+        */
 
+        public Dictionary<string, int> GetQADict(string type)
+        {
+            // Get all QA categories and natures from db
+            var qas = _context.GeekQAs
+                .Select(qa => new { qa.CategoryOfError, qa.NatureOfError })
+                .ToList();
+            var Dict = new Dictionary<string, int>();
+            if (type == "category")
+            {
+                //convert into two lists, one for natures one for categories
+                Dict = qas
+                    .GroupBy(qa => qa.CategoryOfError)
+                    .ToDictionary(g => g.Key, g => g.Count());
+            }
+            else if (type == "nature")
+            {
+                Dict = qas
+                    .GroupBy(qa => qa.NatureOfError)
+                    .ToDictionary(g => g.Key, g => g.Count());
+            }
+            Console.WriteLine(Dict);
+            foreach (var kvp in Dict)
+            {
+                Console.WriteLine($"Category: {kvp.Key}, Count: {kvp.Value}");
+            }
+            return Dict;
+        }
 
     }
 }
