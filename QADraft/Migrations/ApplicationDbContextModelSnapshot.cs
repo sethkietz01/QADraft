@@ -123,6 +123,9 @@ namespace QADraft.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("LastLogin")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

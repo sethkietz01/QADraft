@@ -5,7 +5,7 @@
 namespace QADraft.Migrations
 {
     /// <inheritdoc />
-    public partial class newColumns : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

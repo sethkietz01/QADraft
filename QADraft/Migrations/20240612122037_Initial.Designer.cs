@@ -12,8 +12,8 @@ using QADraft.Data;
 namespace QADraft.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240522130631_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240612122037_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,27 @@ namespace QADraft.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("QADraft.Data.GeekQA", b =>
+            modelBuilder.Entity("QADraft.Models.Events", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("EventInformation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EventTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Events");
+                });
+
+            modelBuilder.Entity("QADraft.Models.GeekQA", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -35,7 +55,8 @@ namespace QADraft.Migrations
 
                     b.Property<string>("CategoryOfError")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("CommittedById")
                         .HasColumnType("int");
@@ -45,7 +66,8 @@ namespace QADraft.Migrations
 
                     b.Property<string>("CustomerName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -62,14 +84,19 @@ namespace QADraft.Migrations
 
                     b.Property<string>("NatureOfError")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("Severity")
                         .HasColumnType("int");
 
+                    b.Property<string>("SubmittedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UnitId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -80,7 +107,7 @@ namespace QADraft.Migrations
                     b.ToTable("GeekQAs");
                 });
 
-            modelBuilder.Entity("QADraft.Data.User", b =>
+            modelBuilder.Entity("QADraft.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -99,6 +126,9 @@ namespace QADraft.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("LastLogin")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -115,20 +145,32 @@ namespace QADraft.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("endDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("isActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("isFlagged")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("startDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("QADraft.Data.GeekQA", b =>
+            modelBuilder.Entity("QADraft.Models.GeekQA", b =>
                 {
-                    b.HasOne("QADraft.Data.User", "CommittedBy")
+                    b.HasOne("QADraft.Models.User", "CommittedBy")
                         .WithMany()
                         .HasForeignKey("CommittedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("QADraft.Data.User", "FoundBy")
+                    b.HasOne("QADraft.Models.User", "FoundBy")
                         .WithMany()
                         .HasForeignKey("FoundById")
                         .OnDelete(DeleteBehavior.Restrict)
