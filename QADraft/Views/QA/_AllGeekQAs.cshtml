@@ -7,6 +7,8 @@
 }
  
 <style>
+   
+
     .action-btn {
         color: #fff;
         background-color: #861F41;
@@ -75,7 +77,7 @@
 
  
 <!-- Table used to output QAs -->
-<table class="table table-striped" id="table">
+<table class="table" id="table">
     <thead>
         <tr>
             <th onclick="sortTable(0)">Committed By<span class="arrow"></th>
@@ -97,7 +99,7 @@
                 <td>@qa.FoundBy?.FirstName @qa.FoundBy?.LastName</td>
                 <td>@qa.CategoryOfError</td>
                 <td>@qa.NatureOfError</td>
-                <td style="background-color: #fff;" data-severity="@qa.Severity">@qa.Severity</td>
+                <td class="severity-cell" data-severity="@qa.Severity">@qa.Severity</td>
                 <td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
                 <td>@qa.FoundOn.ToString("yyyy-MM-dd")</td>
                 <td>
