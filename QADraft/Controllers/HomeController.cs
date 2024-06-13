@@ -12,6 +12,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Identity.Client;
 using System.Collections;
+using QADraft.ViewModels;
 
 namespace QADraft.Controllers
 {
@@ -75,7 +76,13 @@ namespace QADraft.Controllers
 
             ViewBag.Layout = GetLayout();
 
-            return View();
+            var viewModel = new EventsViewModel
+            {
+                EventList = _context.Events.ToList(), // Assuming _context is your ApplicationDbContext instance
+                SingleEvent = new Events() // You can initialize this as needed
+            };
+
+            return View(viewModel);
         }
 
 

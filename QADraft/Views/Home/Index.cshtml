@@ -1,4 +1,7 @@
-﻿@{
+﻿@model QADraft.ViewModels.EventsViewModel
+
+
+@{
     ViewData["Title"] = "Home Page";
     Layout = ViewBag.Layout;
 }
@@ -87,11 +90,36 @@
 </div>
 </div>
 
+
+
 <body class="dashboard">
+
+<form asp-action="AddEvent" method="post">
+    <!-- Your form HTML -->
+    <div class="form-group">
+        <label asp-for="SingleEvent.EventTime" class="control-label">Event Time</label>
+        <input asp-for="SingleEvent.EventTime" class="form-control" type="date" value="@Model.SingleEvent.EventTime.ToString("yyyy-MM-dd")" />
+        <span asp-validation-for="SingleEvent.EventTime" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SingleEvent.EventInformation" class="control-label">Event Time</label>
+        <input asp-for="SingleEvent.EventInformation" class="form-control" placeholder="Enter Event Info" />
+        <span asp-validation-for="SingleEvent.EventInformation" class="text-danger"></span>
+    </div>
+    <button type="submit">Add Event</button>
+</form>
+
     <div class="calendar">
         <p>Event Calendar</p>
-        <textarea id="eventCalendar" rows="15" cols="50" style="resize: none" readonly></textarea>   
+        <textarea id="eventCalendar" rows="15" cols="50" style="resize: none" readonly>
+               @foreach (var evt in Model.EventList)
+{
+        <div>@evt.EventTime - @evt.EventInformation</div>
+}
+        </textarea>   
     </div>
+
+
     <div class="dashboard-buttons">
         <div>
             <button class="dash-button">Button1</button>
@@ -102,4 +130,6 @@
             <button class="dash-button">Button4</button>
         </div>
     </div>
+
+
 </body>

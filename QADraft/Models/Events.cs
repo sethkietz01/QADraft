@@ -10,11 +10,10 @@ namespace QADraft.Models
     {
         public int Id { get; set; }
 
-        [Required]
-        public DateTime? EventTime { get; set; }
+        public DateTime EventTime { get; set; }
 
-        [Required]
-        public string? EventInformation { get; set; }
+        
+        public string EventInformation { get; set; }
 
     }
 }
