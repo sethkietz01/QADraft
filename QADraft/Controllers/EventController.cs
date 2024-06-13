@@ -21,16 +21,9 @@ namespace QADraft.Controllers
 
         public IActionResult Index()
         {
-            var combinedModel = new CombinedEventsViewModel
-            {
-                EventsViewModel = new EventsViewModel
-                {
-                    EventList = _context.Events.ToList()
-                },
-                NewEvent = new Events()
-            };
 
-            return View(combinedModel); // Ensure this view is located in /Views/Event/Index.cshtml
+
+            return View(); // Ensure this view is located in /Views/Event/Index.cshtml
         }
 
         [HttpPost]

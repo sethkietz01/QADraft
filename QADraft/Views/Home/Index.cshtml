@@ -119,20 +119,20 @@
             </div>
             <div class="modal-body">
                 <!-- Form that posts to the EventController's AddEvent action -->
-<!-- Update the form tag to pass the CombinedEventsViewModel -->
-<form asp-controller="Event" asp-action="AddEvent" method="post">
-    <div class="form-group">
-        <label asp-for="EventsViewModel.SingleEvent.EventTime" class="control-label">Event Time</label>
-        <input asp-for="EventsViewModel.SingleEvent.EventTime" class="form-control" type="date" />
-        <span asp-validation-for="EventsViewModel.SingleEvent.EventTime" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="EventsViewModel.SingleEvent.EventInformation" class="control-label">Event Information</label>
-        <input asp-for="EventsViewModel.SingleEvent.EventInformation" class="form-control" placeholder="Enter Event Info" />
-        <span asp-validation-for="EventsViewModel.SingleEvent.EventInformation" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Add Event</button>
-</form>
+            <!-- Update the form tag to pass the CombinedEventsViewModel -->
+            <form asp-controller="Event" asp-action="AddEvent" method="post">
+                <div class="form-group">
+                    <label asp-for="EventsViewModel.SingleEvent.EventTime" class="control-label">Event Time</label>
+                    <input asp-for="EventsViewModel.SingleEvent.EventTime" class="form-control" type="date" />
+                    <span asp-validation-for="EventsViewModel.SingleEvent.EventTime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EventsViewModel.SingleEvent.EventInformation" class="control-label">Event Information</label>
+                    <input asp-for="EventsViewModel.SingleEvent.EventInformation" class="form-control" placeholder="Enter Event Info" />
+                    <span asp-validation-for="EventsViewModel.SingleEvent.EventInformation" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Event</button>
+            </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
