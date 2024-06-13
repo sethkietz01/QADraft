@@ -4,12 +4,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - QADraft</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    
+    <!-- Bootstrap CSS from CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+
+    <!-- Site-specific CSS files -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/QADraft.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap">
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> <!-- Added Google Charts script -->
     
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap">
+    
+    <!-- Google Charts script -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
     <style>
         .navbar {
             background-color: #861F41;
@@ -49,7 +57,7 @@
             justify-content: flex-start;
             flex-grow: 1;
         }
-        
+
         .watermark {
             position: absolute;
             top: 50%;
@@ -100,7 +108,7 @@
             background-color: #f0f0f0;
         }
 
-        .user-name{
+        .user-name {
             color: white;
             font-family: 'Barlow';
             font-size: 18px;
@@ -114,16 +122,15 @@
             border-color: #861F41;
         }
         
-            .buttons:hover {
-                color: #fff;
-                background-color: #b31f4f;
-                border-color: #E6A65D;
-                box-shadow: 0 0 5px rgba(230, 168, 93, 0.7);
-            }
+        .buttons:hover {
+            color: #fff;
+            background-color: #b31f4f;
+            border-color: #E6A65D;
+            box-shadow: 0 0 5px rgba(230, 168, 93, 0.7);
+        }
 
-            .buttons:active {
-                transform: translateY(1px) translateX(1px);
-            }
+        .buttons:active {
+            transform: translateY(1px) translateX(1px);
         }
 
         header {
@@ -148,7 +155,6 @@
         .form-buttons {
             margin-top: 10px;
         }
-        
     </style>
 </head>
     <link rel="icon" type="image/x-icon" href="~/images/whiteIcon.ico" />
@@ -167,11 +173,11 @@
                     string? isAuthenticated = Context.Session.GetString("IsAuthenticated");
                     string? firstName = Context.Session.GetString("FirstName");
                     string? lastName = Context.Session.GetString("LastName");
- 
+
                     string name = lastName + ", " + firstName;
                 }
                 @if (isAuthenticated == "true")
-                {   
+                {
                     <label class="user-name nav-item">@name</label>
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-auto">
@@ -226,10 +232,17 @@
             EKU IT Geeks QA
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JQuery and Bootstrap JS from CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Chart.js from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Site-specific JavaScript -->
     <script src="~/js/site.js" asp-append-version="true"></script>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

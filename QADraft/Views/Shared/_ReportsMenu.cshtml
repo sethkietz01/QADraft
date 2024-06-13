@@ -1,4 +1,27 @@
 ﻿<style>
+  
+     tr:nth-child(even) {
+        background-color: #eaeaea;
+    }
+
+    tr:nth-child(odd) {
+        background-color: #f5f5f5;
+    }
+
+    td {
+        vertical-align: middle;
+    }
+
+    td:nth-child(5) {
+        background-color: #f5f5f5;
+        border-radius: 10px;
+    }
+
+    th:nth-child(n + 5),
+    td:nth-child(n + 5) {
+        text-align: center;
+    }
+
     .menu-button {
         color: #fff;
         background-color: #861F41;
@@ -177,13 +200,15 @@
         
 
     function applySeverityColors() {
-        var severityCells = document.querySelectorAll('td[data-severity]');
-        severityCells.forEach(function(cell) {
-            var severity = cell.getAttribute('data-severity');
-            var color = getSeverityColor(severity);
-            cell.style.backgroundColor = color;
-        });
-    }
+    var severityCells = document.querySelectorAll('td[data-severity]');
+
+    severityCells.forEach(function(cell) {
+        var severity = cell.getAttribute('data-severity');
+        var color = getSeverityColor(severity);
+
+        cell.style.backgroundColor = color;
+    });
+}
 
     document.addEventListener('DOMContentLoaded', function() {
         applySeverityColors();

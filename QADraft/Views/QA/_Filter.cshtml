@@ -120,7 +120,7 @@
     </form>
 </div>
 
-<table id="table" class="table table-striped">
+<table id="table" class="table">
     <thead>
         <tr>
             <th onclick="sortTable(0)">Committed By<span class="arrow"></th>
@@ -145,6 +145,7 @@
                     <td>@qa.NatureOfError</td>
                     <td style="background-color: #fff;" data-severity="@qa.Severity">@qa.Severity</td>
                     <td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
+                    <td>@qa.FoundOn.ToString("yyyy-MM-dd")</td>
                     <td>
                         <form method="post" asp-controller="QA" asp-action="ManageQA">
                             <input type="hidden" name="qaId" value="@qa.Id" />

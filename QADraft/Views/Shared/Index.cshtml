@@ -16,10 +16,6 @@
         clear: both;
     }
 
-    .modal-open .modal {
-    overflow-y: auto;
-}
-
     .dashboard-button {
         width: 45%; /* Adjust width as needed */
         margin: 0 5px; /* Add some spacing between items */
@@ -109,37 +105,36 @@
         Add New Event
     </button>
 
-<!-- Modal for Adding Event -->
-<div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addEventModalLabel">Add New Event</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Form that posts to the EventController's AddEvent action -->
-            <!-- Update the form tag to pass the CombinedEventsViewModel -->
-            <form asp-controller="Event" asp-action="AddEvent" method="post">
-                <div class="form-group">
-                    <label asp-for="EventsViewModel.SingleEvent.EventTime" class="control-label">Event Time</label>
-                    <input asp-for="EventsViewModel.SingleEvent.EventTime" class="form-control" type="date" />
-                    <span asp-validation-for="EventsViewModel.SingleEvent.EventTime" class="text-danger"></span>
+    <!-- Modal for Adding Event -->
+    <div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addEventModalLabel">Add New Event</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="form-group">
-                    <label asp-for="EventsViewModel.SingleEvent.EventInformation" class="control-label">Event Information</label>
-                    <input asp-for="EventsViewModel.SingleEvent.EventInformation" class="form-control" placeholder="Enter Event Info" />
-                    <span asp-validation-for="EventsViewModel.SingleEvent.EventInformation" class="text-danger"></span>
+                <div class="modal-body">
+                    <!-- Form that posts to the EventController's AddEvent action -->
+                    <form asp-controller="Event" asp-action="AddEvent" method="post">
+                        <div class="form-group">
+                            <label asp-for="NewEvent.EventTime" class="control-label">Event Time</label>
+                            <input asp-for="NewEvent.EventTime" class="form-control" type="date" />
+                            <span asp-validation-for="NewEvent.EventTime" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="NewEvent.EventInformation" class="control-label">Event Information</label>
+                            <input asp-for="NewEvent.EventInformation" class="form-control" placeholder="Enter Event Info" />
+                            <span asp-validation-for="NewEvent.EventInformation" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Event</button>
+                    </form>
                 </div>
-                <button type="submit" class="btn btn-primary">Add Event</button>
-            </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <div class="dashboard-buttons">
         <div>
@@ -158,6 +153,4 @@
     <!-- JQuery and Bootstrap JS from CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
 }

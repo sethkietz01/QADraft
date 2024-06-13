@@ -12,6 +12,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Identity.Client;
 using System.Collections;
+using QADraft.ViewModels;
 
 namespace QADraft.Controllers
 {
@@ -71,6 +72,7 @@ namespace QADraft.Controllers
             return View();
         }
 
+
         /*
          * TEST END
         */
@@ -84,8 +86,19 @@ namespace QADraft.Controllers
 
             ViewBag.Layout = GetLayout();
 
-            return View();
+            // Initialize the combined view model
+            var combinedModel = new CombinedEventsViewModel
+            {
+                EventsViewModel = new EventsViewModel
+                {
+                    EventList = _context.Events.ToList() // Retrieve all events from the database
+                },
+                NewEvent = new Events() // Initialize a new event for the form
+            };
+
+            return View(combinedModel);
         }
+
 
 
         // This is the initial login referencer
