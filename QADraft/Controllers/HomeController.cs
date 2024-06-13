@@ -71,9 +71,10 @@ namespace QADraft.Controllers
             return View();
         }
 
+
         /*
          * TEST END
-        */ 
+        */
 
         public IActionResult Index()
         {
@@ -84,14 +85,19 @@ namespace QADraft.Controllers
 
             ViewBag.Layout = GetLayout();
 
-            var viewModel = new EventsViewModel
+            // Initialize the combined view model
+            var combinedModel = new CombinedEventsViewModel
             {
-                EventList = _context.Events.ToList(), // Assuming _context is your ApplicationDbContext instance
-                SingleEvent = new Events() // You can initialize this as needed
+                EventsViewModel = new EventsViewModel
+                {
+                    EventList = _context.Events.ToList() // Retrieve all events from the database
+                },
+                NewEvent = new Events() // Initialize a new event for the form
             };
 
-            return View(viewModel);
+            return View(combinedModel);
         }
+
 
 
         // This is the initial login referencer

@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using QADraft.Data;
 using QADraft.Services;
 using QADraft.Utilities;
+using System;
+using System.IO;
+using System.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,7 +74,7 @@ else
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseStaticFiles(); // Enable serving static files like CSS, JS, etc.
 
 app.UseRouting();
 
