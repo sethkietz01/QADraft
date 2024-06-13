@@ -58,6 +58,26 @@
             background-color: #b31f4f;
             border-color: #E6A65D
         }
+
+    .form-control,
+    select,
+    select option {
+        background-color: #f8f9fa;
+    }
+
+    select:focus,
+    select option:focus,
+    select option:hover {
+        background-color: #f8f9fa;
+    }
+
+    .placeholder {
+        background-color: #f8f9fa;
+    }
+
+    .button-container button {
+        margin-right: 10px;
+    }
 </style>
 
 <h2>Add QA</h2>
@@ -66,14 +86,14 @@
 <form asp-action="AddQA" method="post">
     <div class="form-group">
         <label asp-for="CommittedById" class="control-label">Committed By</label>
-        <select asp-for="CommittedById" class="form-control" asp-items="Model.Users">
+        <select id="committed-by" asp-for="CommittedById" class="form-control" asp-items="Model.Users" required>
             <option class="placeholder" value="" disabled selected>Select user</option>
         </select>
         <span asp-validation-for="CommittedById" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="FoundById" class="control-label">Found By</label>
-        <select asp-for="FoundById" class="form-control" asp-items="Model.Users">
+        <select id="found-by" asp-for="FoundById" class="form-control" asp-items="Model.Users">
             <option class="placeholder" value="" disabled selected>Select user</option>
         </select>
         <span asp-validation-for="FoundById" class="text-danger"></span>
@@ -81,7 +101,7 @@
     <div class="form-group">
         <label asp-for="CategoryOfError" class="control-label">Category of Error</label>
         <select asp-for="CategoryOfError" class="form-control" id="categorySelect">
-            <option value="">Select Category</option>
+            <option class="placeholder" value="" disabled selected>Select Category</option>
             <!-- Populate categories dynamically with JavaScript -->
         </select>
         <span asp-validation-for="CategoryOfError" class="text-danger"></span>
@@ -89,7 +109,8 @@
     <div class="form-group">
         <label asp-for="NatureOfError" class="control-label">Nature of Error</label>
         <select asp-for="NatureOfError" class="form-control" id="natureSelect">
-            <option value="">Select Nature</option>
+            <option class="placeholder" value="" disabled selected>Select Nature</option>
+            <option class="placeholder" value="" disabled>Please select a category to see natures</option>
             <!-- Populate natures dynamically with JavaScript -->
         </select>
         <span asp-validation-for="NatureOfError" class="text-danger"></span>
@@ -101,49 +122,39 @@
     </div>
     <div class="form-group">
         <label asp-for="CustomerName" class="control-label">Customer Name</label>
-        <input asp-for="CustomerName" class="form-control" placeholder="If none, type N/A" />
+        <input id="customer-name" asp-for="CustomerName" class="form-control" placeholder="If none, leave blank" />
         <span asp-validation-for="CustomerName" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="UnitId" class="control-label">Unit ID</label>
-        <input asp-for="UnitId" class="form-control" placeholder="If none, type N/A" />
+        <input id="unit-id" asp-for="UnitId" class="form-control" placeholder="If none, leave blank" />
         <span asp-validation-for="UnitId" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ErrorDate" class="control-label">Error Date</label>
-        <input asp-for="ErrorDate" class="form-control" type="date" value="@Model.ErrorDate.ToString("yyyy-MM-dd")" />
+        <label asp-for="ErrorDate" class="control-label">Commited On</label>
+        <input id="commited-on" asp-for="ErrorDate" class="form-control" type="date" value="@Model.ErrorDate.ToString("yyyy-MM-dd")" />
         <span asp-validation-for="ErrorDate" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="FoundOn" class="control-label">Found On</label>
-        <input asp-for="FoundOn" class="form-control" type="date" />
+        <input id="found-on" asp-for="FoundOn" class="form-control" type="date" />
         <span asp-validation-for="FoundOn" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Description" class="control-label">Description</label>
-        <textarea asp-for="Description" class="form-control" placeholder="Describe the QA"></textarea>
+        <textarea id="description" asp-for="Description" class="form-control" placeholder="Describe the QA"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
-    <!-- Form Submit -->
-    <input type="submit" value="Add QA" hidden/>
-
+        <!-- Form Submit -->
+        <input type="submit" value="Add QA" hidden/>
 </form>
 
-<div>
-    <button onclick="openConfirmation()" class="btn buttons form-buttons">Add QA</button>
-</div>
+<div class="button-container">
+    <button onclick="openConfirmation()" class="btn buttons form-buttons">Submit</button>
 
-
-<!-- Add QA Complete Popup -->
-<div id="confirmationDialog" class="confirmation-dialog">
-    <div class="confirmation-content">
-        <p>Press Confirm to submit the QA Report</p>
-        <div class="confirmation-buttons">
-            <button class="btn btn-danger" onclick="confirmAdd()">Confirm</button>
-            <button class="btn btn-secondary" onclick="closeConfirmation()">Cancel</button>
-        </div>
-    </div>
+    <!-- Cancel and redirect to home -->
+    <a class="btn buttons form-buttons" asp-area="" asp-controller="Home" asp-action="Index">Cancel</a>
 </div>
 
 @section Scripts {
@@ -215,9 +226,8 @@
             // Update nature options when category changes
             categorySelect.addEventListener("change", function() {
                 var selectedCategory = categorySelect.value;
-                natureSelect.innerHTML = '<option value="">Select Nature</option>'; // Reset natures
-                severityInput.value = ''; // Reset severity
-                severityInput.style.backgroundColor = "#fff";
+                natureSelect.innerHTML = '<option class="placeholder" value="" disabled selected>Select Nature</option>'; // Reset natures
+                severityInput.value = '0'; // Reset severity
 
                 if (selectedCategory) {
                     var natures = natureMapping.filter(m => m.categories.includes(selectedCategory));
@@ -236,63 +246,57 @@
                 var selectedOption = natureSelect.options[natureSelect.selectedIndex];
                 severity = selectedOption.dataset.severity || '';
                 severityInput.value = severity;
-
-                switch (severity)
-                {
-                    case '1':
-                        severityInput.style.background = "#ffe000";
-                        break;
-                    case '2':
-                        severityInput.style.background = "#ffce00";
-                        break;
-                    case '3':
-                        severityInput.style.background = "#ffb700";
-                        break;
-                    case '4':
-                        severityInput.style.background = "#ffb000";
-                        break;
-                    case '5':
-                        severityInput.style.background = "#ffa500";
-                        break;
-                    case '6':
-                        severityInput.style.background = "#ff9900";
-                        break;
-                    case '7':
-                        severityInput.style.background = "#ff8e00";
-                        break;
-                    case '8':
-                        severityInput.style.background = "#ff7b00";
-                        break;
-                    case '9':
-                        severityInput.style.background = "#dc0505";
-                        break;
-                    case '10':
-                        severityInput.style.background = "#dc0542";
-                        break;
-                    default:
-                        severityInput.style.background = "#fff";
-                }
             });
         });
 
-
         function openConfirmation() {
-            console.log("OpenConfirmation");
 
             // Show the confirmation dialog
-            document.getElementById('confirmationDialog').style.display = 'block';
+            var confirmed = confirm("Press OK to submit the QA Report");
+
+
+            if (confirmed) {
+                // If 'Confirm' is clicked, submit the form
+                document.querySelector('input[type="submit"][value="Add QA"]').click();
+            }
         }
 
-        function closeConfirmation() {
-            document.getElementById('confirmationDialog').style.display = 'none';
+        function validateDates() {
+            var committedOnDate = new Date(document.getElementById("commited-on").value);
+            var foundOnDate = new Date(document.getElementById("found-on").value);
+
+            if (committedOnDate > foundOnDate) {
+                alert("Committed on date cannot be after the found on date."); // Show error message
+                return false; // Prevent form submission
+            }
+            return true; // Allow form submission
         }
 
-        function confirmAdd() {
-            closeConfirmation();
-            document.querySelector('input[type="submit"][value="Add QA"]').click();
-            console.log("Clicked");
-            closeConfirmationDialog();
-            return false;
-        }
+        // Add event listener for form submission
+        document.querySelector('form').addEventListener('submit', function(event) {
+            var committedBy = document.getElementById("committed-by");
+            var foundBy = document.getElementById("found-by");
+            var category = document.getElementById("categorySelect");
+            var nature = document.getElementById("natureSelect");
+            var customerName = document.getElementById("customer-name");
+            var unitId = document.getElementById("unit-id");
+            var description = document.getElementById("description");
+
+
+            // Validate dates before form submission
+            if (! validateDates()) {
+                event.preventDefault(); // Prevent form submission
+            }
+
+            // Automatically populate the customer name and unit ID with N/A if they are left blank
+            if (committedBy.selectedIndex !== -1 && foundBy.selectedIndex !== -1 && category.selectedIndex !== -1 && nature.selectedIndex !== -1 && description.value.trim() !== "")
+            {
+                 if (! customerName.value)
+                    customerName.value = "N/A";
+
+                if (! unitId.value)
+                    unitId.value = "N/A";
+            }
+        });
     </script>
 }

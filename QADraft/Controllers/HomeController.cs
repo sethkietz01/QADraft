@@ -31,41 +31,49 @@ namespace QADraft.Controllers
          * TEST
         */
 
-        public IActionResult TestChart()
+        public Dictionary<string, int> GetQADict(string type)
         {
             // Get all QA categories and natures from db
             var qas = _context.GeekQAs
                 .Select(qa => new { qa.CategoryOfError, qa.NatureOfError })
                 .ToList();
-
-            //convert into two lists, one for natures one for categories
-            var categoryDict = qas
-                .GroupBy(qa => qa.CategoryOfError)
-                .ToDictionary(g => g.Key, g => g.Count());
-
-            var natureDict = qas
-                .GroupBy(qa => qa.NatureOfError)
-                .ToDictionary(g => g.Key, g => g.Count());
-
-            Console.WriteLine(categoryDict);
-            foreach (var kvp in categoryDict)
+            var Dict = new Dictionary<string, int>();
+            if (type == "category") {
+                //convert into two lists, one for natures one for categories
+                Dict = qas
+                    .GroupBy(qa => qa.CategoryOfError)
+                    .ToDictionary(g => g.Key, g => g.Count());
+            }
+            else if (type == "nature") {
+                Dict = qas
+                    .GroupBy(qa => qa.NatureOfError)
+                    .ToDictionary(g => g.Key, g => g.Count());
+            }
+            Console.WriteLine(Dict);
+            foreach (var kvp in Dict)
             {
                 Console.WriteLine($"Category: {kvp.Key}, Count: {kvp.Value}");
             }
-
-            Console.WriteLine(natureDict);
-            foreach (var kvp in natureDict)
-            {
-                Console.WriteLine($"Nature: {kvp.Key}, Count: {kvp.Value}");
-            }
-
-            ViewBag.categoryDict = categoryDict;
-            ViewBag.natureDict = natureDict;
-
-            return View(ViewBag);
+            return Dict;
         }
 
+        public IActionResult TestChart()
+        {
+            ViewBag.categoryDict = GetQADict("category");
+            ViewBag.natureDict = GetQADict("nature");
 
+            return View();
+        }
+
+        public IActionResult PieChart()
+        {
+
+            return View();
+        }
+
+        /*
+         * TEST END
+        */ 
 
         public IActionResult Index()
         {

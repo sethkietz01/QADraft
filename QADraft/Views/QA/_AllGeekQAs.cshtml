@@ -68,6 +68,11 @@
  
 <partial name="_ReportsMenu" />
 <h2>All QAs</h2>
+
+<button onclick="call('category')">Category</button>
+<button onclick="call('nature')">Nature</button>
+<partial name="PieChart"/>
+
  
 <!-- Table used to output QAs -->
 <table class="table table-striped" id="table">
@@ -78,7 +83,8 @@
             <th onclick="sortTable(2)">Category<span class="arrow"></th>
             <th onclick="sortTable(3)">Nature<span class="arrow"></th>
             <th onclick="sortTable(4)">Severity<span class="arrow"></th>
-            <th onclick="sortTable(5)">Date<span class="arrow"></th>
+            <th onclick="sortTable(5)">Commited On<span class="arrow"></th>
+            <th onclick="sortTable(6)">Found On<span class="arrow"></th>
             <th class="noSort">Actions</th> 
         </tr>
     </thead>
