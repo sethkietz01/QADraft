@@ -69,10 +69,13 @@
 <partial name="_ReportsMenu" />
 <h2>All QAs</h2>
 
-<button onclick="call('category')">Category</button>
-<button onclick="call('nature')">Nature</button>
-<partial name="PieChart"/>
-
+<!-- Show and hide piechart -->
+<button onclick="toggleChart()" class="btn buttons">Show/Hide</button>
+<div>
+    <div id="chartDiv">
+        <partial name="PieChart"/>
+    </div>
+</div>
  
 <!-- Table used to output QAs -->
 <table class="table table-striped" id="table">
@@ -187,6 +190,17 @@
             return false;
         }
 
+        //set initial state to hidden
+        var toggle = false;
+        toggleChart();
+
+        function toggleChart() {
+            $("#chartDiv").toggle(toggle);
+            $("#categoryBtn").toggle(toggle);
+            $("#natureBtn").toggle(toggle);
+            toggle = !toggle;
+        }
+        
     </script>
 }
  

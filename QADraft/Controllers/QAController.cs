@@ -192,6 +192,8 @@ namespace QADraft.Controllers
                 .Include(q => q.FoundBy)
                 .ToList();
 
+            //code to get data for piechart
+            Console.WriteLine("Call PieChart");
             ViewBag.categoryDict = GetQADict("category");
             ViewBag.natureDict = GetQADict("nature");
 

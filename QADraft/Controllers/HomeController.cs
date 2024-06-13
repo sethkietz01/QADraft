@@ -51,28 +51,29 @@ namespace QADraft.Controllers
             Console.WriteLine(Dict);
             foreach (var kvp in Dict)
             {
-                Console.WriteLine($"Category: {kvp.Key}, Count: {kvp.Value}");
+                Console.WriteLine($"{kvp.Key} : {kvp.Value}");
             }
             return Dict;
         }
 
         public IActionResult TestChart()
         {
+            Console.WriteLine("Call PieChart");
             ViewBag.categoryDict = GetQADict("category");
             ViewBag.natureDict = GetQADict("nature");
-
             return View();
         }
 
         public IActionResult PieChart()
         {
+            
 
             return View();
         }
 
         /*
          * TEST END
-        */ 
+        */
 
         public IActionResult Index()
         {
