@@ -31,14 +31,17 @@
     <div class="container">
         <h2 class="text-center">Login</h2>
         <form asp-action="Login" method="post">
+            <!-- Label and text input for username -->
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" class="form-control" id="username" name="username" required>
             </div>
+            <!-- Label and password input for password -->
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
+            <!-- Form Submit button -->
             <button type="submit" class="btn buttons">Login</button>
         </form>
     </div>

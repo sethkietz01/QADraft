@@ -76,71 +76,87 @@
     <h1 class="display-4">Welcome, @Context.Session.GetString("FirstName")!</h1>
 </div>
 
+<!-- Side bar that contains external links -->
 <div class="link-container">
     <div class="link-bar">
-        <a class="link" title="Argos" href="https://argosp.eku.edu/Argos/AWV/#explorer/Geeks/Equipment%20Checkout" target="_blank"><img src="~/images/argosLogo.png" alt="Argos"></a>
+        <!-- Each link has an image imbedded into them. The links will open in a new tab. -->
+        <a class="link" href="" onclick="openAll()">Open All</a> <!-- Shortcut to open all external links at once -->
+
+        <a class="link" title="Argos" href="https://argosp.eku.edu/Argos/AWV/#explorer/Geeks/Equipment%20Checkout" target="_blank" rel="noopener noreferrer"><img src="~/images/argosLogo.png" alt="Argos"></a>
         <a class="link" title="Asana" href="https://app.asana.com/-/login?_gl=1*lpkqvz*_ga*MjM4ODA2MDE5LjE3MTY0NzUyMjQ.*_ga_J1KDXMCQTH*MTcxNjQ3NTIyNC4xLjEuMTcxNjQ3NTIyNC42MC4wLjEwNTc1MjYwMTA.*_fplc*bjdDRk1QMTklMkZaaXpyMlo4NUkwaVVBcFRxWW5aQzFySXQ5JTJCaUo1QjFTOGdiWDNOSUhUMUMlMkJ1d1htb3NqNks2WmtkaG51ZVBuTjViQzFtUXoxRzhsUzlpMDZRVnY4b0JTTnFYYnBIaklwRlFBcUpBS3MxdnZXNTJjNVZta1V3JTNEJTNE" target="_blank"><img src="~/images/asanaLogo.png" alt="Asana"></a>
         <a class="link" title="Docusign" href="https://account.docusign.com/oauth/auth?response_type=code&scope=all%20click.manage%20me_profile%20room_forms%20room_fields%20inproductcommunication_read%20data_explorer_signing_insights%20notary_read%20notary_write%20search_read%20search_write%20webforms_manage%20dtr%20valmod_manage%20signature&client_id=2CC56DC9-4BCD-4B55-8AB0-8BA60BAE1065&redirect_uri=https%3A%2F%2Fapps.docusign.com%2Fauthenticate&state=%7B%22widgetId%22%3A%22%40ds%2Fsend%22%2C%22xsrfToken%22%3A%22tKVf99o%2B5aaZ0d%2Bc8bp%2B%2B5D9h0qXk3IZT799yTuMknkDgNACnVPzjWynA8zxlH%2FKIcVY2vtAfu6vzo%2BvLGg8avfd%2FKn379N4HWJwxhDyHT9prk2TNzaSpmqvqllpphw7fvcWONPy47J216fgi2XsYgvYUXDY07kT4oYZGwDU6ks%3D%22%2C%22redirectUri%22%3A%22%2Fsend%22%7D" target="_blank"><img src="~/images/docusignLogo.png" alt="Docusign"></a>
         <a class="link" title="Google Drive" href="https://www.google.com/intl/en-US/drive/" target="_blank"><img src="~/images/driveLogo.png" alt="Google Drive"></a>
         <a class="link" title="EKU myMail" href="https://it.eku.edu/mso365" target="_blank"><img src="~/images/mymailLogo.png" alt="myMail"></a>
         <a class="link" title="Snipe-IT" href="https://itservice6.eku.edu/login" target="_blank"><img src="~/images/snipeitLogo.png" alt="Snipe-IT"></a>
     </div>
+    <script>
+        // JS for link-shortcut options. window.open() will open the given link in a new tab
+        function openAll(){
+            window.open("https://argosp.eku.edu/Argos/AWV/#explorer/Geeks/Equipment%20Checkout", "_blank");
+            window.open("https://app.asana.com/-/login?_gl=1*lpkqvz*_ga*MjM4ODA2MDE5LjE3MTY0NzUyMjQ.*_ga_J1KDXMCQTH*MTcxNjQ3NTIyNC4xLjEuMTcxNjQ3NTIyNC42MC4wLjEwNTc1MjYwMTA.*_fplc*bjdDRk1QMTklMkZaaXpyMlo4NUkwaVVBcFRxWW5aQzFySXQ5JTJCaUo1QjFTOGdiWDNOSUhUMUMlMkJ1d1htb3NqNks2WmtkaG51ZVBuTjViQzFtUXoxRzhsUzlpMDZRVnY4b0JTTnFYYnBIaklwRlFBcUpBS3MxdnZXNTJjNVZta1V3JTNEJTNE");
+            window.open("https://account.docusign.com/oauth/auth?response_type=code&scope=all%20click.manage%20me_profile%20room_forms%20room_fields%20inproductcommunication_read%20data_explorer_signing_insights%20notary_read%20notary_write%20search_read%20search_write%20webforms_manage%20dtr%20valmod_manage%20signature&client_id=2CC56DC9-4BCD-4B55-8AB0-8BA60BAE1065&redirect_uri=https%3A%2F%2Fapps.docusign.com%2Fauthenticate&state=%7B%22widgetId%22%3A%22%40ds%2Fsend%22%2C%22xsrfToken%22%3A%22tKVf99o%2B5aaZ0d%2Bc8bp%2B%2B5D9h0qXk3IZT799yTuMknkDgNACnVPzjWynA8zxlH%2FKIcVY2vtAfu6vzo%2BvLGg8avfd%2FKn379N4HWJwxhDyHT9prk2TNzaSpmqvqllpphw7fvcWONPy47J216fgi2XsYgvYUXDY07kT4oYZGwDU6ks%3D%22%2C%22redirectUri%22%3A%22%2Fsend%22%7D");
+            window.open("https://www.google.com/intl/en-US/drive/");
+            window.open("https://it.eku.edu/mso365");
+            window.open("https://itservice6.eku.edu/login");
+        }
+    </script>
 </div>
 
 <body class="dashboard">
     <div class="calendar">
         <p>Event Calendar</p>
         <textarea id="eventCalendar" rows="15" cols="50" style="resize: none; width: 100%;" readonly>
-@{
-    // Construct a string with all event details.
-    string eventText = "";
-    foreach (var evt in Model.EventsViewModel.EventList)
-    {
-        eventText += $"{evt.EventTime.ToString("yyyy-MM-dd")} - {evt.EventInformation}\n";
-    }
-    // Output the plain text.
-    @eventText
-}
+            @{
+                // Construct a string with all event details.
+                string eventText = "";
+                // Iterate through the events in EventsViewModel
+                foreach (var evt in Model.EventsViewModel.EventList)
+                {
+                    // Parse the event info to string and concat wiht eventText
+                    eventText += $"{evt.EventTime.ToString("yyyy-MM-dd")} - {evt.EventInformation}\n";
+                }
+                // Output the plain text.
+                @eventText
+            }
         </textarea>
     </div>
 
     <!-- Trigger Button for Modal -->
-    <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addEventModal">
-        Add New Event
-    </button>
+    <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#addEventModal">Add New Event</button>
 
-<!-- Modal for Adding Event -->
-<div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addEventModalLabel">Add New Event</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Form that posts to the EventController's AddEvent action -->
-            <!-- Update the form tag to pass the CombinedEventsViewModel -->
-            <form asp-controller="Event" asp-action="AddEvent" method="post">
-                <div class="form-group">
-                    <label asp-for="EventsViewModel.SingleEvent.EventTime" class="control-label">Event Time</label>
-                    <input asp-for="EventsViewModel.SingleEvent.EventTime" class="form-control" type="date" />
-                    <span asp-validation-for="EventsViewModel.SingleEvent.EventTime" class="text-danger"></span>
+    <!-- Modal for Adding Event -->
+    <div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addEventModalLabel">Add New Event</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="form-group">
-                    <label asp-for="EventsViewModel.SingleEvent.EventInformation" class="control-label">Event Information</label>
-                    <input asp-for="EventsViewModel.SingleEvent.EventInformation" class="form-control" placeholder="Enter Event Info" />
-                    <span asp-validation-for="EventsViewModel.SingleEvent.EventInformation" class="text-danger"></span>
+                <div class="modal-body">
+                    <!-- Form that posts to the EventController's AddEvent action -->
+                <!-- Update the form tag to pass the CombinedEventsViewModel -->
+                <form asp-controller="Event" asp-action="AddEvent" method="post">
+                    <div class="form-group">
+                        <label asp-for="EventsViewModel.SingleEvent.EventTime" class="control-label">Event Time</label>
+                        <input asp-for="EventsViewModel.SingleEvent.EventTime" class="form-control" type="date" />
+                        <span asp-validation-for="EventsViewModel.SingleEvent.EventTime" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EventsViewModel.SingleEvent.EventInformation" class="control-label">Event Information</label>
+                        <input asp-for="EventsViewModel.SingleEvent.EventInformation" class="form-control" placeholder="Enter Event Info" />
+                        <span asp-validation-for="EventsViewModel.SingleEvent.EventInformation" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Event</button>
+                </form>
                 </div>
-                <button type="submit" class="btn btn-primary">Add Event</button>
-            </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
+    <!-- Dashboard button elements -->
     <div class="dashboard-buttons">
         <div>
             <button class="dash-button">Button1</button>
