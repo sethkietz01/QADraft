@@ -32,9 +32,11 @@ namespace QADraft.Models
 
         public int Severity { get; set; }
 
+        [Required(ErrorMessage = " ")]
         [StringLength(100)]
         public string CustomerName { get; set; }
 
+        [Required(ErrorMessage = " ")]
         [StringLength(50)]
         public string UnitId { get; set; }
 
