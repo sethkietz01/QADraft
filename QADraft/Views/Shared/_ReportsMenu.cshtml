@@ -1,24 +1,33 @@
 ﻿<style>
   
-     tr:nth-child(even) {
+    .table-test {
+        padding: .5rem .5rem;
+        padding-top: 0.5rem;
+        padding-right: 0.5rem;
+        padding-bottom: 0.5rem;
+        padding-left: 0.5rem;
+        width: 100%;
+    }
+
+    .table-test tr {
+        height: 50px;
+        border-bottom: 1px solid #aaaaaa;
+    }
+
+    .table-test tr:nth-child(even) {
         background-color: #eaeaea;
     }
 
-    tr:nth-child(odd) {
+    .table-test tr:nth-child(odd) {
         background-color: #f5f5f5;
     }
 
-    td {
-        vertical-align: middle;
+    .table-test td {
+        vertical-align: middle
     }
 
-    td:nth-child(5) {
-        background-color: #f5f5f5;
-        border-radius: 10px;
-    }
-
-    th:nth-child(n + 5),
-    td:nth-child(n + 5) {
+    .table-test th:nth-child(n + 5),
+    .table-test td:nth-child(n + 5) {
         text-align: center;
     }
 
@@ -48,6 +57,25 @@
         cursor: default;
         user-select: none;
     }
+
+
+    .test-span {
+        position: absolute;
+        top: 10%;
+        left: 25%;
+        width: 50%;
+        height: 75%;
+        display: flex; /* Use flexbox for centering */
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        box-sizing: border-box;
+        border-radius: 10px;
+    }
+
+    .severity-cell {
+        position: relative; 
+    }
+
 
 </style>
 
@@ -203,13 +231,44 @@
     function applySeverityColors() {
         var severityCells = document.querySelectorAll('td[data-severity]');
 
-        severityCells.forEach(function(cell) {
-            var severity = cell.getAttribute('data-severity');
-            var color = getSeverityColor(severity);
+    severityCells.forEach(function(cell, index) {
+        var severity = cell.getAttribute('data-severity');
+        var severityColor = getSeverityColor(severity);
+        var backgroundColor = '#000';
+        
+        if (index % 2 === 0) 
+        {
+            backgroundColor = '#f5f5f5';
+        } 
+        else 
+        {
+            backgroundColor = '#eaeaea';
+        }
 
-            cell.style.backgroundColor = color;
-        });
-    }
+        // Color the whole cell
+        //cell.style.backgroundColor = severityColor;
+
+        // Color the border of the cell
+        //cell.style.border = `2px solid ${severityColor}`;
+
+        // Style a span
+        /*
+        var span = cell.querySelector('.test-span');
+        if (span) {
+            span.style.backgroundColor = severityColor;
+        }
+        */
+
+        // Simple radial gradient
+        //cell.style.background = `radial-gradient(circle, ${severityColor} 10%, rgba(255,255,255,0) 50%, ${backgroundColor} 100%)`;
+
+        // Hollow radial gradient
+        cell.style.background = `radial-gradient(circle, rgba(255,255,255,0) 20%, ${severityColor} 40%,  ${backgroundColor} 45%)`;
+        cell.style.borderBottom = '1px solid #aaaaaa';
+
+        
+    });
+}
 
     document.addEventListener('DOMContentLoaded', function() {
         applySeverityColors();
