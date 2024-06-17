@@ -27,10 +27,6 @@ namespace QADraft.Controllers
             _logger = logger;
         }
 
-        /*
-         * TEST
-        */
-
         public Dictionary<string, int> GetQADict(string type)
         {
             // Get all QA categories and natures from db
@@ -57,25 +53,13 @@ namespace QADraft.Controllers
             return Dict;
         }
 
-        public IActionResult TestChart()
-        {
-            Console.WriteLine("Call PieChart");
-            ViewBag.categoryDict = GetQADict("category");
-            ViewBag.natureDict = GetQADict("nature");
-            return View();
-        }
-
         public IActionResult PieChart()
         {
-            
+            Debug.WriteLine("PieChart");
 
             return View();
         }
 
-
-        /*
-         * TEST END
-        */
 
         public IActionResult Index()
         {
