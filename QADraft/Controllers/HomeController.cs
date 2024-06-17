@@ -70,7 +70,7 @@ namespace QADraft.Controllers
 
             ViewBag.Layout = GetLayout();
 
-            // Initialize the combined view model
+            // Initialize CombinedEventsViewModel
             var combinedModel = new CombinedEventsViewModel
             {
                 EventsViewModel = new EventsViewModel
@@ -82,6 +82,7 @@ namespace QADraft.Controllers
 
             return View(combinedModel);
         }
+    
 
 
 
