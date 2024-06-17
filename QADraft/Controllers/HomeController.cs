@@ -157,6 +157,8 @@ namespace QADraft.Controllers
         [HttpGet]
         public IActionResult Outages()
         {
+            DoPing.ping();
+
             return View();
         }
 
