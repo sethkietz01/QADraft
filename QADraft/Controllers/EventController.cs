@@ -4,7 +4,6 @@ using QADraft.Data;
 using QADraft.Models;
 using QADraft.ViewModels;
 using System;
-using System.Linq;
 
 namespace QADraft.Controllers
 {
@@ -19,60 +18,32 @@ namespace QADraft.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
-        {
-
-
-            return View(); // Ensure this view is located in /Views/Event/Index.cshtml
-        }
-
         [HttpPost]
-        public IActionResult AddEvent(CombinedEventsViewModel combinedModel)
+        public IActionResult AddEvent(Events newEvent)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // Add the new event to the database
-                    _context.Events.Add(combinedModel.NewEvent);
+                    _context.Events.Add(newEvent);
                     _context.SaveChanges();
-
-                    // Redirect to Index action after successful addition
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Home");
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error saving Event");
                     ModelState.AddModelError(string.Empty, "An error occurred while saving the Event. Please try again.");
-
-                    // Log exception details
-                    _logger.LogError(ex, "Exception occurred while saving the event: {Message}", ex.Message);
-                }
-            }
-            else
-            {
-                // Log ModelState errors if ModelState is not valid
-                foreach (var modelState in ModelState.Values)
-                {
-                    foreach (var error in modelState.Errors)
-                    {
-                        _logger.LogError(error.ErrorMessage);
-                    }
                 }
             }
 
-            // If model state is not valid or there's an error, reload the view with the current combined model
-            combinedModel.EventsViewModel = new EventsViewModel
+            // If ModelState is not valid, return to Index with the current CombinedEventsViewModel
+            var viewModel = new CombinedEventsViewModel
             {
-                EventList = _context.Events.ToList() // Refresh the event list
+                NewEvent = newEvent,
+                EventsViewModel = new EventsViewModel() // Replace with your actual EventsViewModel initialization
             };
 
-            // Add a flag to indicate the modal should stay open
-            ViewBag.ShowModal = true;
-
-            // Return the view with the layout
-            return View("Index", combinedModel);
+            return View("Index", viewModel);
         }
-
     }
 }
