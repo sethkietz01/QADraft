@@ -241,9 +241,10 @@ namespace QADraft.Controllers
         {
             Debug.WriteLine("ManagQA reached");
             Debug.WriteLine("Action: ", action);
-            if (action == "Update")
+            if (action == "View/Edit")
             {
-                Debug.WriteLine("Update QA Reached");
+                Debug.WriteLine(qaId);
+                Debug.WriteLine("Edit QA");
                 return RedirectToAction("EditQA", new { id = qaId });
             }
             else if (action == "Delete QA")
@@ -255,10 +256,42 @@ namespace QADraft.Controllers
             return RedirectToAction("Index"); // Default redirection
         }
 
+        [HttpGet]
+        public IActionResult ViewQA(int id)
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login");
+            }
+
+            var qa = _context.GeekQAs.Find(id);
+            if (qa == null)
+            {
+                return NotFound();
+            }
+
+            var users = _context.Users.Select(u => new SelectListItem
+            {
+                Value = u.Id.ToString(),
+                Text = $"{u.FirstName} {u.LastName}"
+            }).ToList();
+
+            qa.Users = users;
+
+            Console.WriteLine("QA:" + qa.Id);
+            Console.WriteLine(qa.Users);
+            Console.WriteLine(qa.CategoryOfError);
+            Console.WriteLine(qa.NatureOfError);
+
+            return View(qa);
+        }
+
 
         [HttpGet]
         public IActionResult EditQA(int id)
         {
+            Debug.WriteLine("id:");
+            Debug.WriteLine(id);
             if (!IsAuthenticated())
             {
                 return RedirectToAction("Login");
