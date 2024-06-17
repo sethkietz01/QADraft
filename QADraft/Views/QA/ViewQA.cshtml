@@ -1,0 +1,65 @@
+﻿@model GeekQA
+
+@{
+    ViewData["Title"] = "View QA";
+}
+
+<h2>View QA</h2>
+
+<!-- Display the QA information as readonly -->
+<div>
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <!-- Displaying individual fields as readonly -->
+    <div class="form-group">
+        <label asp-for="CommittedById" class="control-label">Commited By</label>
+        <input type="text" asp-for="CommittedById" class="form-control" asp-items="Model.Users" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="FoundById" class="control-label">Found By</label>
+        <input type="text" asp-for="FoundById" class="form-control" asp-items="Model.Users" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="CategoryOfError" class="control-label">Category of Error</label>
+        <input type="text" asp-for="CategoryOfError" class="form-control" id="categoryinput" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="NatureOfError" class="control-label">Nature of Error</label>
+        <input type="text" asp-for="NatureOfError" class="form-control" id="natureinput" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="Severity" class="control-label">Severity</label>
+        <input type="text" asp-for="Severity" class="form-control" id="severityInput" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="CustomerName" class="control-label">Customer Name</label>
+        <input type="text" asp-for="CustomerName" class="form-control" placeholder="If none, type N/A" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="UnitId" class="control-label">Unit ID</label>
+        <input type="text" asp-for="UnitId" class="form-control" placeholder="If none, type N/A" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="ErrorDate" class="control-label">Error Date</label>
+        <input type="text" asp-for="ErrorDate" class="form-control" value="@Model.ErrorDate.ToString("MM/dd/yyyy")" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="FoundOn" class="control-label">Found On</label>
+        <input type="text" asp-for="FoundOn" class="form-control" value="@Model.ErrorDate.ToString("MM/dd/yyyy")" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label">Description</label>
+        <textarea asp-for="Description" class="form-control" placeholder="Describe the QA" readonly></textarea>
+    </div>
+
+    <!-- Form for editing -->
+    <form method="post" asp-controller="QA" asp-action="ManageQA">
+        <input id="idinput" type="hidden" asp-for="Id" />
+        <button type="button" onclick="history.back()" class="btn buttons">Go Back</button>
+        <input type="submit" id="editButton" name="action" value="Edit" class="btn buttons" />
+    </form>
+</div>
+
+<script>
+    console.log( document.getElementById("idinput").value );
+</script>

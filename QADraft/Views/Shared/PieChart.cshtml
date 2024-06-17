@@ -224,7 +224,7 @@ function update(data) {
       .attr("transform", d => `translate(${arc.centroid(d)})`)
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
-      .text((d, i) => percents[i]); // Numbering starts from 1
+      .text((d, i) => percents[i] + "%"); // Numbering starts from 1
 
     // Remove old label numbers
     svg.selectAll(".labelNumber")

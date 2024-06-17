@@ -1,28 +1,27 @@
 ﻿@model GeekQA
 
-@{
-    ViewData["Title"] = "Edit QA";
-}
-
-<h2>Edit QA</h2>
+<head>
+    <title id="page-title">QA</title>
+</head>
+<h2 id="title">QA</h2>
 
 <!-- Form to get updated information on the selected user -->
-<form asp-action="EditQA" method="post">
+<form id="form-items" asp-action="EditQA" method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
     <input type="hidden" asp-for="Id" />
     <div class="form-group">
         <label asp-for="CommittedById" class="control-label"></label>
-        <select asp-for="CommittedById" class="form-control" asp-items="Model.Users"></select>
+        <select id="commitedSelect" asp-for="CommittedById" class="form-control" asp-items="Model.Users"></select>
         <span asp-validation-for="CommittedById" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="FoundById" class="control-label"></label>
-        <select asp-for="FoundById" class="form-control" asp-items="Model.Users"></select>
+        <select id="foundSelect" asp-for="FoundById" class="form-control" asp-items="Model.Users"></select>
         <span asp-validation-for="FoundById" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="CategoryOfError" class="control-label"></label>
-        <select asp-for="CategoryOfError" class="form-control" id="categorySelect">
+        <select id="categorySelect" asp-for="CategoryOfError" class="form-control" id="categorySelect">
             <option value="">Select Category</option>
             <!-- Populate categories dynamically with JavaScript -->
         </select>
@@ -30,7 +29,7 @@
     </div>
     <div class="form-group">
         <label asp-for="NatureOfError" class="control-label"></label>
-        <select asp-for="NatureOfError" class="form-control" id="natureSelect">
+        <select id="natureSelect" asp-for="NatureOfError" class="form-control" id="natureSelect">
             <option value="">Select Nature</option>
             <!-- Populate natures dynamically with JavaScript -->
         </select>
@@ -66,15 +65,107 @@
         <textarea asp-for="Description" class="form-control" placeholder="Describe the QA"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <input type="submit" value="Save Changes" class="btn buttons form-buttons" />
+    <div style="margin-top: 10px;">
+        <button type="button" onclick="history.back()" class="btn buttons">Go Back</button>
+        <button id="editBtn" type="button" onclick="edit()" class="btn buttons">Edit QA</button>
+        <button id="viewBtn" type="button" onclick="view()" class="btn buttons">View QA</button>
+        <input id="saveChanges" type="submit" value="Save Changes" class="btn buttons" />
     </div>
+
+
 </form>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
+        // Load initial state as view
+        view();
+
+        function edit() {
+            // Set the header text and page title
+            document.getElementById("title").textContent = "Edit QA";
+            document.title = "Edit QA";
+
+            // Return to top of page
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'  // Optional: smooth scroll animation
+            });
+
+            // Switch the show/edit button's visibility
+            document.getElementById("editBtn").style.display = 'none' // Hide
+            document.getElementById("viewBtn").style.display = 'inline-block' // Show
+
+            // Show the save changes button
+            document.getElementById("saveChanges").style.display = 'inline-block' // Show
+
+            // Get the form element
+            const form = document.getElementById('form-items');
+
+            // Disable 
+
+            // Check if the form exists
+            if (form) {
+                // Get all form elements inside the form
+                const elements = form.elements;
+
+                // Convert the elements collection to an array
+                const elementsArray = Array.from(elements);
+
+                // Iterate through each element
+                elementsArray.forEach(element => {
+                    // Check if the element is an input, select, or textarea
+                    if (element.tagName === 'INPUT' || element.tagName === 'SELECT' || element.tagName === 'TEXTAREA') {
+                        // Enable the element
+                        element.disabled = false;
+                    }
+                });
+            }
+        }
+
+        function view() {
+            // Set the header text
+            document.getElementById("title").textContent = "View QA";
+            document.title = "View QA";
+
+            // Return to top of page
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'  // Optional: smooth scroll animation
+            });
+
+            // Switch the show/edit button's visibility
+            document.getElementById("editBtn").style.display = 'inline-block' // Show
+            document.getElementById("viewBtn").style.display = 'none' // Hide
+
+            // Hide the save changes button
+            document.getElementById("saveChanges").style.display = 'none' // Hide
+
+            // Get the form element
+            const form = document.getElementById('form-items');
+
+            // Check if the form exists
+            if (form) {
+                // Get all form elements inside the form
+                const elements = form.elements;
+
+                // Convert the elements collection to an array
+                const elementsArray = Array.from(elements);
+
+                // Iterate through each element
+                elementsArray.forEach(element => {
+                    // Check if the element is an input, select, or textarea
+                    if (element.tagName === 'INPUT' || element.tagName === 'SELECT' || element.tagName === 'TEXTAREA') {
+                        // Disable the element
+                        element.disabled = true;
+                    }
+                });
+            }
+        }
+        
+
+
         var natureMapping = [
             { nature: "Didn't check out asset at all (Not in SnipeIT)", categories: ["Snipe-It"], severity: "9", involves: "" },
             { nature: "Didn't update Snipe-It at all (Rechecks/Check ins)", categories: ["Snipe-It"], severity: "9", involves: "" },
@@ -171,8 +262,8 @@
                 option.dataset.severity = nature.severity;
                 natureSelect.appendChild(option);
             });
-            natureSelect.value = "@Model.NatureOfError";
-            severityInput.value = "@Model.Severity";
+            natureSelect.value = "@Html.Raw(Model.NatureOfError)";
+            severityInput.value = "@Html.Raw(Model.Severity)";
         });
     </script>
 }

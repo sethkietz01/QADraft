@@ -39,6 +39,7 @@
     }
 
     th {
+        min-width: 150px;
         cursor: pointer;
         user-select: none;
     }
@@ -200,17 +201,18 @@
         
 
     function applySeverityColors() {
-    var severityCells = document.querySelectorAll('td[data-severity]');
+        var severityCells = document.querySelectorAll('td[data-severity]');
 
-    severityCells.forEach(function(cell) {
-        var severity = cell.getAttribute('data-severity');
-        var color = getSeverityColor(severity);
+        severityCells.forEach(function(cell) {
+            var severity = cell.getAttribute('data-severity');
+            var color = getSeverityColor(severity);
 
-        cell.style.backgroundColor = color;
-    });
-}
+            cell.style.backgroundColor = color;
+        });
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         applySeverityColors();
     });
+
 </script>
