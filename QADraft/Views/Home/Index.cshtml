@@ -105,14 +105,24 @@
 <body class="dashboard">
     <div class="calendar">
         <p>Event Calendar</p>
-        <textarea id="eventCalendar" rows="15" cols="50" style="resize: none; width: 100%;" readonly>
-@{
-    var eventsString = string.Join("\n", Model.EventsViewModel.EventList.Select(e => $"{e.EventTime} - {e.EventInformation}"));
-    @eventsString
-}
-        </textarea>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Event Time</th>
+                    <th>Event Information</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var eventItem in Model.EventsViewModel.EventList.OrderBy(e => e.EventTime))
+                {
+                    <tr>
+                        <td>@eventItem.EventTime</td>
+                        <td>@eventItem.EventInformation</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-
 
     <!-- Button to trigger modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEventModal">
@@ -132,7 +142,7 @@
                     <form asp-controller="Event" asp-action="AddEvent" method="post">
                         <div class="form-group">
                             <label asp-for="NewEvent.EventTime" class="control-label">Event Time</label>
-                            <input asp-for="NewEvent.EventTime" class="form-control" type="datetime-local" />
+                            <input asp-for="NewEvent.EventTime" class="form-control" type="datetime-local" id="eventTimeInput" />
                             <span asp-validation-for="NewEvent.EventTime" class="text-danger"></span>
                         </div>
                         <div class="form-group">
@@ -151,20 +161,40 @@
     </div>
 </div>
 
-    <!-- Your existing table structure -->
+@section Scripts {
+    <!-- JQuery and Bootstrap JS from CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    @section Scripts {
-        <!-- JQuery and Bootstrap JS from CDN -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        <!-- Chart.js from CDN -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Site-specific JavaScript -->
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    <!-- Validation Scripts Partial -->
+    <partial name="_ValidationScriptsPartial" />
 
-        <!-- Site-specific JavaScript -->
-        <script src="~/js/site.js" asp-append-version="true"></script>
-        
-        <!-- Validation Scripts Partial -->
-        <partial name="_ValidationScriptsPartial" />
-    }
+    <!-- Script to set the default date and time in the event time input -->
+    <script>
+        $(document).ready(function () {
+            function setCurrentDateTime() {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = ('0' + (now.getMonth() + 1)).slice(-2);
+                const day = ('0' + now.getDate()).slice(-2);
+                const hours = ('0' + now.getHours()).slice(-2);
+                const minutes = ('0' + now.getMinutes()).slice(-2);
+
+                const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+                $('#eventTimeInput').val(formattedDateTime);
+            }
+
+            setCurrentDateTime();
+
+            // Set the current date and time when the modal is opened
+            $('#addEventModal').on('shown.bs.modal', setCurrentDateTime);
+        });
+    </script>
+}
 </body>
