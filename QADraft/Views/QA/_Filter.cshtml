@@ -150,11 +150,11 @@
                         <form method="post" asp-controller="QA" asp-action="ManageQA">
                             <input type="hidden" name="qaId" value="@qa.Id" />
                             <div class="form-group">
-                                <input type="submit" name="action" value="View/Edit" class="btn buttons" />
-                                <input type="submit" name="action" value="Delete QA" class="btn buttons" hidden />
+                                <input type="submit" name="action" value="View/Edit" class="buttons" />
+                                <input type="submit" name="action" value="Delete QA" class="buttons" hidden />
                                 <input type="hidden" name="source" value="Filter" />
 
-                                <button id="deleteButton" onclick="openConfirmationDialog(event)" class="btn buttons">Delete</button>
+                                <button id="deleteButton" onclick="openConfirmationDialog(event)" class="buttons">Delete</button>
                             </div>
                         </form>
                     </td>
@@ -168,8 +168,8 @@
     <div class="confirmation-content">
         <p>Are you sure you want to delete this QA?</p>
         <div class="confirmation-buttons">
-            <button class="btn btn-danger" onclick="confirmDelete()">Yes</button>
-            <button class="btn btn-primary" onclick="closeConfirmationDialog()">No</button>
+            <button class="btn-danger" onclick="confirmDelete()">Yes</button>
+            <button class="btn-primary" onclick="closeConfirmationDialog()">No</button>
         </div>
     </div>
 </div>
