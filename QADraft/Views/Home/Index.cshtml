@@ -106,12 +106,13 @@
     <div class="calendar">
         <p>Event Calendar</p>
         <textarea id="eventCalendar" rows="15" cols="50" style="resize: none; width: 100%;" readonly>
-            @foreach (var eventItem in Model.EventsViewModel.EventList)
-            {
-                <div> @eventItem.EventTime - @eventItem.EventInformation</div>
-            }
+@{
+    var eventsString = string.Join("\n", Model.EventsViewModel.EventList.Select(e => $"{e.EventTime} - {e.EventInformation}"));
+    @eventsString
+}
         </textarea>
     </div>
+
 
     <!-- Button to trigger modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEventModal">
