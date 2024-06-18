@@ -158,7 +158,11 @@ namespace QADraft.Controllers
         [HttpGet]
         public IActionResult Outages()
         {
-            DoPing.ping();
+            ZoomStatus.Get();
+
+            string[] outage = GoogleStatus.Get();
+            ViewBag.GooglePercentOutage = outage[0];
+            ViewBag.GoogleVitalOutage = outage[1];
 
             return View();
         }
