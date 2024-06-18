@@ -235,43 +235,55 @@
     function applySeverityColors() {
         var severityCells = document.querySelectorAll('td[data-severity]');
 
-    severityCells.forEach(function(cell, index) {
-        var severity = cell.getAttribute('data-severity');
-        var severityColor = getSeverityColor(severity);
-        var backgroundColor = '#000';
+        severityCells.forEach(function(cell, index) {
+            var severity = cell.getAttribute('data-severity');
+            var severityColor = getSeverityColor(severity);
+            var backgroundColor = '#000';
         
-        if (index % 2 === 0) 
-        {
-            backgroundColor = '#f5f5f5';
-        } 
-        else 
-        {
-            backgroundColor = '#eaeaea';
-        }
+            if (index % 2 === 0) 
+            {
+                backgroundColor = '#f5f5f5';
+            } 
+            else 
+            {
+                backgroundColor = '#eaeaea';
+            }
 
-        // Color the whole cell
-        //cell.style.backgroundColor = severityColor;
+            // Color the whole cell
+            //cell.style.backgroundColor = severityColor;
 
-        // Color the border of the cell
-        //cell.style.border = `2px solid ${severityColor}`;
+            // Color the border of the cell
+            //cell.style.border = `2px solid ${severityColor}`;
 
-        // Style a span
-        /*
-        var span = cell.querySelector('.test-span');
-        if (span) {
-            span.style.backgroundColor = severityColor;
-        }
-        */
+            // Style a span
+            /*
+            var span = cell.querySelector('.test-span');
+            if (span) {
+                span.style.backgroundColor = severityColor;
+            }
+            */
 
-        // Simple radial gradient
-        //cell.style.background = `radial-gradient(circle, ${severityColor} 10%, rgba(255,255,255,0) 50%, ${backgroundColor} 100%)`;
+            // Simple radial gradient
+            //cell.style.background = `radial-gradient(circle, ${severityColor} 10%, rgba(255,255,255,0) 50%, ${backgroundColor} 100%)`;
 
-        // Hollow radial gradient
-        cell.style.background = `radial-gradient(circle, rgba(255,255,255,0) 20%, ${severityColor} 40%,  ${backgroundColor} 45%)`;
-        cell.style.borderBottom = '1px solid #aaaaaa';
+            // Hollow radial gradient
+            cell.style.background = `radial-gradient(circle, rgba(255,255,255,0) 20%, ${severityColor} 40%,  ${backgroundColor} 45%)`;
+            cell.style.borderBottom = '1px solid #aaaaaa';
 
         
     });
+
+    var severitySpans = document.querySelectorAll('.test-span');
+
+        severitySpans.forEach(function(span)
+        {
+            var spanContent = span.textContent;
+
+            if (spanContent == "10")
+            {
+                span.style.left = "24%";
+            }
+        });
 }
 
     document.addEventListener('DOMContentLoaded', function() {
