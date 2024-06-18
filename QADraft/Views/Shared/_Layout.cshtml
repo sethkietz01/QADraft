@@ -117,21 +117,37 @@
 
         /* Styles for all buttons across the website */
         .buttons {
+            display: inline-block;
             color: #fff;
             background-color: #861F41;
             border-color: #861F41;
+
+            /* tests */
+            padding: 8px 12px;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            text-align: center;
+            vertical-align: middle;
+            text-decoration: none;
+            cursor: pointer;
+            border-color: transparent;
+            border-radius: 5px;
         }
         
-        .buttons:hover {
-            color: #fff;
-            background-color: #b31f4f;
-            border-color: #E6A65D;
-            box-shadow: 0 0 5px rgba(230, 168, 93, 0.7);
-        }
+            .buttons:hover {
+                color: #fff;
+                background-color: #b31f4f;
+                border-color: #E6A65D;
+                box-shadow: 0 0 5px rgba(230, 168, 93, 0.7);
+            }
 
-        .buttons:active {
-            transform: translateY(1px) translateX(1px);
-        }
+            .buttons:active {
+                transform: translateY(1px) translateX(1px) !important;
+                color: #fff;
+                background-color: #b31f4f;
+                border-color: #E6A65D;
+            }
 
         header {
             margin-bottom: 20px;

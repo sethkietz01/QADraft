@@ -72,7 +72,7 @@
 <h2>All QAs</h2>
 
 <!-- Show and hide piechart -->
-<button onclick="toggleChart()" class="btn buttons">Show/Hide</button>
+<button onclick="toggleChart()" class="buttons">Show/Hide</button>
 <div>
     <div id="chartDiv">
         <partial name="PieChart"/>
@@ -80,7 +80,7 @@
 </div>
  
 <!-- Table used to output QAs -->
-<table class="table" id="table">
+<table class="table-qa" id="table">
     <thead>
         <tr>
             <th onclick="sortTable(0)">Committed By<span class="arrow"></th>
@@ -110,10 +110,10 @@
                         <input type="hidden" name="qaId" value="@qa.Id" />
                         <div class="form-group">
  
-                            <input id="updateButton" type="submit" name="action" value="View/Edit" class="btn buttons"  />
-                            <input id="deleteButton" type="submit" name="action" value="Delete QA" class="btn buttons" hidden/>
+                            <input id="updateButton" type="submit" name="action" value="View/Edit" class="buttons"  />
+                            <input id="deleteButton" type="submit" name="action" value="Delete QA" class="buttons" hidden/>
  
-                            <button id="deleteButton" onclick="openConfirmationDialog(event)" class="btn buttons">Delete</button>
+                            <button id="deleteButton" onclick="openConfirmationDialog(event)" class="buttons">Delete</button>
                         </div>
                     </form>
                 </td>

@@ -69,7 +69,7 @@
 <h2>Your QAs</h2>
 
 <!-- Table used to output QAs -->
-<table id="table" class="table-test">
+<table id="table" class="table-qa">
     <thead>
         <tr>
             <th onclick="sortTable(0)">Committed By<span class="arrow"></th>
@@ -96,7 +96,7 @@
                 <td>@qa.FoundOn.ToString("yyyy-MM-dd")</td>
                 <td>
                     <form>
-                        <button id="descriptionButton" class="btn action-btn" onclick="showDescription(event)"> <img id="description-icon" src="~/images/descriptionIconWhite.png"> </button>
+                        <button id="descriptionButton" class="buttons" onclick="showDescription(event)"> <img id="description-icon" src="~/images/descriptionIconWhite.png"> </button>
                         <p id="qaDescription" hidden>@qa.Description</p>
                     </form>
                 </td>
