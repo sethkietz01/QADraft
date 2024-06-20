@@ -27,8 +27,13 @@ namespace QADraft.Utilities
                 catch (HttpRequestException ex)
                 {
                     Console.WriteLine($"Error accessing Zoom API: {ex.Message}");
+                    if (ex.InnerException != null)
+                    {
+                        Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                    }
                 }
             }
+
         }
 
     }

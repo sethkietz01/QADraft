@@ -33,41 +33,42 @@ namespace QADraft.Controllers
             var qas = _context.GeekQAs
                 .Select(qa => new { qa.CategoryOfError, qa.NatureOfError })
                 .ToList();
+            // Initilize empty string:int dictionary
             var Dict = new Dictionary<string, int>();
+            // if-else to retrieve target QA attribute
             if (type == "category") {
-                //convert into two lists, one for natures one for categories
+                // Get each category using.GroupBy, then convert it to a dictionary
                 Dict = qas
                     .GroupBy(qa => qa.CategoryOfError)
                     .ToDictionary(g => g.Key, g => g.Count());
             }
             else if (type == "nature") {
+                // Get each nature using.GroupBy, then convert it to a dictionary
                 Dict = qas
                     .GroupBy(qa => qa.NatureOfError)
                     .ToDictionary(g => g.Key, g => g.Count());
             }
-            Console.WriteLine(Dict);
-            foreach (var kvp in Dict)
-            {
-                Console.WriteLine($"{kvp.Key} : {kvp.Value}");
-            }
+            
+            // Return the fetched dictionary
             return Dict;
         }
 
+        [HttpGet]
         public IActionResult PieChart()
         {
-            Debug.WriteLine("PieChart");
-
             return View();
         }
 
 
         public IActionResult Index()
         {
+            // Verify that the user is logged in
             if (!IsAuthenticated())
             {
                 return RedirectToAction("Login");
             }
 
+            // Get the target layout for the user
             ViewBag.Layout = GetLayout();
 
             // Initialize CombinedEventsViewModel
@@ -75,43 +76,48 @@ namespace QADraft.Controllers
             {
                 EventsViewModel = new EventsViewModel
                 {
-                    EventList = _context.Events.ToList() // Retrieve all events from the database
+                    // Retrieve all events from the database
+                    EventList = _context.Events.ToList() 
                 },
-                NewEvent = new Events() // Initialize a new event for the form
+                // Initialize a new event for the form
+                NewEvent = new Events() 
             };
 
             return View(combinedModel);
         }
     
 
-
-
-        // This is the initial login referencer
+        // Initial login referencer
         [HttpGet]
         public IActionResult Login()
         {
+            // Verify that the user is logged in
             if (IsAuthenticated())
             {
+                // Direct the user to the home page
                 return RedirectToAction("Index");
             }
+            // Get the target layout for the user role
             ViewBag.Layout = GetLayout();
 
+            // If the user is not logged in (most likely case), return the login page
             return View();
         }
 
-        // This is the actual function to see if the user has the correct login credentials, if not it redirects back to the login screen.
+        // Verify if the user has entered valid credentials
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
-            Debug.WriteLine("Login attempt");
+            // Fetch the account where the username is the same as the user-entered username
             var user = _context.Users.SingleOrDefault(u => u.Username == username);
-
+            // If a user was found (not null), verify the password
             if (user != null)
             {
-                Debug.WriteLine($"User found: {username}");
+                // Call PasswordHasher utilitiy to check the password.
+                // The user-entered password is hashed and then compared to the hashed password saved in the database.
                 if (PasswordHasher.VerifyPassword(password, user.Password))
                 {
-                    Debug.WriteLine("Password verified");
+                    // If the user has been verified, set/assign the session data
                     HttpContext.Session.SetString("IsAuthenticated", "true");
                     HttpContext.Session.SetString("Username", user.Username);
                     HttpContext.Session.SetString("FirstName", user.FirstName);
@@ -119,72 +125,79 @@ namespace QADraft.Controllers
                     HttpContext.Session.SetInt32("Id", user.Id);
                     HttpContext.Session.SetString("Role", user.Role);
 
-                    // Set the current DateTime as LastLogin for user in DB
+                    // Set the current DateTime as LastLogin for user in database
                     user.LastLogin = DateTime.Now;
                     _context.SaveChanges();
 
-
+                    // Direct the user to the home page
                     return RedirectToAction("Index");
                 }
-                else
-                {
-                    Debug.WriteLine("Password verification failed");
-                }
             }
-            else
-            {
-                Debug.WriteLine("User not found");
-            }
-
-            ViewBag.Layout = GetLayout();
+            // If the login attempt fails (username or password don't match database) resend the login screen
             return View();
         }
 
+        // Log the user out of the session
         [HttpGet]
         public IActionResult Logout()
         {
+            // Clear all session data
             HttpContext.Session.SetString("IsAuthenticated", "false");
             HttpContext.Session.SetString("Username", "");
+            HttpContext.Session.SetString("FirstName", "");
+            HttpContext.Session.SetString("LastName", "");
             HttpContext.Session.SetInt32("Id", 0);
+            HttpContext.Session.SetString("Role", "");
+
+            // Direct the user back to the initial Login page
             return RedirectToAction("Login");
         }
 
+        // Display the permissions denied screen
         [HttpGet]
         public IActionResult PermissionsDenied()
         {
+            // If the user tries to access a page they don't have access to,
+            // they should be immediatly redirected to the permissions denied page.
             return View();
         }
 
+        // Display the extern-site outages page
         [HttpGet]
         public IActionResult Outages()
         {
             ZoomStatus.Get();
 
+            // Get the app services health from google and display
             string[] outage = GoogleStatus.Get();
             ViewBag.GooglePercentOutage = outage[0];
             ViewBag.GoogleVitalOutage = outage[1];
 
+            // Return the outages view
             return View();
         }
 
+        // Helper function to check if user is currently logged in
         public bool IsAuthenticated()
         {
+            // Check if the session string "IsAuthenticated" is true and return true/false
             return HttpContext.Session.GetString("IsAuthenticated") == "true";
         }
 
+        // Helper function to get the user's Id
         public int? GetId()
         {
+            // Grab the session integer "Id" and return it
             return HttpContext.Session.GetInt32("Id");
         }
 
-        public string GetRole()
-        {
-            return HttpContext.Session.GetString("Role");
-        }
-
+        // Helper function to determine the correct layout to use for the user's role
         public string GetLayout()
         {
-            string role = HttpContext.Session.GetString("Role");
+            // Get the current user's role from the httpcontext session.
+            string? role = HttpContext.Session.GetString("Role");
+
+            // Assign the appropriate layout for each role.
             if (role == "Geek")
                 return "~/Views/Shared/_LayoutGeek.cshtml";
 
