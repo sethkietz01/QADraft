@@ -43,5 +43,9 @@ namespace QADraft.Utilities
                 return "~/Views/Shared/_Layout.cshtml";
         }
 
+        internal static dynamic GetLayout()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

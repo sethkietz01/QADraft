@@ -115,6 +115,7 @@ namespace QADraft.Controllers
         [HttpGet]
         public async Task<IActionResult> Filter(string dateFilter, DateTime? startDate, DateTime? endDate, int? committedBy, int? loggedBy, string category)
         {
+           // ViewBag.layout = SessionUtil.GetLayout(HttpContext);
             // Pass all users into the viewbag to populate drop-down selectors
             ViewBag.Users = _context.Users.ToList();
             // Pass all error categories into viewbag
@@ -387,6 +388,7 @@ namespace QADraft.Controllers
 
         private async Task<string> RenderViewAsync(string viewName, object model)
         {
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
             ViewData.Model = model;
             using (var writer = new StringWriter())
             {
