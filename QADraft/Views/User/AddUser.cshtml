@@ -77,9 +77,23 @@
     
     <div class="form-group">
         <input type="submit" value="Add User" class="buttons form-buttons" />
+        <!-- Cancel and redirect to home -->
+        <button onclick="cancel()" class="buttons form-buttons">Cancel</button>
     </div>
+</form>
+
+<form id="cancel-form" asp-area="" asp-controller="Home" asp-action="Index" method="get">
+    <button type="submit" class="buttons form-buttons" hidden></button>
 </form>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        function cancel()
+        {
+            var cancelForm = document.getElementById("cancel-form");
+
+            cancelForm.submit();
+        }
+    </script>
 }
