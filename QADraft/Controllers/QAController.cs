@@ -11,38 +11,41 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System;
+using QADraft.Utilities;
 
 namespace QADraft.Controllers
 {
     public class QAController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<QAController> _logger;
         private readonly ICompositeViewEngine _viewEngine;
 
-        public QAController(ApplicationDbContext context, ILogger<QAController> logger, ICompositeViewEngine viewEngine)
+        public QAController(ApplicationDbContext context,ICompositeViewEngine viewEngine)
         {
             _context = context;
-            _logger = logger;
             _viewEngine = viewEngine;
         }
 
 
 
+        // Display the AddQA page
         [HttpGet]
         public IActionResult AddQA()
         {
-            if (!IsAuthenticated())
+            // Verify that the user is logged in, if not direct them to login page
+            if (!SessionUtil.IsAuthenticated(HttpContext))
             {
                 return RedirectToAction("Login");
             }
 
+            // Get every user's id and name and place into a list
             var users = _context.Users.Select(u => new SelectListItem
             {
                 Value = u.Id.ToString(),
                 Text = $"{u.FirstName} {u.LastName}"
             }).ToList();
 
+            // Create a new GeekQA instance and assign it the current DateTime and list of users.
             GeekQA model = new GeekQA
             {
                 ErrorDate = DateTime.Now,
@@ -50,34 +53,36 @@ namespace QADraft.Controllers
                 Users = users
             };
 
+            // Return the AddQA view with the GeekQA instance model. This will auto-fill the related input fields.
             return View(model);
         }
 
+        // Process the AddQA POST
         [HttpPost]
         public IActionResult AddQA(GeekQA model)
         {
+            // Verify that the submitted model state is valid (checks types and if all required model attributes are there)
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // Set the currently logged in User for the "CommitedBy" field
-                    model.SubmittedBy = GetFullName();
+                    // Set the currently logged in User for the "SubmittedBy" field.
+                    model.SubmittedBy = SessionUtil.GetFullName(HttpContext);
                     _context.GeekQAs.Add(model);
                     _context.SaveChanges();
 
-                    //Get user and flag if QA severity is 10
+                    // Automatically flag the user that commited an error (if it needs to be flagged).
                     var user = _context.Users.FirstOrDefault(u => u.Id == model.CommittedById);
                     if (user != null)
                     {
                         AutomaticFlag(user, model);
                     }
 
-
+                    // Direct the user back to the inital AddQA page
                     return RedirectToAction("AddQA");
                 }
-                catch (Exception ex)
+                catch
                 {
-                    _logger.LogError(ex, "Error saving GeekQA");
                     ModelState.AddModelError(string.Empty, "An error occurred while saving the QA. Please try again.");
                 }
             }
@@ -89,28 +94,30 @@ namespace QADraft.Controllers
                 Text = $"{u.FirstName} {u.LastName}"
             }).ToList();
 
+            // Direct the user back to the same page
             return View(model);
         }
 
-
-        /*
-         *      UTIL FLAG FUNCTION
-         */ 
+        // Automatically flag the user's account if the QA's severity is 10.
         public void AutomaticFlag(User user, GeekQA model)
         {
             if (model.Severity == 10)
             {
+                // Set the attribute isFlagged to true
                 user.isFlagged = true;
+                // Save the change to the database
                 _context.SaveChanges();
             }
 
         }
 
-
+        // Display the Filter page
         [HttpGet]
         public async Task<IActionResult> Filter(string dateFilter, DateTime? startDate, DateTime? endDate, int? committedBy, int? loggedBy, string category)
         {
+            // Pass all users into the viewbag to populate drop-down selectors
             ViewBag.Users = _context.Users.ToList();
+            // Pass all error categories into viewbag
             ViewBag.Categories = new List<SelectListItem>
             {
                 new SelectListItem { Value = "Snipe-It", Text = "Snipe-It" },
@@ -120,6 +127,7 @@ namespace QADraft.Controllers
                 new SelectListItem { Value = "Other", Text = "Other" }
             };
 
+            // Fetch all QAs
             var qas = _context.GeekQAs.AsQueryable();
 
             if (!string.IsNullOrEmpty(dateFilter))
@@ -167,11 +175,11 @@ namespace QADraft.Controllers
         [HttpGet]
         public IActionResult YourQAs()
         {
-            if (!IsAuthenticated())
+            if (!SessionUtil.IsAuthenticated(HttpContext))
             {
                 return RedirectToAction("Login");
             }
-            var id = GetId();
+            var id = SessionUtil.GetId(HttpContext);
             var user = _context.Users.SingleOrDefault(u => u.Id == id);
             var qa = _context.GeekQAs.Where(q => q.CommittedById == user.Id).Include(q => q.FoundBy).ToList();
 
@@ -183,7 +191,7 @@ namespace QADraft.Controllers
         [HttpGet]
         public IActionResult AllGeekQAs()
         {
-            if (!IsAuthenticated())
+            if (!SessionUtil.IsAuthenticated(HttpContext))
             {
                 return RedirectToAction("Login");
             }
@@ -206,7 +214,7 @@ namespace QADraft.Controllers
         [HttpGet]
         public IActionResult FlaggedAccounts()
         {
-            if (!IsAuthenticated())
+            if (!SessionUtil.IsAuthenticated(HttpContext))
             {
                 return RedirectToAction("Login");
             }
@@ -225,7 +233,7 @@ namespace QADraft.Controllers
         [HttpGet]
         public IActionResult QADescriptions()
         {
-            if (!IsAuthenticated())
+            if (!SessionUtil.IsAuthenticated(HttpContext))
             {
                 return RedirectToAction("Login");
             }
@@ -259,7 +267,7 @@ namespace QADraft.Controllers
         [HttpGet]
         public IActionResult ViewQA(int id)
         {
-            if (!IsAuthenticated())
+            if (!SessionUtil.IsAuthenticated(HttpContext))
             {
                 return RedirectToAction("Login");
             }
@@ -292,7 +300,7 @@ namespace QADraft.Controllers
         {
             Debug.WriteLine("id:");
             Debug.WriteLine(id);
-            if (!IsAuthenticated())
+            if (!SessionUtil.IsAuthenticated(HttpContext))
             {
                 return RedirectToAction("Login");
             }
@@ -343,7 +351,6 @@ namespace QADraft.Controllers
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error updating GeekQA");
                     ModelState.AddModelError(string.Empty, "An error occurred while updating the QA. Please try again.");
                 }
             }
@@ -361,7 +368,7 @@ namespace QADraft.Controllers
         [HttpGet]
         public IActionResult DeleteQA(int id, string src)
         {
-            if (!IsAuthenticated())
+            if (!SessionUtil.IsAuthenticated(HttpContext))
             {
                 return RedirectToAction("Login");
             }
@@ -376,9 +383,6 @@ namespace QADraft.Controllers
 
             return RedirectToAction("AllGeekQAs");
         }
-
-        
-
 
 
         private async Task<string> RenderViewAsync(string viewName, object model)
@@ -407,57 +411,41 @@ namespace QADraft.Controllers
             }
         }
 
-        
-
-        public bool IsAuthenticated()
-        {
-            return HttpContext.Session.GetString("IsAuthenticated") == "true";
-        }
-
-        public string GetFullName()
-        {
-            string? firstName = HttpContext.Session.GetString("FirstName");
-            string? lastName = HttpContext.Session.GetString("LastName");
-            string? name = firstName + " " + lastName;
-
-            return name;
-        }
-
-        public int? GetId()
-        {
-            return HttpContext.Session.GetInt32("Id");
-        }
-
-        /*
-         * TEST
-        */
-
+        // Create the dictionary needed for making pie chart
         public Dictionary<string, int> GetQADict(string type)
         {
             // Get all QA categories and natures from db
             var qas = _context.GeekQAs
                 .Select(qa => new { qa.CategoryOfError, qa.NatureOfError })
                 .ToList();
+            // Initilize empty string:int dictionary
             var Dict = new Dictionary<string, int>();
+            // if-else to retrieve target QA attribute
             if (type == "category")
             {
-                //convert into two lists, one for natures one for categories
+                // Get each category using.GroupBy, then convert it to a dictionary
                 Dict = qas
                     .GroupBy(qa => qa.CategoryOfError)
                     .ToDictionary(g => g.Key, g => g.Count());
             }
             else if (type == "nature")
             {
+                // Get each nature using.GroupBy, then convert it to a dictionary
                 Dict = qas
                     .GroupBy(qa => qa.NatureOfError)
                     .ToDictionary(g => g.Key, g => g.Count());
             }
-            Console.WriteLine(Dict);
-            foreach (var kvp in Dict)
-            {
-                Console.WriteLine($"Category: {kvp.Key}, Count: {kvp.Value}");
-            }
+
+            // Return the fetched dictionary
             return Dict;
+        }
+
+        // Display the category / nature piechart
+        [HttpGet]
+        public IActionResult PieChart()
+        {
+            // Return the piechart view
+            return View();
         }
 
     }

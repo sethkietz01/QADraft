@@ -1,17 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using QADraft.Data;
 using QADraft.Models;
 using QADraft.Utilities;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Identity.Client;
-using System.Collections;
 using QADraft.ViewModels;
 
 namespace QADraft.Controllers
@@ -19,99 +9,74 @@ namespace QADraft.Controllers
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger)
+        // HomeController constructor
+        public HomeController(ApplicationDbContext context)
         {
+            // Assigned the context to local variable
             _context = context;
-            _logger = logger;
         }
 
-        public Dictionary<string, int> GetQADict(string type)
-        {
-            // Get all QA categories and natures from db
-            var qas = _context.GeekQAs
-                .Select(qa => new { qa.CategoryOfError, qa.NatureOfError })
-                .ToList();
-            var Dict = new Dictionary<string, int>();
-            if (type == "category") {
-                //convert into two lists, one for natures one for categories
-                Dict = qas
-                    .GroupBy(qa => qa.CategoryOfError)
-                    .ToDictionary(g => g.Key, g => g.Count());
-            }
-            else if (type == "nature") {
-                Dict = qas
-                    .GroupBy(qa => qa.NatureOfError)
-                    .ToDictionary(g => g.Key, g => g.Count());
-            }
-            Console.WriteLine(Dict);
-            foreach (var kvp in Dict)
-            {
-                Console.WriteLine($"{kvp.Key} : {kvp.Value}");
-            }
-            return Dict;
-        }
-
-        public IActionResult PieChart()
-        {
-            Debug.WriteLine("PieChart");
-
-            return View();
-        }
-
-
+        // Display the index / home page
         public IActionResult Index()
         {
-            if (!IsAuthenticated())
+            // Verify that the user is logged in
+            if (!SessionUtil.IsAuthenticated(HttpContext))
             {
                 return RedirectToAction("Login");
             }
 
-            ViewBag.Layout = GetLayout();
+            // Get the target layout for the user
+            ViewBag.Layout = SessionUtil.GetLayout(HttpContext);
 
             // Initialize CombinedEventsViewModel
-            var combinedModel = new CombinedEventsViewModel
+            var calendarModel = new CombinedEventsViewModel
             {
                 EventsViewModel = new EventsViewModel
                 {
-                    EventList = _context.Events.ToList() // Retrieve all events from the database
+                    // Retrieve all events from the database
+                    EventList = _context.Events.ToList() 
                 },
-                NewEvent = new Events() // Initialize a new event for the form
+                // Initialize a new event for the form
+                NewEvent = new Events() 
             };
 
-            return View(combinedModel);
+            // return the index page with the calendar model
+            return View(calendarModel);
         }
     
 
-
-
-        // This is the initial login referencer
+        // Initial login referencer
         [HttpGet]
         public IActionResult Login()
         {
-            if (IsAuthenticated())
+            // Verify that the user is logged in
+            if (SessionUtil.IsAuthenticated(HttpContext))
             {
+                // Direct the user to the home page
                 return RedirectToAction("Index");
             }
-            ViewBag.Layout = GetLayout();
+            // Get the target layout for the user role
+            ViewBag.Layout = SessionUtil.GetLayout(HttpContext);
 
+            // If the user is not logged in (most likely case), return the login page
             return View();
         }
 
-        // This is the actual function to see if the user has the correct login credentials, if not it redirects back to the login screen.
+        // Verify if the user has entered valid credentials
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
-            Debug.WriteLine("Login attempt");
+            // Fetch the account where the username is the same as the user-entered username
             var user = _context.Users.SingleOrDefault(u => u.Username == username);
-
+            // If a user was found (not null), verify the password
             if (user != null)
             {
-                Debug.WriteLine($"User found: {username}");
+                // Call PasswordHasher utilitiy to check the password.
+                // The user-entered password is hashed and then compared to the hashed password saved in the database.
                 if (PasswordHasher.VerifyPassword(password, user.Password))
                 {
-                    Debug.WriteLine("Password verified");
+                    // If the user has been verified, set/assign the session data
                     HttpContext.Session.SetString("IsAuthenticated", "true");
                     HttpContext.Session.SetString("Username", user.Username);
                     HttpContext.Session.SetString("FirstName", user.FirstName);
@@ -119,77 +84,57 @@ namespace QADraft.Controllers
                     HttpContext.Session.SetInt32("Id", user.Id);
                     HttpContext.Session.SetString("Role", user.Role);
 
-                    // Set the current DateTime as LastLogin for user in DB
+                    // Set the current DateTime as LastLogin for user in database
                     user.LastLogin = DateTime.Now;
                     _context.SaveChanges();
 
-
+                    // Direct the user to the home page
                     return RedirectToAction("Index");
                 }
-                else
-                {
-                    Debug.WriteLine("Password verification failed");
-                }
             }
-            else
-            {
-                Debug.WriteLine("User not found");
-            }
-
-            ViewBag.Layout = GetLayout();
+            // If the login attempt fails (username or password don't match database) resend the login screen
             return View();
         }
 
+        // Log the user out of the session
         [HttpGet]
         public IActionResult Logout()
         {
+            // Clear all session data
             HttpContext.Session.SetString("IsAuthenticated", "false");
             HttpContext.Session.SetString("Username", "");
+            HttpContext.Session.SetString("FirstName", "");
+            HttpContext.Session.SetString("LastName", "");
             HttpContext.Session.SetInt32("Id", 0);
+            HttpContext.Session.SetString("Role", "");
+
+            // Direct the user back to the initial Login page
             return RedirectToAction("Login");
         }
 
+        // Display the permissions denied screen
         [HttpGet]
         public IActionResult PermissionsDenied()
         {
+            // If the user tries to access a page they don't have access to,
+            // they should be immediatly redirected to the permissions denied page.
             return View();
         }
 
+        // Display the extern-site outages page
         [HttpGet]
         public IActionResult Outages()
         {
             ZoomStatus.Get();
 
+            // Get the app services health from google and display
             string[] outage = GoogleStatus.Get();
             ViewBag.GooglePercentOutage = outage[0];
             ViewBag.GoogleVitalOutage = outage[1];
 
+            // Return the outages view
             return View();
         }
 
-        public bool IsAuthenticated()
-        {
-            return HttpContext.Session.GetString("IsAuthenticated") == "true";
-        }
-
-        public int? GetId()
-        {
-            return HttpContext.Session.GetInt32("Id");
-        }
-
-        public string GetRole()
-        {
-            return HttpContext.Session.GetString("Role");
-        }
-
-        public string GetLayout()
-        {
-            string role = HttpContext.Session.GetString("Role");
-            if (role == "Geek")
-                return "~/Views/Shared/_LayoutGeek.cshtml";
-
-            else
-                return "~/Views/Shared/_Layout.cshtml";
-        }
     }
 }
