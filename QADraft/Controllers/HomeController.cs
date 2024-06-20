@@ -1,17 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using QADraft.Data;
 using QADraft.Models;
 using QADraft.Utilities;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Identity.Client;
-using System.Collections;
 using QADraft.ViewModels;
 
 namespace QADraft.Controllers
@@ -19,60 +9,28 @@ namespace QADraft.Controllers
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger)
+        // HomeController constructor
+        public HomeController(ApplicationDbContext context)
         {
+            // Assigned the context to local variable
             _context = context;
-            _logger = logger;
         }
 
-        public Dictionary<string, int> GetQADict(string type)
-        {
-            // Get all QA categories and natures from db
-            var qas = _context.GeekQAs
-                .Select(qa => new { qa.CategoryOfError, qa.NatureOfError })
-                .ToList();
-            // Initilize empty string:int dictionary
-            var Dict = new Dictionary<string, int>();
-            // if-else to retrieve target QA attribute
-            if (type == "category") {
-                // Get each category using.GroupBy, then convert it to a dictionary
-                Dict = qas
-                    .GroupBy(qa => qa.CategoryOfError)
-                    .ToDictionary(g => g.Key, g => g.Count());
-            }
-            else if (type == "nature") {
-                // Get each nature using.GroupBy, then convert it to a dictionary
-                Dict = qas
-                    .GroupBy(qa => qa.NatureOfError)
-                    .ToDictionary(g => g.Key, g => g.Count());
-            }
-            
-            // Return the fetched dictionary
-            return Dict;
-        }
-
-        [HttpGet]
-        public IActionResult PieChart()
-        {
-            return View();
-        }
-
-
+        // Display the index / home page
         public IActionResult Index()
         {
             // Verify that the user is logged in
-            if (!IsAuthenticated())
+            if (!SessionUtil.IsAuthenticated(HttpContext))
             {
                 return RedirectToAction("Login");
             }
 
             // Get the target layout for the user
-            ViewBag.Layout = GetLayout();
+            ViewBag.Layout = SessionUtil.GetLayout(HttpContext);
 
             // Initialize CombinedEventsViewModel
-            var combinedModel = new CombinedEventsViewModel
+            var calendarModel = new CombinedEventsViewModel
             {
                 EventsViewModel = new EventsViewModel
                 {
@@ -83,7 +41,8 @@ namespace QADraft.Controllers
                 NewEvent = new Events() 
             };
 
-            return View(combinedModel);
+            // return the index page with the calendar model
+            return View(calendarModel);
         }
     
 
@@ -92,13 +51,13 @@ namespace QADraft.Controllers
         public IActionResult Login()
         {
             // Verify that the user is logged in
-            if (IsAuthenticated())
+            if (SessionUtil.IsAuthenticated(HttpContext))
             {
                 // Direct the user to the home page
                 return RedirectToAction("Index");
             }
             // Get the target layout for the user role
-            ViewBag.Layout = GetLayout();
+            ViewBag.Layout = SessionUtil.GetLayout(HttpContext);
 
             // If the user is not logged in (most likely case), return the login page
             return View();
@@ -177,32 +136,5 @@ namespace QADraft.Controllers
             return View();
         }
 
-        // Helper function to check if user is currently logged in
-        public bool IsAuthenticated()
-        {
-            // Check if the session string "IsAuthenticated" is true and return true/false
-            return HttpContext.Session.GetString("IsAuthenticated") == "true";
-        }
-
-        // Helper function to get the user's Id
-        public int? GetId()
-        {
-            // Grab the session integer "Id" and return it
-            return HttpContext.Session.GetInt32("Id");
-        }
-
-        // Helper function to determine the correct layout to use for the user's role
-        public string GetLayout()
-        {
-            // Get the current user's role from the httpcontext session.
-            string? role = HttpContext.Session.GetString("Role");
-
-            // Assign the appropriate layout for each role.
-            if (role == "Geek")
-                return "~/Views/Shared/_LayoutGeek.cshtml";
-
-            else
-                return "~/Views/Shared/_Layout.cshtml";
-        }
     }
 }
