@@ -125,7 +125,6 @@ namespace QADraft.Controllers
         [HttpGet]
         public IActionResult Outages()
         {
-            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
             ZoomStatus.Get();
 
             // Get the app services health from google and display
