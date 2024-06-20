@@ -147,7 +147,7 @@
                     <td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
                     <td>@qa.FoundOn.ToString("yyyy-MM-dd")</td>
                     <td>
-                        <form method="post" asp-controller="QA" asp-action="ManageQA">
+                        <form method="post" asp-controller="QA" asp-action="ManageQA" >
                             <input type="hidden" name="qaId" value="@qa.Id" />
                             <div class="form-group">
                                 <input type="submit" name="action" value="View/Edit" class="buttons" />
