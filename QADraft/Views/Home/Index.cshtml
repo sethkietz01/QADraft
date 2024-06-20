@@ -46,7 +46,9 @@
         display: flex;
         position: relative;
     }
-
+    .past-event {
+        display: none; /* Hide past events by default */
+    }
     /* Styles for the external links bar (vertical bar on the left) */
     .link-bar {
         background-color: #fff;
@@ -101,7 +103,9 @@
         }
     </script>
 </div>
-
+<button type="button" id="togglePastEvents" class="btn btn-secondary">
+    Show/Hide Past Events
+</button>
 <body class="dashboard">
     <div class="calendar">
         <p>Event Calendar</p>
@@ -115,17 +119,21 @@
             <tbody>
                 @foreach (var eventItem in Model.EventsViewModel.EventList.OrderBy(e => e.EventTime))
                 {
-                    <tr>
+                    // Determine if event time is in the past
+                    var isPastEvent = eventItem.EventTime < DateTime.Now;
+
+                    // Apply a class based on whether the event is in the past
+                    <tr class="@if (isPastEvent) { <text>past-event</text> }">
                         <td>@eventItem.EventTime</td>
                         <td>@eventItem.EventInformation</td>
                     </tr>
-                }
+    }
             </tbody>
         </table>
     </div>
 
     <!-- Button to trigger modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEventModal">
+    <button type="button" onclick = "setCurrentDateTime()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEventModal">
         Add New Event
     </button>
 
@@ -150,7 +158,7 @@
                             <input asp-for="NewEvent.EventInformation" class="form-control" placeholder="Enter Event Info" />
                             <span asp-validation-for="NewEvent.EventInformation" class="text-danger"></span>
                         </div>
-                        <button type="submit" class="btn btn-primary">Add Event</button>
+                        <button type="submit" onclick = "" class="btn btn-primary">Add Event</button>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -195,6 +203,40 @@
             // Set the current date and time when the modal is opened
             $('#addEventModal').on('shown.bs.modal', setCurrentDateTime);
         });
+
+        function setCurrentDateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = ('0' + (now.getMonth() + 1)).slice(-2);
+            const day = ('0' + now.getDate()).slice(-2);
+            const hours = ('0' + now.getHours()).slice(-2);
+            const minutes = ('0' + now.getMinutes()).slice(-2);
+
+            const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+            $('#eventTimeInput').val(formattedDateTime);
+
+            // Set the minimum date and time to current date and time
+            $('#eventTimeInput').attr('min', formattedDateTime);
+        }
+
+        $('form').submit(function (event) {
+            const selectedDateTime = new Date($('#eventTimeInput').val());
+            const currentDateTime = new Date();
+
+            if (selectedDateTime < currentDateTime) {
+                alert('Please select a date and time that is after the current date and time.');
+                event.preventDefault(); // Prevent form submission
+            }
+        });
+        $(document).ready(function () {
+             // Toggle button click event
+            $('#togglePastEvents').click(function () {
+            $('.past-event').toggle(); // Toggle visibility of past events
+        });
+        });
+
     </script>
+
+
 }
 </body>
