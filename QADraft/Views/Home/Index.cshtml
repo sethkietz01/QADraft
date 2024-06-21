@@ -111,6 +111,14 @@
 
         .event-calendar td:nth-child(2) {
         }
+        
+        /* CSS for input field */
+        .editable input {
+            border: none;
+            width: 90%;
+            box-sizing: border-box;
+            padding: 5px;
+        }
 </style>
 
 <div class="text-center">
@@ -142,9 +150,7 @@
         }
     </script>
 </div>
-<button type="button" id="togglePastEvents" class="btn btn-secondary">
-    Show/Hide Past Events
-</button>
+
 <body class="dashboard">
     <div class="calendar-container">
         <p>Event Calendar</p>
@@ -162,18 +168,28 @@
                     // Determine if event time is in the past
                     var isPastEvent = eventItem.EventTime < DateTime.Now;
 
+                    // Break the EventTime into two separate variables, one representing the time 
+                    //      and the other representing the date
+                    var date = eventItem.EventTime.ToString("MM/dd/yyyy");
+                    var time = eventItem.EventTime.ToString("h:mm tt");
+
                     // Apply a class based on whether the event is in the past
-                    <tr class="@if (isPastEvent) { <text>past-event</text> }">
-                        <td>@eventItem.EventTime</td>
-                        <td>@eventItem.EventInformation</td>
+                    <tr class="@if (isPastEvent) { <text>past-event</text> }" data-event-id="@eventItem.Id">
+                        <td class="editable" onclick="editEventDate(this)">@time <br />
+                            @date    
+                        </td>
+                        <td class="editable" onclick="editEventInformation(this)">@eventItem.EventInformation</td>
                     </tr>
     }
             </tbody>
         </table>
     </div>
     <!-- Button to trigger modal -->
-    <button type="button" onclick = "setCurrentDateTime()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEventModal">
+    <button type="button" onclick = "setCurrentDateTime()" class="buttons form-buttons" data-bs-toggle="modal" data-bs-target="#addEventModal">
         Add New Event
+    </button>
+    <button type="button" id="togglePastEvents" class="buttons form-buttons">
+        Show/Hide Past Events
     </button>
 
     <!-- Modal for adding new event -->
@@ -274,6 +290,109 @@
         });
         });
 
+        function editEventDate(td) {
+            var currentValue = td.innerText.trim();
+
+            var newDateInput = document.createElement('input');
+            newDateInput.type = 'datetime-local';
+            newDateInput.value = currentValue;
+
+            td.innerText = '';
+            td.appendChild(newDateInput);
+
+            newDateInput.focus();
+
+            newDateInput.addEventListener('change', function() {
+                var newValue = newDateInput.value.trim();
+        
+                // Get eventId from the parent tr or pass it to this function explicitly
+                var eventId = td.closest('tr').getAttribute('data-event-id');
+
+                // const month = String(newValue.getMonth() + 1).padStart(2, '0'); 
+                // const day = String(newValue.getDate()).padStart(2, '0');
+                // const year = newValue.getFullYear();
+
+                // formattedDate = `${month}/${day}/${year}`;
+
+                td.innerText = newValue;
+
+                var formData = new FormData();
+                formData.append('eventId', eventId);
+                formData.append('updatedEventTime', newValue);
+
+                fetch('/Event/UpdateEventTime', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    console.log('Event updated successfully');
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        }
+
+        function editEventInformation(td) 
+        {
+            // Save the current content of the td
+            var currentValue = td.innerText.trim();
+
+            // Get the event ID from the parent tr
+            var eventId = td.closest('tr').getAttribute('data-event-id');
+
+            // Create an input field
+            var input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentValue;
+
+            // Replace the td content with the input
+            td.innerText = '';
+            td.appendChild(input);
+
+            // Focus on the input field
+            input.focus();
+
+            // Handle input blur to save changes
+            input.addEventListener('blur', function() {
+                // Get updated value
+                var newValue = input.value.trim();
+
+
+                if (newValue.trim() === "")
+                {
+                    td.removeChild(input);
+                    td.innerText = currentValue;
+                    return;
+                }
+
+                // Display updated value in the table
+                td.innerText = newValue;
+
+                // Send a POST request to update the event
+                var formData = new FormData();
+                formData.append('eventId', eventId);
+                formData.append('updatedEventInformation', newValue);
+
+                fetch('/Event/UpdateEventInformation', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    console.log('Event updated successfully');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        }
     </script>
 
 
