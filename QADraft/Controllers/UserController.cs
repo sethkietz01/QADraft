@@ -18,100 +18,123 @@ namespace QADraft.Controllers
     public class UserController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<UserController> _logger;
 
-        public UserController(ApplicationDbContext context, ILogger<UserController> logger)
+        public UserController(ApplicationDbContext context)
         {
             _context = context;
-            _logger = logger;
         }
 
 
-
+        // Display the accounts list page
         [HttpGet]
         public IActionResult GeekAccounts()
         {
-            if (!IsAuthenticated())
+            // Verify that the user is logged in, if not direct them to login page
+            if (!SessionUtil.IsAuthenticated(HttpContext))
             {
                 return RedirectToAction("Login");
             }
-
+            // Fetch a list of all the users in the database
             var qas = _context.Users
                 .ToList();
-            
+            // Return the view with the list of users
             return View(qas);
         }
 
 
-
+        // Display the AddUser page
         [HttpGet]
         public IActionResult AddUser()
         {
-            if (!IsAuthenticated())
+            // Verify that the user is logged in, if not direct them to login page
+            if (!SessionUtil.IsAuthenticated(HttpContext))
             {
                 return RedirectToAction("Login");
             }
 
             /*
-            if (!CheckPermissions("Admin") )
+            if (!SessionUtil.CheckPermissions("Admin", HttpContext) )
             {
                 return RedirectToAction("PermissionsDenied", "Home");
             }
             */
 
-            ViewBag.layout = GetLayout();
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
+            // Return the page
             return View();
         }
 
+        // Process the AddUser POST request
         [HttpPost]
         public IActionResult AddUser(User user)
         {
+            // Verify that the user is logged in, if not direct them to login page
+            if (!SessionUtil.IsAuthenticated(HttpContext))
+            {
+                return RedirectToAction("Login");
+            }
+            // Verify that the user Model passed is valid
             if (ModelState.IsValid)
             {
+                // If it is, hash the password before it is stored in the database
                 user.Password = PasswordHasher.HashPassword(user.Password);
-
+                // Add the user to the database and save the changes made
                 _context.Users.Add(user);
                 _context.SaveChanges();
+                // Return the GeekAccounts view (accounts list page)
                 return RedirectToAction("GeekAccounts");
             }
+            // If the model state is invalid, return the view again with the entered data.
             return View(user);
         }
 
-
+        // Display the EditUser page
         [HttpGet]
         public IActionResult EditUser(string Id)
         {
-            if (!IsAuthenticated())
+            // Verify that the user is logged in, if not direct them to login page
+            if (!SessionUtil.IsAuthenticated(HttpContext))
             {
                 return RedirectToAction("Login");
             }
+            // Conver the passed ID to an integer
             int intId = int.Parse(Id);
+            // Fetch the user who's ID matches the passed ID
             var userData = _context.Users.SingleOrDefault(u => u.Id == intId);
+            // Verify that the user exists and was found
             if (userData == null)
             {
+                // If not, return an empty page
                 return View();
             }
-
+            // If the user was found, return the view with the user data
             return View(userData);
         }
 
+        // Process the EditUser POST request
         [HttpPost]
         public IActionResult EditUser(User user, string id, string action)
         {
-            if (!IsAuthenticated())
+            // Verify that the user is logged in, if not direct them to login page
+            if (!SessionUtil.IsAuthenticated(HttpContext))
             {
                 return RedirectToAction("Login");
             }
+            // Verify that the user Model state is valid
             else if (ModelState.IsValid)
             {
-                Debug.WriteLine("Valid ModelState");
+                // Fetch the user who's ID matches the passed ID
                 var existingUser = _context.Users.SingleOrDefault(u => u.Id == int.Parse(id));
+                // Verify that the user exists and was found
                 if (existingUser != null)
                 {
-                    Debug.WriteLine("User Exists");
-
-                    Debug.WriteLine("Edit User");
+                    // Update all relevant attributes of the user to equal the passed data
                     existingUser.Username = user.Username;
+                    // When the EditUser page is rendered, the password field will be blank. If the user does not change it
+                    // (does not update the password) then the value is sent as "-".
+                    // If the password value != "-", then update the password, otherwise don't
                     if (user.Password != "-")
                         existingUser.Password = PasswordHasher.HashPassword(user.Password);
                     existingUser.FirstName = user.FirstName;
@@ -119,91 +142,34 @@ namespace QADraft.Controllers
                     existingUser.Email = user.Email;
                     existingUser.isActive = user.isActive;
                     existingUser.Role = user.Role;
+                    // Save all the changes made to the database.
                     _context.SaveChanges();
                 }
             }
-            Debug.WriteLine("End");
+            // IReturn the user to the GeekAccounts page (accounts list page) whether the model state was valid or not
             return RedirectToAction("GeekAccounts");
         }
 
-        
-
-        
-
-        
-
+        // Display the UserInfo page
         [HttpGet]
         public IActionResult UserInfo()
         {
-            if (!IsAuthenticated() || GetId() < 0)
+            // Verify that the user is logged in, if not direct them to login page
+            if (!SessionUtil.IsAuthenticated(HttpContext))
             {
                 return RedirectToAction("Login");
             }
-
-            var user = _context.Users.SingleOrDefault(u => u.Id == GetId());
+            // Fetch the user from the database who's ID matches the ID of the current user
+            var user = _context.Users.SingleOrDefault(u => u.Id == SessionUtil.GetId(HttpContext) );
+            // Verify that the user exists and was found
             if (user != null)
             {
+                // If the user was found, return the view with the user's data
                 return View(user);
             }
-
+            // If the user was not found, return an empty view
             return View();
         }
-
-
-
-
-        public bool IsAuthenticated()
-        {
-            return HttpContext.Session.GetString("IsAuthenticated") == "true";
-        }
-
-        public int? GetId()
-        {
-            return HttpContext.Session.GetInt32("Id");
-        }
-
-        public bool CheckPermissions(string clearance)
-        {
-            string userRole = HttpContext.Session.GetString("Role");
-            Debug.WriteLine(userRole);
-            Debug.WriteLine(userRole == clearance);
-
-            if (clearance == "Geek")
-            {
-                if (userRole == "Geek" || userRole == "Coordinator" || userRole == "Admin")
-                {
-                    return true;
-                }
-            }
-            else if (clearance == "Coordinator")
-            {
-                if (userRole == "Coordinator" || userRole == "Admin")
-                {
-                    return true;
-                }
-            }
-            else if (clearance == "Admin")
-            {
-                if (userRole == "Admin")
-                {
-                    return true;
-                }
-            }
-                
-            return false;
-        }
-
-
-        public string GetLayout()
-        {
-            string role = HttpContext.Session.GetString("role");
-            if (role == "Geek")
-                return "~/Views/Shared/_LayoutGeek.cshtml";
-
-            else
-                return "~/Views/Shared/_Layout.cshtml";
-        }
-
 
     }
 }

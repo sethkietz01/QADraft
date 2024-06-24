@@ -293,17 +293,20 @@ namespace QADraft.Controllers
                 return RedirectToAction("Login");
             }
 
+            /*                  */
+            ViewBag.source = source;
+
             // Check if the passed action is to View/ Edit
             if (action == "View/Edit")
             {
                 // Direct to the EditQA action and pass the ID of the QA and the source page
-                return RedirectToAction("EditQA", new { id = qaId, src = source });
+                return RedirectToAction("EditQA", new { id = qaId, source = source });
             }
             // Check if the passed action is to Delete
             else if (action == "Delete QA")
             {
                 // Direct to the DeleteQA action and pass the ID of the QA and the source page
-                return RedirectToAction("DeleteQA", new { id = qaId });
+                return RedirectToAction("DeleteQA", new { id = qaId, source = source });
             }
 
             // Otherwise, an error has occured and they will be redirected to the home page (Home/Index)
@@ -313,14 +316,13 @@ namespace QADraft.Controllers
         // Display the Edit(View)QA page
         // View and Edit QA are consolidated into the same page
         [HttpGet]
-        public IActionResult EditQA(int id)
+        public IActionResult EditQA(int id, string source)
         {
             // Verify that the user is logged in, if not direct them to login page
             if (!SessionUtil.IsAuthenticated(HttpContext))
             {
                 return RedirectToAction("Login");
             }
-
             // Fetch the QA that matches the ID of the QA selected from table
             var qa = _context.GeekQAs.Find(id);
             // Verify that the QA was found and exists
@@ -336,8 +338,11 @@ namespace QADraft.Controllers
                 // Verify that users were found
                 if (users != null)
                 {
-                    // Assign the list of users to qa.Users and return the view with the fetched QA
+                    // Assign the list of users to qa.Users and 
                     qa.Users = users;
+                    // Pass the source into the ViewBag
+                    ViewBag.source = source;
+                    // Return the view with the fetched QA and the ViewBag
                     return View(qa);
                 }
             }
@@ -347,9 +352,15 @@ namespace QADraft.Controllers
 
         // Process the EditQA POST request
         [HttpPost]
-        public IActionResult EditQA(GeekQA model, string src)
+        public IActionResult EditQA(GeekQA model, string source)
         {
-            Debug.WriteLine($"editsrc:{src}");
+            // The source string is passed through the ViewBag into an input field during the HTTPGet for EditQA
+            // Verify that the user is logged in, if not direct them to login page
+            if (!SessionUtil.IsAuthenticated(HttpContext))
+            {
+                return RedirectToAction("Login");
+            }
+            // Source is passed by the page that calls EditQA (_Filter or AllGeekQAs)
             // Verify that the passed model is valid and contains all required fields
             if (ModelState.IsValid)
             {
@@ -357,86 +368,98 @@ namespace QADraft.Controllers
                 {
                     // Fetch the QA that matches the ID of the QA passed during POST
                     var qa = _context.GeekQAs.Find(model.Id);
-
-                    if (qa == null)
+                    // Verify that an existing QA was found
+                    if (qa != null)
                     {
-                        return NotFound();
+                        // Take all (relevant) data from the passed model and overwrite the fetched qa.
+                        qa.CommittedById = model.CommittedById;
+                        qa.FoundById = model.FoundById;
+                        qa.CategoryOfError = model.CategoryOfError;
+                        qa.NatureOfError = model.NatureOfError;
+                        qa.Severity = model.Severity;
+                        qa.CustomerName = model.CustomerName;
+                        qa.UnitId = model.UnitId;
+                        qa.ErrorDate = model.ErrorDate;
+                        qa.FoundOn = model.FoundOn;
+                        qa.Description = model.Description;
+
+                        // Update the database and save the changes
+                        _context.Update(qa);
+                        _context.SaveChanges();
+                        // Use the source parmater to determine the source page and redirect accordingly
+                        if (source == "Filter")
+                            return RedirectToAction("Filter");
+                        else if (source == "AllGeekQAs")
+                            return RedirectToAction("AllGeekQAs");
                     }
 
-                    qa.CommittedById = model.CommittedById;
-                    qa.FoundById = model.FoundById;
-                    qa.CategoryOfError = model.CategoryOfError;
-                    qa.NatureOfError = model.NatureOfError;
-                    qa.Severity = model.Severity;
-                    qa.CustomerName = model.CustomerName;
-                    qa.UnitId = model.UnitId;
-                    qa.ErrorDate = model.ErrorDate;
-                    qa.FoundOn = model.FoundOn;
-                    qa.Description = model.Description;
-
-                    _context.Update(qa);
-                    _context.SaveChanges();
-                    if (src == "Filter")
-                        return RedirectToAction("Filter");
-                    else if (src == "AllGeekQAs")
-                        return RedirectToAction("AllGeekQAs");
                 }
-                catch
-                {
-                    ModelState.AddModelError(string.Empty, "An error occurred while updating the QA. Please try again.");
-                }
+                catch { }
             }
 
+            // If the model passed was not valid, regenerate the drop down data for users and pass the model back through the view
             model.Users = _context.Users.Select(u => new SelectListItem
             {
                 Value = u.Id.ToString(),
                 Text = $"{u.FirstName} {u.LastName}"
             }).ToList();
-
+            // Return the view with the passed model along with the generated Users list.
             return View(model);
         }
 
-
+        // Display the DeleteQA page
         [HttpGet]
         public IActionResult DeleteQA(int id)
         {
+            // Verify that the user is logged in, if not direct them to login page
             if (!SessionUtil.IsAuthenticated(HttpContext))
             {
                 return RedirectToAction("Login");
             }
-            var findQA = _context.GeekQAs.SingleOrDefault(q => q.Id == id);
-            if (findQA != null)
+            // Fetch the matching qa by the ID
+            var qa = _context.GeekQAs.SingleOrDefault(q => q.Id == id);
+            // Verify that the qa exists and was found
+            if (qa != null)
             {
-                _context.Remove(findQA);
+                // Delete the fetched qa from the database and save the changes
+                _context.Remove(qa);
                 _context.SaveChanges();
             }
-
+            // Return the view (reloads the page)
             return View();
         }
 
-
+        // Helper function to render a view asynchronously
         private async Task<string> RenderViewAsync(string viewName, object model)
         {
+            // Pass the model into the ViewData
             ViewData.Model = model;
+            // Use a StringWriter to capture the output of the view rendering
             using (var writer = new StringWriter())
             {
+                // Use FindView on the passed view name to fetch the current view
                 var viewResult = _viewEngine.FindView(ControllerContext, viewName, false);
 
+                // Verify that that view exists and is valid
                 if (viewResult.View == null)
                 {
+                    // If it is not, throw an exception
                     throw new ArgumentNullException($"{viewName} does not match any available view");
                 }
 
+                // Create a new ViewContext 
                 var viewContext = new ViewContext(
-                    ControllerContext,
-                    viewResult.View,
-                    ViewData,
-                    TempData,
-                    writer,
-                    new HtmlHelperOptions()
+                    ControllerContext,      // The current Controller context
+                    viewResult.View,        // View instance found by viewResult
+                    ViewData,               // The ViewData which contains the model
+                    TempData,               // For temporary data storage
+                    writer,                 // StringWriter to capture the output
+                    new HtmlHelperOptions()     
                 );
 
+                // Wait for the view to be rendered on viewResult
                 await viewResult.View.RenderAsync(viewContext);
+                // Return the view content
                 return writer.GetStringBuilder().ToString();
             }
         }
