@@ -7,8 +7,6 @@
 }
  
 <style>
-   
-
     .action-btn {
         color: #fff;
         background-color: #861F41;
@@ -39,6 +37,7 @@
         text-align: center;
     }
  
+    /* Style for the confirmation buttons */
     .confirmation-buttons {
         margin-top: 20px;
     }
@@ -49,25 +48,14 @@
         cursor: pointer;
     }
  
-    #descriptionButton {
- 
-        padding: 5px 8px;
-    }
- 
-    #description-icon {
-        width: 22px;
-        height: 22px;
-    }
- 
     /* Underlines the current page's link in the nav bar */
     #qa-menu-link {
         padding-bottom: 1px;
         border-bottom: 1px solid #fff;
     }
-
-
 </style>
  
+<!-- Load the partial view for the menu buttons -->
 <partial name="_ReportsMenu" />
 <h2>All QAs</h2>
 
@@ -81,8 +69,12 @@
  
 <!-- Table used to output QAs -->
 <table class="table-qa" id="table">
+    <!-- Table Header -->
     <thead>
         <tr>
+            <!-- sortTable(x) calls the javascript function from _ReportsMenu to sort 
+            by the specified column where x is the column index. The class "arrow" is 
+            used by the function to edit the column header -->
             <th onclick="sortTable(0)">Committed By<span class="arrow"></th>
             <th onclick="sortTable(1)">Found By<span class="arrow"></th>
             <th onclick="sortTable(2)">Category<span class="arrow"></th>
@@ -90,14 +82,17 @@
             <th onclick="sortTable(4)">Severity<span class="arrow"></th>
             <th onclick="sortTable(5)">Commited On<span class="arrow"></th>
             <th onclick="sortTable(6)">Found On<span class="arrow"></th>
-            <th class="noSort">Actions</th> 
+            <th class="noSort">Actions</th> <!-- Don't allow the user to sort by the action column -->
         </tr>
     </thead>
+    <!-- Table Body -->
     <tbody>
         <!-- Populate the table with all QAs form the database -->
         @foreach (var qa in Model.OrderByDescending(q => q.ErrorDate))
         {
+            // Create a new table row
             <tr>
+                @* Insert table data from model *@
                 <td>@qa.CommittedBy?.FirstName @qa.CommittedBy?.LastName</td>
                 <td>@qa.FoundBy?.FirstName @qa.FoundBy?.LastName</td>
                 <td>@qa.CategoryOfError</td>
@@ -105,15 +100,22 @@
                 <td class="severity-cell" data-severity="@qa.Severity">@qa.Severity</td>
                 <td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
                 <td>@qa.FoundOn.ToString("yyyy-MM-dd")</td>
+                @* Insert the form inputs into the table row *@
                 <td>
+                    @* Assign the form method as POST and the appropriate controller and IActionResult *@
                     <form method="post" asp-controller="QA" asp-action="ManageQA">
+                        @* Create hidden input to pass the ID with POST *@
                         <input type="hidden" name="qaId" value="@qa.Id" />
+                        @* Create div to hold buttons *@
                         <div class="form-group">
- 
+                            @* Inputs that send action with POST. That value is used in ManageQA to determine the correct action to take *@
                             <input id="updateButton" type="submit" name="action" value="View/Edit" class="buttons"  />
-                            <input id="deleteButton" type="submit" name="action" value="Delete QA" class="buttons" hidden/>
+                            @* The delete input is hidden and cannot be selected by the user *@
+                            <input id="deleteButton" type="submit" name="action" value="Delete QA" class="buttons" hidden/> 
+                            @* Hidden input to pass the source with POST *@
                             <input type="hidden" name="source" value="AllGeekQAs" />
- 
+                            @* This button's onclick will open a confirmation dialog. In that dialog you can confirm the 
+                            delete action which will trigger the delete button input *@
                             <button id="deleteButton" onclick="openConfirmationDialog(event)" class="buttons">Delete</button>
                         </div>
                     </form>
@@ -126,8 +128,12 @@
 <!-- Configure delete QA confirmation popup -->
 <div id="confirmationDialog" class="confirmation-dialog">
     <div class="confirmation-content">
+        <!-- Confirmation text -->
         <p>Are you sure you want to delete this QA?</p>
+        <!-- Confirmation button container -->
         <div class="confirmation-buttons">
+            <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
+            the deleteButton input. No will close the confirmation dialog -->
             <button class="btn btn-danger" onclick="confirmDelete()">Yes</button>
             <button class="btn btn-primary" onclick="closeConfirmationDialog()">No</button>
         </div>

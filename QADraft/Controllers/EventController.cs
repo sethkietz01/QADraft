@@ -19,19 +19,24 @@ namespace QADraft.Controllers
             _logger = logger;
         }
 
+        // Process AddEvent POST request
         [HttpPost]
         public IActionResult AddEvent(Events newEvent)
         {
+            // Verify that the event model stat is valid
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // If it is, add the newEvent to the data base and save the changes made
                     _context.Events.Add(newEvent);
                     _context.SaveChanges();
+                    // Direct to the Index page
                     return RedirectToAction("Index", "Home");
                 }
                 catch (Exception ex)
                 {
+                    // If an exception was caught, log and handle the error.
                     _logger.LogError(ex, "Error saving Event");
                     ModelState.AddModelError(string.Empty, "An error occurred while saving the Event. Please try again.");
                 }
@@ -41,9 +46,9 @@ namespace QADraft.Controllers
             var viewModel = new CombinedEventsViewModel
             {
                 NewEvent = newEvent,
-                EventsViewModel = new EventsViewModel() // Replace with your actual EventsViewModel initialization
+                EventsViewModel = new EventsViewModel()
             };
-
+            // Return to the Index page with the view model
             return View("Index", viewModel);
         }
 
