@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Add QA";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
@@ -154,7 +155,9 @@
     <button onclick="openConfirmation()" class="buttons form-buttons">Submit</button>
 
     <!-- Cancel and redirect to home -->
-    <a class="buttons form-buttons" asp-area="" asp-controller="Home" asp-action="Index">Cancel</a>
+    <form class="cancel-forms" asp-area="" asp-controller="Home" asp-action="Index" method="get">
+        <button type="submit" class="buttons form-buttons">Cancel</button>
+    </form>
 </div>
 
 @section Scripts {

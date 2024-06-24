@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Geek Accounts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
@@ -38,7 +39,7 @@
                 <td>@qa.Role</td>
                 <td>@qa.CreatedAt.ToString("yyyy-MM-dd")</td>
                 <td>
-                    <a class="btn buttons" asp-area="" asp-controller="User" asp-action="EditUser" asp-route-Id="@qa.Id">Edit</a>
+                    <a class="buttons" asp-area="" asp-controller="User" asp-action="EditUser" asp-route-Id="@qa.Id">Edit</a>
                 </td>
             </tr>
         }
