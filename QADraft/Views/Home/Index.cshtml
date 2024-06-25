@@ -155,34 +155,31 @@
     <div class="calendar-container">
         <p>Event Calendar</p>
         <div class="kalendar">
-        <table class="event-calendar">
-            <thead>
-                <tr>
-                    <th>Event Time</th>
-                    <th>Event Information</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var eventItem in Model.EventsViewModel.EventList.OrderBy(e => e.EventTime))
-                {
-                    // Determine if event time is in the past
-                    var isPastEvent = eventItem.EventTime < DateTime.Now;
-
-                    // Break the EventTime into two separate variables, one representing the time 
-                    //      and the other representing the date
-                    var date = eventItem.EventTime.ToString("MM/dd/yyyy");
-                    var time = eventItem.EventTime.ToString("h:mm tt");
-
-                    // Apply a class based on whether the event is in the past
-                    <tr class="@if (isPastEvent) { <text>past-event</text> }" data-event-id="@eventItem.Id">
-                        <td class="editable" onclick="editEventDate(this)">@time <br />
-                            @date    
-                        </td>
-                        <td class="editable" onclick="editEventInformation(this)">@eventItem.EventInformation</td>
+            <table class="event-calendar">
+                <thead>
+                    <tr>
+                        <th>Event Time</th>
+                        <th>Event Information</th>
+                        <th>Actions</th> <!-- New column for delete button -->
                     </tr>
+                </thead>
+<tbody>
+    @foreach (var eventItem in Model.EventsViewModel.EventList.OrderBy(e => e.EventTime))
+    {
+        var isPastEvent = eventItem.EventTime < DateTime.Now;
+        var date = eventItem.EventTime.ToString("MM/dd/yyyy");
+        var time = eventItem.EventTime.ToString("h:mm tt");
+
+        <tr class="@if (isPastEvent) { <text>past-event</text> }" data-event-id="@eventItem.Id">
+            <td class="editable" onclick="editEventDate(this)">@time <br /> @date </td>
+            <td class="editable" onclick="editEventInformation(this)">@eventItem.EventInformation</td>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm" onclick="openConfirmationDialog(@eventItem.Id)">Delete</button>
+            </td>
+        </tr>
     }
-            </tbody>
-        </table>
+</tbody>
+            </table>
     </div>
     <!-- Button to trigger modal -->
     <button type="button" onclick = "setCurrentDateTime()" class="buttons form-buttons" data-bs-toggle="modal" data-bs-target="#addEventModal">
@@ -191,6 +188,7 @@
     <button type="button" id="togglePastEvents" class="buttons form-buttons">
         Show/Hide Past Events
     </button>
+
 
     <!-- Modal for adding new event -->
     <div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
@@ -393,6 +391,35 @@
                 });
             });
         }
+
+        function openConfirmationDialog(eventId) {
+            if (confirm('Are you sure you want to delete this event?')) {
+                // Perform the delete action here, similar to your previous function
+                deleteEvent(eventId);
+            }
+        }
+
+        function deleteEvent(eventId) {
+            fetch(`/Event/DeleteEvent`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ eventId: eventId })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                console.log('Event deleted successfully');
+                window.location.reload(); // Refresh the page after deletion
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+
     </script>
 
 

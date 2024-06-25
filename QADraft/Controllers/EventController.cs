@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using QADraft.Data;
 using QADraft.Models;
+using QADraft.Utilities;
 using QADraft.ViewModels;
 using System;
 using System.Diagnostics;
@@ -114,6 +115,40 @@ namespace QADraft.Controllers
             {
                 // Handle exceptions if necessary
                 return BadRequest(new { error = "An error occurred while updating the event." });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult DeleteEvent(int eventId)
+        {
+            Debug.Write("Rat");
+            Debug.Write(eventId);
+            try
+            {
+                // Fetch the matching Event by the eventId
+                var eventToDelete = _context.Events.Find(eventId);
+
+                // Verify that the Event exists and was found
+                if (eventToDelete == null)
+                {
+                    Debug.Write("Hat");
+
+                    return NotFound(); // Optionally handle case where event with given ID was not found
+                }
+                Debug.Write("Bat");
+                // Delete the fetched Event from the database
+                _context.Events.Remove(eventToDelete);
+                _context.SaveChanges();
+                Debug.Write("Sat");
+                // Redirect to the Index action of the Event controller
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                // Optionally handle any exceptions that might occur during deletion
+                _logger.LogError(ex, "Error deleting Event");
+                ViewBag.ErrorMessage = "Failed to delete event. Please try again later.";
+                return RedirectToAction("Index", "Home"); // Redirect to the event list page or handle the error appropriately
             }
         }
     }
