@@ -34,6 +34,16 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Coordinator", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
             // Fetch a list of all the users in the database
             var qas = _context.Users
                 .ToList();
@@ -52,12 +62,11 @@ namespace QADraft.Controllers
                 return RedirectToAction("Login");
             }
 
-            /*
-            if (!SessionUtil.CheckPermissions("Admin", HttpContext) )
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Admin", HttpContext))
             {
                 return RedirectToAction("PermissionsDenied", "Home");
             }
-            */
 
             // Assign the appropriate layout
             ViewBag.layout = SessionUtil.GetLayout(HttpContext);
@@ -75,6 +84,16 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Admin", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
             // Verify that the user Model passed is valid
             if (ModelState.IsValid)
             {
@@ -99,6 +118,16 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Admin", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
             // Conver the passed ID to an integer
             int intId = int.Parse(Id);
             // Fetch the user who's ID matches the passed ID
@@ -122,8 +151,18 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Admin", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
             // Verify that the user Model state is valid
-            else if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 // Fetch the user who's ID matches the passed ID
                 var existingUser = _context.Users.SingleOrDefault(u => u.Id == int.Parse(id));
@@ -159,6 +198,16 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Geek", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
             // Fetch the user from the database who's ID matches the ID of the current user
             var user = _context.Users.SingleOrDefault(u => u.Id == SessionUtil.GetId(HttpContext) );
             // Verify that the user exists and was found

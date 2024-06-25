@@ -1,8 +1,9 @@
-﻿@model List<QADraft.Models.GeekQA>
+﻿@* Define the model being used in the page. Uses a list of GeekQAs *@
+@model List<QADraft.Models.GeekQA>
 
 @{
     ViewData["Title"] = "Filter QAs";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = ViewBag.Layout;
 }
 
 <style>
@@ -64,17 +65,22 @@
     {
         margin-top: 10px; 
     }
-
 </style>
 
+<!-- Load the partial view for the navigaton menu -->
 <partial name="_ReportsMenu" />
 <h2>Filter QAs</h2>
 
+<!-- Place the filter options within a div -->
 <div class="filter-section">
+    <!-- Create the form element and assign the controller and action -->
     <form id="filterForm" method="get" asp-controller="QA" asp-action="Filter">
+        <!-- Create div to contain the date selection elements -->
         <div class="form-group">
+            <!-- Checkbox that toggles the visibility of the date selection elements -->
             <input type="checkbox" id="dateFilter" name="dateFilter" onchange="toggleDatePicker(this)">
             <label for="dateFilter">Sort by Error Date</label>
+            <!-- Container for the date picking elements -->
             <div id="datePickers" style="display: none;">
                 <label for="startDate">Start Date:</label>
                 <input type="text" id="startDate" name="startDate" class="datepicker form-control hidden-date" onchange="changeStartDate()">
@@ -82,46 +88,68 @@
                 <input type="text" id="endDate" name="endDate" class="datepicker form-control hidden-date" onchange="changeEndDate()">
             </div>
         </div>
+        <!-- Create div to contain the Committed By elements -->
         <div class="form-group">
+            <!-- Label for CommittedBy-->
             <label for="committedBy">Committed By:</label>
+            <!-- Create the drop down selection for CommitedBy -->
             <select id="committedBy" name="committedBy" class="form-control">
                 <option value="">Select User</option>
+                <!-- Populate the dropdown with user list passed through the ViewBag -->
                 @foreach (var user in ViewBag.Users)
                 {
+                    @* For each user, add their first and last name as a selection option *@
                     <option value="@user.Id">@user.FirstName @user.LastName</option>
                 }
             </select>
         </div>
+        <!-- Create div to contain the Logged By elements -->
         <div class="form-group">
+            <!-- Label for LoggedBy -->
             <label for="loggedBy">Logged By:</label>
+            <!-- Create the drop down selection for LoggedBy -->
             <select id="loggedBy" name="loggedBy" class="form-control">
                 <option value="">Select User</option>
+                <!-- Populate the dropdown with user list passed through the ViewBag -->
                 @foreach (var user in ViewBag.Users)
                 {
+                    @* For each user, add theri first and last name as a selection option *@
                     <option value="@user.Id">@user.FirstName @user.LastName</option>
                 }
             </select>
         </div>
+        <!-- Create div to contain the Category elements -->
         <div class="form-group">
+            <!-- Label for Category -->
             <label for="category">Category:</label>
+            <!-- Create the dropdown selection for Category-->
             <select id="category" name="category" class="form-control">
                 <option value="">Select Category</option>
+                <!-- Populate the dropdown with categories list passed through the ViewBag -->
                 @foreach (var category in ViewBag.Categories)
                 {
+                    @* For each category, add it as a selection option *@
                     <option value="@category.Value">@category.Text</option>
                 }
             </select>
         </div>
+        <!-- Create div to contain submission buttons -->
         <div class="button-group">
             <button type="submit" class="buttons">Apply Filters</button>
+            <!-- Button click calls js function resetFilters() -->
             <button type="button" class="buttons" onclick="resetFilters()">Reset Filters</button>
         </div>
     </form>
 </div>
 
+<!-- Place the QA table under the filter options-->
 <table id="table" class="table-qa">
+    <!-- Create the table headers-->
     <thead>
         <tr>
+            <!-- sortTable(x) calls the javascript function from _ReportsMenu to sort 
+            by the specified column where x is the column index. The class "arrow" is 
+            used by the function to edit the column header -->
             <th onclick="sortTable(0)">Committed By<span class="arrow"></th>
             <th onclick="sortTable(1)">Found By<span class="arrow"></th>
             <th onclick="sortTable(2)">Category<span class="arrow"></th>
@@ -129,15 +157,20 @@
             <th onclick="sortTable(4)">Severity<span class="arrow"></th>
             <th onclick="sortTable(5)">Commited On<span class="arrow"></th>
             <th onclick="sortTable(6)">Found On<span class="arrow"></th>
-            <th class="noSort">Actions</th>
+            <th class="noSort">Actions</th> <!-- Don't allow the user to sort by the action column -->
         </tr>
     </thead>
+    <!-- Create the table body -->
     <tbody>
+        <!-- Verify that the Model exists and is not null -->
         @if (Model != null)
         {
+            @* If it exists, then populate the table *@
             @foreach (var qa in Model.OrderByDescending(q => q.ErrorDate))
             {
+                @* Add each QA in the list of GeekQAs in its own table row *@
                 <tr>
+                    @* Insert the data from the model *@
                     <td>@qa.CommittedBy?.FirstName @qa.CommittedBy?.LastName</td>
                     <td>@qa.FoundBy?.FirstName @qa.FoundBy?.LastName</td>
                     <td>@qa.CategoryOfError</td>
@@ -146,13 +179,21 @@
                     <td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
                     <td>@qa.FoundOn.ToString("yyyy-MM-dd")</td>
                     <td>
+                        @* Insert form elements into each row *@
+                        @* Assign the form method as POST and the appropriate controller and IActionResult *@
                         <form method="post" asp-controller="QA" asp-action="ManageQA" >
+                            @* Create hidden input to pass the ID with POST *@
                             <input type="hidden" name="qaId" value="@qa.Id" />
+                             @* Create div to hold buttons *@
                             <div class="form-group">
+                                @* Inputs that send action with POST. That value is used in ManageQA to determine the correct action to take *@
                                 <input type="submit" name="action" value="View/Edit" class="buttons" />
+                                @* The delete input is hidden and cannot be selected by the user *@
                                 <input type="submit" name="action" value="Delete QA" class="buttons" hidden />
+                                @* Hidden input to pass the source with POST *@
                                 <input type="hidden" name="source" value="Filter" />
-
+                                @* This button's onclick will open a confirmation dialog. In that dialog you can confirm the 
+                                delete action which will trigger the delete button input *@
                                 <button id="deleteButton" onclick="openConfirmationDialog(event)" class="buttons">Delete</button>
                             </div>
                         </form>
@@ -163,10 +204,15 @@
     </tbody>
 </table>
 
+<!-- Configure delete QA confirmation popup -->
 <div id="confirmationDialog" class="confirmation-dialog">
     <div class="confirmation-content">
+        <!-- Confirmation text -->
         <p>Are you sure you want to delete this QA?</p>
+        <!-- Confirmation button container -->
         <div class="confirmation-buttons">
+            <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
+            the deleteButton input. No will close the confirmation dialog -->
             <button class="btn-danger" onclick="confirmDelete()">Yes</button>
             <button class="btn-primary" onclick="closeConfirmationDialog()">No</button>
         </div>

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using QADraft.Data;
 using QADraft.Models;
 using QADraft.Utilities;
@@ -26,8 +27,14 @@ namespace QADraft.Controllers
                 return RedirectToAction("Login");
             }
 
-            // Get the target layout for the user
-            ViewBag.Layout = SessionUtil.GetLayout(HttpContext);
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Geek", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
 
             // Initialize CombinedEventsViewModel
             var calendarModel = new CombinedEventsViewModel
@@ -56,6 +63,9 @@ namespace QADraft.Controllers
                 // Direct the user to the home page
                 return RedirectToAction("Index");
             }
+
+            // Do not check for permissions on the initial login page
+
             // Get the target layout for the user role
             ViewBag.Layout = SessionUtil.GetLayout(HttpContext);
 
@@ -67,6 +77,8 @@ namespace QADraft.Controllers
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
+            // Do not check for permissions on the initial login page
+
             // Fetch the account where the username is the same as the user-entered username
             var user = _context.Users.SingleOrDefault(u => u.Username == username);
             // If a user was found (not null), verify the password
@@ -100,6 +112,8 @@ namespace QADraft.Controllers
         [HttpGet]
         public IActionResult Logout()
         {
+            // Do not check permissions on the logout page
+
             // Clear all session data
             HttpContext.Session.SetString("IsAuthenticated", "false");
             HttpContext.Session.SetString("Username", "");
@@ -112,27 +126,59 @@ namespace QADraft.Controllers
             return RedirectToAction("Login");
         }
 
-        // Display the permissions denied screen
-        [HttpGet]
-        public IActionResult PermissionsDenied()
-        {
-            // If the user tries to access a page they don't have access to,
-            // they should be immediatly redirected to the permissions denied page.
-            return View();
-        }
-
         // Display the extern-site outages page
         [HttpGet]
         public IActionResult Outages()
         {
+            // Verify that the user is logged in
+            if (!SessionUtil.IsAuthenticated(HttpContext))
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Geek", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
+            /*
             ZoomStatus.Get();
 
             // Get the app services health from google and display
             string[] outage = GoogleStatus.Get();
             ViewBag.GooglePercentOutage = outage[0];
             ViewBag.GoogleVitalOutage = outage[1];
+            */
 
             // Return the outages view
+            return View();
+        }
+
+        // Display the permissions denied screen
+        [HttpGet]
+        public IActionResult PermissionsDenied()
+        {
+            // Verify that the user is logged in
+            if (!SessionUtil.IsAuthenticated(HttpContext))
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Geek", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
+            // If the user tries to access a page they don't have access to,
+            // they should be immediatly redirected to the permissions denied page.
             return View();
         }
 

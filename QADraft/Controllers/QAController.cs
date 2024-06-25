@@ -38,6 +38,15 @@ namespace QADraft.Controllers
                 return RedirectToAction("Login");
             }
 
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Coordinator", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
             // Get every user's id and name and place into a list
             var users = _context.Users.Select(u => new SelectListItem
             {
@@ -66,6 +75,15 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Coordinator", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
 
             // Verify that the submitted model state is valid (checks types and if all required model attributes are there)
             if (ModelState.IsValid)
@@ -104,19 +122,6 @@ namespace QADraft.Controllers
             return View(model);
         }
 
-        // Automatically flag the user's account if the QA's severity is 10.
-        public void AutomaticFlag(User user, GeekQA model)
-        {
-            if (model.Severity == 10)
-            {
-                // Set the attribute isFlagged to true
-                user.isFlagged = true;
-                // Save the change to the database
-                _context.SaveChanges();
-            }
-
-        }
-
         // Display the Filter page
         [HttpGet]
         public async Task<IActionResult> Filter(string dateFilter, DateTime? startDate, DateTime? endDate, int? committedBy, int? loggedBy, string category)
@@ -126,6 +131,15 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Coordinator", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
 
             // Pass all users into the viewbag to populate drop-down selectors
             ViewBag.Users = _context.Users.ToList();
@@ -204,6 +218,15 @@ namespace QADraft.Controllers
                 return RedirectToAction("Login");
             }
 
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Geek", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
             // Get the ID of the logged in user
             var id = SessionUtil.GetId(HttpContext);
             // Find the matching ID in the database table Users
@@ -230,6 +253,15 @@ namespace QADraft.Controllers
                 return RedirectToAction("Login");
             }
 
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Coordinator", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
             // Fetch all QAs along with the attributes CommitedBy and FoundBy (These attributes are names while CommitedByID and FoundByID are IDs).
             var qas = _context.GeekQAs
                 .Include(q => q.CommittedBy)
@@ -244,8 +276,6 @@ namespace QADraft.Controllers
             return View("_AllGeekQAs", qas);
         }
 
-
-
         // Display the FlaggedAccounts page
         [HttpGet]
         public IActionResult FlaggedAccounts()
@@ -255,6 +285,15 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Coordinator", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
 
             // Fetch all of QAs along with the attributes CommitedBy and FoundBy
             var flaggedAccounts = _context.GeekQAs
@@ -267,8 +306,6 @@ namespace QADraft.Controllers
             return PartialView("_FlaggedAccounts", flaggedAccounts);
         }
 
-
-
         // Display the QADescriptions page
         [HttpGet]
         public IActionResult QADescriptions()
@@ -278,6 +315,15 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Geek", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
 
             // Return the view
             return View("_QADescriptions");
@@ -292,6 +338,14 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Coordinator", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // No layout to assign
 
             /*                  */
             ViewBag.source = source;
@@ -323,6 +377,16 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Coordinator", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
             // Fetch the QA that matches the ID of the QA selected from table
             var qa = _context.GeekQAs.Find(id);
             // Verify that the QA was found and exists
@@ -360,6 +424,16 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Coordinator", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
             // Source is passed by the page that calls EditQA (_Filter or AllGeekQAs)
             // Verify that the passed model is valid and contains all required fields
             if (ModelState.IsValid)
@@ -416,6 +490,16 @@ namespace QADraft.Controllers
             {
                 return RedirectToAction("Login");
             }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Coordinator", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
             // Fetch the matching qa by the ID
             var qa = _context.GeekQAs.SingleOrDefault(q => q.Id == id);
             // Verify that the qa exists and was found
@@ -427,6 +511,19 @@ namespace QADraft.Controllers
             }
             // Return the view (reloads the page)
             return View();
+        }
+
+        // Automatically flag the user's account if the QA's severity is 10.
+        public void AutomaticFlag(User user, GeekQA model)
+        {
+            if (model.Severity == 10)
+            {
+                // Set the attribute isFlagged to true
+                user.isFlagged = true;
+                // Save the change to the database
+                _context.SaveChanges();
+            }
+
         }
 
         // Helper function to render a view asynchronously
@@ -464,7 +561,7 @@ namespace QADraft.Controllers
             }
         }
 
-        // Create the dictionary needed for making pie chart
+        // Create the dictionary needed for making Donut chart
         public Dictionary<string, int> GetQADict(string type)
         {
             // Get all QA categories and natures from db
@@ -493,11 +590,11 @@ namespace QADraft.Controllers
             return Dict;
         }
 
-        // Display the category / nature piechart
+        // Display the category / nature Donutchart
         [HttpGet]
-        public IActionResult PieChart()
+        public IActionResult DonutChart()
         {
-            // Return the piechart view
+            // Return the Donutchart view
             return View();
         }
 
