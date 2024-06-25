@@ -2,8 +2,8 @@
  
 @{
     ViewData["Title"] = "All QA's";
-    Layout = "~/Views/Shared/_Layout.cshtml";
- 
+    Layout = ViewBag.Layout;
+    string menu = ViewBag.menu;
 }
  
 <style>
@@ -56,14 +56,16 @@
 </style>
  
 <!-- Load the partial view for the menu buttons -->
-<partial name="_ReportsMenu" />
+@Html.Partial(@menu)
 <h2>All QAs</h2>
 
 <!-- Show and hide piechart -->
 <button onclick="toggleChart()" class="buttons">Show/Hide</button>
 <div>
+    <!-- Partial view must placed within a div that is nested in another div. -->
     <div id="chartDiv">
-        <partial name="PieChart"/>
+        <!-- Load the partial view for the DonutChart-->
+        <partial name="DonutChart"/>
     </div>
 </div>
  
@@ -142,6 +144,7 @@
  
 @section Scripts {
 <script>
+        // Document event listener to listen for page being loaded
         document.addEventListener("DOMContentLoaded", function() {
             // Load the QAMenu partial view content
             fetch('@Url.Action("QAMenu", "Home")')
@@ -151,36 +154,45 @@
                 });
         });
  
+        // Function called by the delete button.
         function openConfirmationDialog(event) {
             event.preventDefault(); // Prevent default behavior
  
-            // Show the confirmation dialog
-            console.log("openconfirm");
+            // Get the correct form to be submitted
             var parentForm = event.target.closest('form');
             window.currentForm = parentForm;
+            // Style the Confirmation Dialog elements to be shown
             document.getElementById('confirmationDialog').style.display = 'block';
         }
  
+        // Function called by the No button in the confirmation dialog popup
         function closeConfirmationDialog() {
-            console.log("close confirm");
+            // Style the Confirmtaion Dialog elements to be hidden
             document.getElementById('confirmationDialog').style.display = 'none';
         }
  
+        // Function called by the Yes button in the confirmation dialog popup
         function confirmDelete() {
-            console.log("confirmdelete");
+            // Using the form we saved in openConfirmationDialog(), use .click() on the form input to delete the QA
             window.currentForm.querySelector('input[type="submit"][name="action"][value="Delete QA"]').click();
+            // If for some reason the page does not change, close the popup and return false (serves to close the function)
             closeConfirmationDialog();
             return false;
         }
 
-        //set initial state to hidden
+        // Code to Hide/Show the DonutChart(s)
+        // Set toggle's value to false. Toggle represents the current state of visibility
         var toggle = false;
-        toggleChart();
+        toggleChart();      // Call toggleChart() to hide the chart
 
+        // Function to toggle the visibility of the DonutChart(s)
         function toggleChart() {
+            // Select the div containing the chart and the buttons to change chart
+            // Toggle their visibility using .toggle(bool)
             $("#chartDiv").toggle(toggle);
             $("#categoryBtn").toggle(toggle);
             $("#natureBtn").toggle(toggle);
+            // Flip the value of toggle so that the next time it is called the visiblity of the elements will flip.
             toggle = !toggle;
         }
         

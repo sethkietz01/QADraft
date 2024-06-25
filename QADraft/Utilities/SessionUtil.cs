@@ -80,5 +80,19 @@ namespace QADraft.Utilities
             return false;
         }
 
+        // Helper function to get the role-appropriate QA navigation menu
+        public static string GetQAMenu(HttpContext _context)
+        {
+            // Get the current user's role from the httpcontext session.
+            string? role = _context.Session.GetString("Role");
+
+            // Assign the appropriate layout for each role.
+            if (role == "Geek")
+                return "_ReportsMenuGeek";
+
+            else
+                return "_ReportsMenu";
+        }
+
     }
 }
