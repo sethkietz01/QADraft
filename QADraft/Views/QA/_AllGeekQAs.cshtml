@@ -6,55 +6,6 @@
     string menu = ViewBag.menu;
 }
  
-<style>
-    .action-btn {
-        color: #fff;
-        background-color: #861F41;
-        border-color: #861F41;
-    }
- 
-        .action-btn:hover {
-            color: #fff;
-            background-color: #b31f4f;
-            border-color: #E6A65D;
-        }
- 
-    .confirmation-dialog {
-        display: none;
-        position: fixed;
-        z-index: 9999;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #d9f0ff;
-        border: 1px solid #ccc;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        max-width: 300px;
-    }
- 
-    .confirmation-content {
-        text-align: center;
-    }
- 
-    /* Style for the confirmation buttons */
-    .confirmation-buttons {
-        margin-top: 20px;
-    }
- 
-    .confirmation-buttons button {
-        padding: 10px 20px;
-        margin: 0 10px;
-        cursor: pointer;
-    }
- 
-    /* Underlines the current page's link in the nav bar */
-    #qa-menu-link {
-        padding-bottom: 1px;
-        border-bottom: 1px solid #fff;
-    }
-</style>
- 
 <!-- Load the partial view for the menu buttons -->
 @Html.Partial(@menu)
 <h2>All QAs</h2>
@@ -209,6 +160,8 @@
             toggle = !toggle;
         }
         
+
+
     </script>
 }
  

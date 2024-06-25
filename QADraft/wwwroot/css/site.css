@@ -20,3 +20,521 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+
+/* From Layout */
+.navbar {
+    background-color: #861F41;
+    padding: 10px;
+    vertical-align: middle;
+    border-bottom: 3px solid rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.nav-item {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 100;
+    text-align: center;
+    padding-top: 10px;
+}
+
+.navbar-brand, .nav-link {
+    color: #fff !important;
+    margin-right: 20px;
+}
+
+.footer {
+    background-color: #f8f9fa;
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    height: 60px;
+    position: fixed !important;
+    bottom: 0;
+    width: 100%;
+}
+
+.role-view {
+    text-align: left;
+    margin-left: 50px;
+    justify-content: flex-start;
+    flex-grow: 1;
+}
+
+.watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.container {
+    margin-top: 20px;
+}
+
+.dropdown input[type="checkbox"] {
+    display: none;
+}
+
+.dropdown .for-dropdown {
+    cursor: pointer;
+    padding: 5px;
+    display: inline-block;
+}
+
+.settings-dropdown {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    right: 0;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.dropdown input[type="checkbox"]:checked ~ .settings-dropdown {
+    display: block;
+}
+
+.settings-dropdown a {
+    display: block;
+    padding: 5px 0;
+    text-decoration: none;
+    color: #333;
+}
+
+    .settings-dropdown a:hover {
+        background-color: #f0f0f0;
+    }
+
+.user-name {
+    color: white;
+    font-family: 'Barlow';
+    font-size: 18px;
+    margin-left: 10px;
+}
+
+/* Styles for all buttons across the website */
+.buttons {
+    display: inline-block;
+    color: #fff;
+    background-color: #861F41;
+    border-color: #861F41;
+    /* tests */
+    padding: 8px 12px;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    vertical-align: middle;
+    text-decoration: none;
+    cursor: pointer;
+    border-color: transparent;
+    border-radius: 5px;
+}
+
+    .buttons:hover {
+        color: #fff;
+        background-color: #b31f4f;
+        border-color: #E6A65D;
+        box-shadow: 0 0 5px rgba(230, 168, 93, 0.7);
+    }
+
+    .buttons:active {
+        transform: translateY(1px) translateX(1px) !important;
+        color: #fff;
+        background-color: #b31f4f;
+        border-color: #E6A65D;
+    }
+
+header {
+    margin-bottom: 20px;
+}
+
+body {
+    background-color: #f5f5f5;
+}
+
+#settings-icon {
+    max-height: 20px;
+    max-width: 20px;
+}
+
+/* Styles for all labels across the website */
+.control-label {
+    margin-top: 20px;
+}
+
+/* Styles for all buttons at the end of forms across the website */
+.form-buttons {
+    margin-top: 10px;
+}
+
+.cancel-forms {
+    display: inline-block;
+}
+
+
+/* From ReportsMenu */
+.table-qa {
+    padding: .5rem .5rem;
+    padding-top: 0.5rem;
+    padding-right: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.5rem;
+    width: 100%;
+}
+
+    .table-qa tr {
+        height: 50px;
+        border-bottom: 1px solid #aaaaaa;
+    }
+
+        .table-qa tr:nth-child(even) {
+            background-color: #eaeaea;
+        }
+
+        .table-qa tr:nth-child(odd) {
+            background-color: #f5f5f5;
+        }
+
+    .table-qa td {
+        vertical-align: middle
+    }
+
+        .table-qa th:nth-child(n + 5),
+        .table-qa td:nth-child(n + 5) {
+            text-align: center;
+        }
+
+.menu-button {
+    color: #fff;
+    background-color: #861F41;
+    border-color: #861F41;
+}
+
+    .menu-button:hover {
+        color: #fff;
+        background-color: #b31f4f;
+        border-color: #E6A65D;
+    }
+
+#menu-bar {
+    margin-bottom: 50px;
+}
+
+th {
+    cursor: pointer;
+    user-select: none;
+}
+
+.noSort {
+    cursor: default;
+    user-select: none;
+}
+
+
+.test-span {
+    position: absolute;
+    top: 10%;
+    left: 25%;
+    width: 50%;
+    height: 75%;
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    box-sizing: border-box;
+    border-radius: 10px;
+}
+
+.severity-cell {
+    position: relative;
+}
+
+.arrow {
+    position: absolute;
+}
+
+/* From Index */
+/* Styles for the main element of the page */
+.dashboard {
+    background: #f5f5f5; /* off white */
+}
+
+.dashboard::after {
+    content: "";
+    clear: both;
+}
+
+.modal-open .modal {
+    overflow-y: auto;
+}
+
+.text-center {
+    width: 100%;
+    top: 0;
+    left: 0;
+    text-align: center;
+
+}
+
+/* Styles for the link-bar container */
+.link-container {
+    display: flex;
+    position: relative;
+}
+.past-event {
+    display: none; /* Hide past events by default */
+}
+/* Styles for the external links bar (vertical bar on the left) */
+.link-bar {
+    background-color: #fff;
+    border-right: 3px groove black;
+    height: 100vh;
+    width: 80px;
+    position: fixed;
+    top: 80px;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    z-index: 0;
+}
+
+/* Styles for the links */
+.link-bar a img {
+    display: flex;
+    margin-top: 40px;
+    max-height: 30px;
+    max-width: 40px;
+}
+
+.calendar-container {
+    height: 600px;
+    width: 40%;
+    float: left;
+    margin-left: 7%;
+}
+
+.kalendar {
+    overflow: auto;
+    height: 600px;
+    width: 100%;
+}
+
+.event-calendar {
+    width: 100%;
+}
+
+    .event-calendar tr {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    }
+
+    .event-calendar td {
+        padding: 10px 0;
+    }
+
+    .event-calendar td:nth-child(1) {
+        width: 30%;
+    }
+
+    .event-calendar td:nth-child(2) {
+    }
+        
+    /* CSS for input field */
+    .editable input {
+        border: none;
+        width: 90%;
+        box-sizing: border-box;
+        padding: 5px;
+    }
+
+         
+/* From Login */
+/* Styles for the login box */
+.login {
+    background-color: #f5f5f5;
+    border: 2px groove black;
+    width: 300px;
+    margin: 0 auto;
+    text-align: center;
+    padding-bottom: 25px;
+}
+
+/* Styles for input forms (username and password) */
+.form-group {
+    margin-bottom: 20px;
+}
+
+
+/* From Outages */
+.highlight-link {
+    padding-bottom: 1px;
+    border-bottom: 1px solid #fff;
+}
+
+
+/* From AllGeekQAs */
+.action-btn {
+    color: #fff;
+    background-color: #861F41;
+    border-color: #861F41;
+}
+
+    .action-btn:hover {
+        color: #fff;
+        background-color: #b31f4f;
+        border-color: #E6A65D;
+    }
+
+.confirmation-dialog {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #d9f0ff;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 300px;
+}
+
+.confirmation-content {
+    text-align: center;
+}
+
+/* Style for the confirmation buttons */
+.confirmation-buttons {
+    margin-top: 20px;
+}
+
+    .confirmation-buttons button {
+        padding: 10px 20px;
+        margin: 0 10px;
+        cursor: pointer;
+    }
+
+
+/* From Filter */
+.filter-options-button {
+    color: #fff;
+    background-color: #861F41;
+    border-color: #861F41;
+}
+
+    .filter-options-button:hover {
+        color: #fff;
+        background-color: #b31f4f;
+        border-color: #E6A65D;
+    }
+
+#table {
+    margin-bottom: 55px;
+}
+
+.hidden-date {
+    font-size: 0;
+    padding: 16px;
+}
+
+.visible-date {
+    font-size: 16px;
+}
+
+.button-group {
+    margin-top: 10px;
+}
+
+
+/* From AddQA */
+/* Styles for the submit button */
+#submit-qa {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #861F41;
+    border-color: #861F41;
+    color: #fff;
+}
+
+.add-qa-button {
+    color: #fff;
+    background-color: #861F41;
+    border-color: #861F41;
+}
+
+    .add-qa-button:hover {
+        color: #fff;
+        background-color: #b31f4f;
+        border-color: #E6A65D
+    }
+
+.form-control,
+select,
+select option {
+    background-color: #f8f9fa;
+}
+
+    select:focus,
+    select option:focus,
+    select option:hover {
+        background-color: #f8f9fa;
+    }
+
+.placeholder {
+    background-color: #f8f9fa;
+}
+
+.button-container button {
+    margin-right: 10px;
+}
+
+
+/* From YourQAs */
+#descriptionButton {
+    padding: 5px 8px;
+}
+
+#description-icon {
+    width: 22px;
+    height: 22px;
+}
+
+
+/* From AddUser */
+.form-group select {
+    margin-bottom: 20px;
+}
+
+.add-user-btn {
+    color: #fff;
+    background-color: #861F41;
+    border-color: #861F41;
+}
+
+    .add-user-btn:hover {
+        color: #fff;
+        background-color: #b31f4f;
+        border-color: #E6A65D
+    }
+
+
+/* From EditUser */
+.edit-user-btn {
+    color: #fff;
+    background-color: #861F41;
+    border-color: #861F41;
+}
+
+    .edit-user-btn:hover {
+        color: #fff;
+        background-color: #b31f4f;
+        border-color: #E6A65D
+    }

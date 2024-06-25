@@ -5,13 +5,6 @@
     Layout = ViewBag.Layout;
 }
 
-<style>
-    #user-options-link {
-        padding-bottom: 1px;
-        border-bottom: 1px solid #fff;
-    }
-</style>
-
 <partial name="_GeeksMenu" />
 <h2>Geek Accounts</h2>
 
@@ -45,3 +38,11 @@
         }
     </tbody>
 </table>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Highlight the current page's link
+        var geekAccountsLink = document.getElementById('geek-accounts-link'); 
+        geekAccountsLink.classList.toggle('highlight-link');
+    });
+</script>

@@ -99,6 +99,10 @@
             var natureSelect = document.getElementById("natureSelect");
             var severityInput = document.getElementById("severityInput");
 
+            // Highlight the current page's link
+            var qaMenuLink = document.getElementById('qa-menu-link'); 
+            qaMenuLink.classList.toggle('highlight-link');
+
             // Populate categories dropdown
             categories.forEach(function(category) {
                 var option = document.createElement("option");

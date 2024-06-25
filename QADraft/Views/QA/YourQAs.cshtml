@@ -7,69 +7,7 @@
     string menu = ViewBag.menu;
 }
 
-<style>
-    .filter-options-button {
-        color: #fff;
-        background-color: #861F41;
-        border-color: #861F41;
-    }
-        
-        .filter-options-button:hover {
-            color: #fff;
-            background-color: #b31f4f;
-            border-color: #E6A65D;
-        }
-
-    #table
-    {
-        margin-bottom: 55px;
-    }
-
-    .confirmation-dialog {
-        display: none;
-        position: fixed;
-        z-index: 9999;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #d9f0ff;
-        border: 1px solid #ccc;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        max-width: 300px;
-    }
-
-    .confirmation-content {
-        text-align: center;
-    }
-
-    .confirmation-buttons {
-        margin-top: 20px;
-    }
-
-        .confirmation-buttons button {
-            padding: 10px 20px;
-            margin: 0 10px;
-            cursor: pointer;
-        }
-
-    .hidden-date {
-        font-size: 0;
-        padding: 16px;
-    }
-
-    .visible-date {
-        font-size: 16px;
-    }
-
-    .button-group
-    {
-        margin-top: 10px; 
-    }
-</style>
-
-<!-- Load the partial view for the navigaton menu -->
-@Html.Partial(@menu)
+<partial name="_ReportsMenu" />
 <h2>Your QAs</h2>
 
 <!-- Place the filter options within a div -->
@@ -200,8 +138,15 @@
             startDate.classList.add("visible-date");
         }
 
-        function changeEndDate() {
-            console.log("changeEndDate");
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Highlight the current page's link
+        var qaMenuLink = document.getElementById('qa-menu-link'); 
+        qaMenuLink.classList.toggle('highlight-link');
+    });
+
+    function showDescription(event) {
+        event.preventDefault(); // Prevent default behavior
 
             var startDate = document.getElementById("startDate");
             var endDate = document.getElementById("endDate");

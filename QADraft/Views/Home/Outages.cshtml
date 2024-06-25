@@ -3,13 +3,6 @@
     Layout = ViewBag.Layout;
 }
 
-<style>
-    #outages-link {
-        padding-bottom: 1px;
-        border-bottom: 1px solid #fff;
-    }
-</style>
-
 <h2>Links to Server Statuses</h2>
 
 <!-- List of external links -->
@@ -51,3 +44,10 @@
         <a href="https://status.zoom.us/" target="_blank">Zoom</a>
     </li>
 </ul>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var outageLink = document.getElementById('outages-link'); 
+        outageLink.classList.toggle('highlight-link');
+    });
+</script>

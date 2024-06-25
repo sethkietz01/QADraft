@@ -5,82 +5,6 @@
     Layout = ViewBag.Layout;
 }
 
-<style>
-    /* Underlines the current page's link in the nav bar */
-    #add-qa-link {
-        padding-bottom: 1px;
-        border-bottom: 1px solid #fff;
-    }
-
-    /* Styles for the submit button */
-    #submit-qa {
-        margin-top: 20px;
-        margin-bottom: 20px;
-        background-color: #861F41;
-        border-color: #861F41;
-        color: #fff;
-    }
-
-    .confirmation-dialog {
-        display: none;
-        position: fixed;
-        z-index: 9999;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #d9f0ff;
-        border: 1px solid #ccc;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        max-width: 300px;
-    }
-
-    .confirmation-content {
-        text-align: center;
-    }
-
-    .confirmation-buttons {
-        margin-top: 20px;
-    }
-
-    .confirmation-buttons button {
-        padding: 10px 20px;
-        margin: 0 10px;
-        cursor: pointer;
-    }
-
-    .add-qa-button{
-        color: #fff;
-        background-color: #861F41;
-        border-color: #861F41;
-    }
-        .add-qa-button:hover{
-            color: #fff;
-            background-color: #b31f4f;
-            border-color: #E6A65D
-        }
-
-    .form-control,
-    select,
-    select option {
-        background-color: #f8f9fa;
-    }
-
-    select:focus,
-    select option:focus,
-    select option:hover {
-        background-color: #f8f9fa;
-    }
-
-    .placeholder {
-        background-color: #f8f9fa;
-    }
-
-    .button-container button {
-        margin-right: 10px;
-    }
-</style>
-
 <h2>Add QA</h2>
 
 <!-- Form to get details about the QA being added -->
@@ -217,6 +141,10 @@
             var categorySelect = document.getElementById("categorySelect");
             var natureSelect = document.getElementById("natureSelect");
             var severityInput = document.getElementById("severityInput");
+
+            // Highlight the current page's link
+            var addQaLink = document.getElementById('add-qa-link'); 
+            addQaLink.classList.toggle('highlight-link');
 
             // Populate categories dropdown
             categories.forEach(function(category) {

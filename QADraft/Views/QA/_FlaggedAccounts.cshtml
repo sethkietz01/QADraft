@@ -12,12 +12,8 @@
 <table id="table" class="table-qa">
     <thead>
         <tr>
-            <th onclick="sortTable(0)">Committed By<span class="arrow"></th>
-            <th onclick="sortTable(1)">Found By<span class="arrow"></th>
-            <th onclick="sortTable(2)">Category<span class="arrow"></th>
-            <th onclick="sortTable(3)">Nature<span class="arrow"></th>
-            <th onclick="sortTable(4)">Severity<span class="arrow"></th>
-            <th onclick="sortTable(5)">Date<span class="arrow"></th>
+            <th onclick="sortTable(0)">User<span class="arrow"></th>
+            <th onclick="sortTable(6)">Flagged On<span class="arrow"></th>
         </tr>
     </thead>
     <tbody>
@@ -25,12 +21,16 @@
         {
             <tr>
                 <td>@qa.CommittedBy?.FirstName @qa.CommittedBy?.LastName</td>
-                <td>@qa.FoundBy?.FirstName @qa.FoundBy?.LastName</td>
-                <td>@qa.CategoryOfError</td>
-                <td>@qa.NatureOfError</td>
-                <td style="background-color: #fff;" data-severity="@qa.Severity">@qa.Severity</td>
-                <td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
+                <td>@qa.FoundOn.ToString("yyyy-MM-dd")</td>
             </tr>
         }
     </tbody>
 </table>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Highlight the current page's link
+        var qaMenuLink = document.getElementById('qa-menu-link'); 
+        qaMenuLink.classList.toggle('highlight-link');
+    });
+</script>

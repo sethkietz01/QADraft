@@ -5,23 +5,6 @@
     Layout = ViewBag.Layout;
 }
 
-<style>
-    .form-group select {
-        margin-bottom: 20px;
-    }
-
-    .add-user-btn {
-        color: #fff;
-        background-color: #861F41;
-        border-color: #861F41;
-    }
-        .add-user-btn:hover{
-            color: #fff;
-            background-color: #b31f4f;
-            border-color: #E6A65D
-        }
-</style>
-
 <partial name="_GeeksMenu" />
 <h2>Add User</h2>
 
@@ -89,6 +72,12 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Highlight the current page's link
+            var geekAccountsLink = document.getElementById('geek-accounts-link'); 
+            geekAccountsLink.classList.toggle('highlight-link');
+        });
+
         function cancel()
         {
             var cancelForm = document.getElementById("cancel-form");

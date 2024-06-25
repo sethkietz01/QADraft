@@ -5,53 +5,6 @@
     Layout = ViewBag.Layout;
 }
 
-<style>
-    .form-group select
-    {
-        margin-bottom: 20px;
-    }
-
-    .confirmation-dialog {
-        display: none;
-        position: fixed;
-        z-index: 9999;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #d9f0ff;
-        border: 1px solid #ccc;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        max-width: 300px;
-    }
-
-    .confirmation-content {
-        text-align: center;
-    }
-
-    .confirmation-buttons {
-        margin-top: 20px;
-    }
-
-    .confirmation-buttons button {
-        padding: 10px 20px;
-        margin: 0 10px;
-        cursor: pointer;
-    }
-
-    .edit-user-btn {
-        color: #fff;
-        background-color: #861F41;
-        border-color: #861F41;
-    }
-        .edit-user-btn:hover{
-            color: #fff;
-            background-color: #b31f4f;
-            border-color: #E6A65D
-        }
-
-</style>
-
 <partial name="_GeeksMenu" />
 <h2>Edit User</h2>
 
@@ -124,6 +77,12 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Highlight the current page's link
+            var geekAccountsLink = document.getElementById('geek-accounts-link'); 
+            geekAccountsLink.classList.toggle('highlight-link');
+        });
+
         function openConfirmation() {
             console.log("OpenConfirmation");
 
