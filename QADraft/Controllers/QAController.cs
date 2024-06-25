@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System;
 using QADraft.Utilities;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace QADraft.Controllers
 {
@@ -210,7 +211,7 @@ namespace QADraft.Controllers
 
         // Display the QAs of the logged in user
         [HttpGet]
-        public IActionResult YourQAs()
+        public async Task<IActionResult> YourQAs(string dateFilter, DateTime? startDate, DateTime? endDate, int? committedBy, int? loggedBy, string category)
         {
             // Verify that the user is logged in, if not direct them to login page
             if (!SessionUtil.IsAuthenticated(HttpContext))
@@ -230,20 +231,60 @@ namespace QADraft.Controllers
             // Get the appropriate navigation menu
             ViewBag.menu = SessionUtil.GetQAMenu(HttpContext);
 
-            // Get the ID of the logged in user
-            var id = SessionUtil.GetId(HttpContext);
-            // Find the matching ID in the database table Users
-            var user = _context.Users.SingleOrDefault(u => u.Id == id);
-            // Check if a user was found
-            if (user != null)
+            // Pass all error categories into viewbag
+            ViewBag.Categories = new List<SelectListItem>
             {
-                // If so, find all QAs where the ID matches
-                var qa = _context.GeekQAs.Where(q => q.CommittedById == user.Id).Include(q => q.FoundBy).ToList();
-                return View(qa);
+                new SelectListItem { Value = "Snipe-It", Text = "Snipe-It" },
+                new SelectListItem { Value = "DocuSign", Text = "DocuSign" },
+                new SelectListItem { Value = "Processes", Text = "Processes" },
+                new SelectListItem { Value = "Desk Conduct", Text = "Desk Conduct" },
+                new SelectListItem { Value = "Other", Text = "Other" }
+            };
+
+            // Fetch all QAs as queryable
+            var userId = SessionUtil.GetId(HttpContext);
+            var qas = _context.GeekQAs
+                .Where(q => q.CommittedById == userId)
+                .AsQueryable();
+
+
+            // Check if the datefilter box is checked
+            if (!string.IsNullOrEmpty(dateFilter))
+            {
+                // Check if there is both a start and end date entered
+                if (startDate.HasValue && endDate.HasValue)
+                {
+                    // Both start date and end date are provided
+                    qas = qas.Where(q => q.ErrorDate >= startDate.Value && q.ErrorDate <= endDate.Value);
+                }
+                // If not, check for a lone start date
+                else if (startDate.HasValue)
+                {
+                    // Only start date is provided, filter from start date to current date
+                    qas = qas.Where(q => q.ErrorDate >= startDate.Value && q.ErrorDate <= DateTime.Now);
+                }
+                // Finally, check for a lone end date
+                else if (endDate.HasValue)
+                {
+                    // Only end date is provided, filter from the minimum date to end date
+                    qas = qas.Where(q => q.ErrorDate >= DateTime.MinValue && q.ErrorDate <= endDate.Value);
+                }
             }
+
+            // Check if the Category field was given a value
+            if (!string.IsNullOrEmpty(category))
+            {
+                // Add QAs that are of the same category
+                qas = qas.Where(q => q.CategoryOfError == category);
+            }
+
+            // Add the QAs to a list and await async
+            var model = await qas.ToListAsync();
+
+            // Insert QAs into Viewbag as the inital content
+            ViewBag.InitialContent = await RenderViewAsync("YourQAs", model);
             // Return the view with the QAs
-            return View();
-            
+            return PartialView("YourQAs", model);
         }
 
         // Display all of the Geek QAs
