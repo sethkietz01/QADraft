@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "All QA's";
     Layout = ViewBag.Layout;
+    string menu = ViewBag.menu;
 }
  
 <style>
@@ -55,7 +56,7 @@
 </style>
  
 <!-- Load the partial view for the menu buttons -->
-<partial name="_ReportsMenu" />
+@Html.Partial(@menu)
 <h2>All QAs</h2>
 
 <!-- Show and hide piechart -->

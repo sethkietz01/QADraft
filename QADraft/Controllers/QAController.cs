@@ -227,6 +227,9 @@ namespace QADraft.Controllers
             // Assign the appropriate layout
             ViewBag.layout = SessionUtil.GetLayout(HttpContext);
 
+            // Get the appropriate navigation menu
+            ViewBag.menu = SessionUtil.GetQAMenu(HttpContext);
+
             // Get the ID of the logged in user
             var id = SessionUtil.GetId(HttpContext);
             // Find the matching ID in the database table Users
@@ -262,6 +265,9 @@ namespace QADraft.Controllers
             // Assign the appropriate layout
             ViewBag.layout = SessionUtil.GetLayout(HttpContext);
 
+            // Get the appropriate navigation menu
+            ViewBag.menu = SessionUtil.GetQAMenu(HttpContext);
+
             // Fetch all QAs along with the attributes CommitedBy and FoundBy (These attributes are names while CommitedByID and FoundByID are IDs).
             var qas = _context.GeekQAs
                 .Include(q => q.CommittedBy)
@@ -295,6 +301,9 @@ namespace QADraft.Controllers
             // Assign the appropriate layout
             ViewBag.layout = SessionUtil.GetLayout(HttpContext);
 
+            // Get the appropriate navigation menu
+            ViewBag.menu = SessionUtil.GetQAMenu(HttpContext);
+
             // Fetch all of QAs along with the attributes CommitedBy and FoundBy
             var flaggedAccounts = _context.GeekQAs
                 .Include(q => q.CommittedBy)
@@ -324,6 +333,9 @@ namespace QADraft.Controllers
 
             // Assign the appropriate layout
             ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
+            // Get the appropriate navigation menu
+            ViewBag.menu = SessionUtil.GetQAMenu(HttpContext);
 
             // Return the view
             return View("_QADescriptions");

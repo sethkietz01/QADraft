@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Your QAs";
     Layout = ViewBag.Layout;
-
+    string menu = ViewBag.menu;
 }
 
 <style>
@@ -61,11 +61,10 @@
         padding-bottom: 1px;
         border-bottom: 1px solid #fff;
     }
-
 </style>
 
-
-<partial name="_ReportsMenu" />
+<!-- Load the partial view for the menu buttons -->
+@Html.Partial(@menu)
 <h2>Your QAs</h2>
 
 <!-- Table used to output QAs -->

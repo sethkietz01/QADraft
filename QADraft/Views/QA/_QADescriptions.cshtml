@@ -2,12 +2,14 @@
 
 @{
     ViewData["Title"] = "QA Descriptions";
-    Layout = ViewBag.Layout;
+    string menu = ViewBag.menu;
 
 }
 
-<partial name="_ReportsMenu" />
+<!-- Load the partial view for the menu buttons -->
+@Html.Partial(@menu)
 <h2>QA Descriptions</h2>
+
 <p>List of QA Descriptions will be displayed here.</p> <!-- Placeholder -->
 
 <!-- Placeholder form to get the category and nature -->
