@@ -82,13 +82,14 @@
             <th onclick="sortTable(2)">Category<span class="arrow"></th>
             <th onclick="sortTable(3)">Nature<span class="arrow"></th>
             <th onclick="sortTable(4)">Severity<span class="arrow"></th>
-            <th onclick="sortTable(5)">Commited On<span class="arrow"></th>
+            <th onclick="sortTable(5)">Committed On<span class="arrow"></th>
             <th onclick="sortTable(6)">Found On<span class="arrow"></th>
             <th class="noSort">Actions</th> <!-- Don't allow the user to sort by the action column -->
         </tr>
     </thead>
     <!-- Table Body -->
     <tbody>
+        
         <!-- Populate the table with all QAs form the database -->
         @foreach (var qa in Model.OrderByDescending(q => q.ErrorDate))
         {
@@ -118,10 +119,31 @@
                             <input type="hidden" name="source" value="AllGeekQAs" />
                             @* This button's onclick will open a confirmation dialog. In that dialog you can confirm the 
                             delete action which will trigger the delete button input *@
-                            <button id="deleteButton" onclick="openConfirmationDialog(event)" class="buttons">Delete</button>
+                            <button id="deleteButton_@qa.Id" onclick="openConfirmationDialog(event)" class="buttons">Delete</button>
                         </div>
+
                     </form>
                 </td>
+                    @* For each row, check if the user is a coordinator and if the QA was committed by them. If it was, disable the Delete button *@
+                    <script>
+                        // Get the variables from the ViewBag
+                        var userRole = '@ViewBag.UserRole';
+                        var userName = '@ViewBag.UserName';
+
+                        // Check if the user is a Coordinator
+                        if (userRole == "Coordinator")
+                        {
+                            // Get the text of the committedSelect element 
+                            var committedBy = '@qa.CommittedBy?.FirstName' + ' ' + '@qa.CommittedBy?.LastName'
+                            console.log(committedBy)
+                            // Check if the CommittedBy name is the same as the user's name
+                            if (committedBy == userName) {
+                                // If it is, disable the Edit button
+                                var deleteBtn = document.getElementById("deleteButton_@qa.Id");
+                                deleteBtn.disabled = true;
+                            }
+                        }
+                    </script>
             </tr>
         }
     </tbody>
@@ -144,17 +166,7 @@
  
 @section Scripts {
 <script>
-        // Document event listener to listen for page being loaded
-        document.addEventListener("DOMContentLoaded", function() {
-            // Load the QAMenu partial view content
-            fetch('@Url.Action("QAMenu", "Home")')
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById("qa-content").innerHTML = html;
-                });
-        });
- 
-        // Function called by the delete button.
+                // Function called by the delete button.
         function openConfirmationDialog(event) {
             event.preventDefault(); // Prevent default behavior
  
@@ -173,6 +185,7 @@
  
         // Function called by the Yes button in the confirmation dialog popup
         function confirmDelete() {
+            
             // Using the form we saved in openConfirmationDialog(), use .click() on the form input to delete the QA
             window.currentForm.querySelector('input[type="submit"][name="action"][value="Delete QA"]').click();
             // If for some reason the page does not change, close the popup and return false (serves to close the function)

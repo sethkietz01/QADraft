@@ -19,6 +19,13 @@ namespace QADraft.Utilities
             return _context.Session.GetInt32("Id");
         }
 
+        // Helper function to fetch the ID of the logged in user
+        public static string? GetRole(HttpContext _context)
+        {
+            // Grab the session integer "Id" and return it
+            return _context.Session.GetString("Role");
+        }
+
         // Helper function to get the First and Last name of the logged in user
         public static string GetFullName(HttpContext _context)
         {

@@ -154,6 +154,11 @@ namespace QADraft.Controllers
                 new SelectListItem { Value = "Other", Text = "Other" }
             };
 
+            // Pass the user's role and name into the ViewBag to compare
+            // against the QA they are trying to edit
+            ViewBag.UserName = SessionUtil.GetFullName(HttpContext);
+            ViewBag.UserRole = SessionUtil.GetRole(HttpContext);
+
             // Fetch all QAs as queryable
             var qas = _context.GeekQAs.AsQueryable();
 
@@ -319,6 +324,11 @@ namespace QADraft.Controllers
             ViewBag.categoryDict = GetQADict("category");
             ViewBag.natureDict = GetQADict("nature");
 
+            // Pass the user's role and name into the ViewBag to compare
+            // against the QA they are trying to edit
+            ViewBag.UserName = SessionUtil.GetFullName(HttpContext);
+            ViewBag.UserRole = SessionUtil.GetRole(HttpContext);
+
             // Return view with ViewBag and list of QAs
             return View("_AllGeekQAs", qas);
         }
@@ -459,6 +469,10 @@ namespace QADraft.Controllers
                     qa.Users = users;
                     // Pass the source into the ViewBag
                     ViewBag.source = source;
+                    // Pass the user's role and name into the ViewBag to compare
+                    // against the QA they are trying to edit
+                    ViewBag.UserName = SessionUtil.GetFullName(HttpContext);
+                    ViewBag.UserRole = SessionUtil.GetRole(HttpContext);
                     // Return the view with the fetched QA and the ViewBag
                     return View(qa);
                 }
