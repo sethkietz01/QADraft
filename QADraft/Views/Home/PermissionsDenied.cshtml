@@ -3,8 +3,45 @@
     Layout = ViewBag.Layout;
 }
 
-<!-- When a user attempts to access a page they do not have access to they should instead be directed to this page -->
-<h3>Permissions Denied</h3>
-<h2>Your role does not have permission to access this page.<h/2>
+<link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+    }
 
-<img src="~/images/pewpew.png" width="400px" height="500px">
+    .spooky-text {
+        color: green;
+        font-weight: 900;
+        font-size: 75px;
+        font-family: 'Creepster', cursive;
+        text-align: center;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+
+        background: linear-gradient(to right, #ff0000, #820000);
+        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;
+    }
+
+    #chang-bang {
+        z-index: -1;
+        position: fixed;
+        width: 100%; 
+        height: 100%; 
+        left: 0;
+        top: 0;
+        object-fit: cover;
+    }
+</style>
+
+<!-- When a user attempts to access a page they do not have access to they should instead be directed to this page -->
+<div class="spooky-text">
+    <h3>Permissions Denied</h3>
+    <h2>Your role does not have permission to access this page.<h2>
+</div>
+<img id="chang-bang" src="~/images/pewpew.png" width="400px" height="500px">
