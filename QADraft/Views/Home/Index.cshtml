@@ -66,15 +66,18 @@
                     }
                 </tbody>
             </table>
-        <div>
+        </div>
+        <div class="calendar-buttons">
+            <!-- Button to trigger modal -->
+            <button type="button" onclick = "setCurrentDateTime()" class="buttons form-buttons" data-bs-toggle="modal" data-bs-target="#addEventModal">
+                Add New Event
+            </button>
+            <button type="button" id="togglePastEvents" class="buttons form-buttons">
+                Show/Hide Past Events
+            </button>
+        </div>
     </div>
-    <!-- Button to trigger modal -->
-    <button type="button" onclick = "setCurrentDateTime()" class="buttons form-buttons" data-bs-toggle="modal" data-bs-target="#addEventModal">
-        Add New Event
-    </button>
-    <button type="button" id="togglePastEvents" class="buttons form-buttons">
-        Show/Hide Past Events
-    </button>
+    
 
 
     <!-- Modal for adding new event -->
