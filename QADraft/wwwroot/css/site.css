@@ -374,10 +374,7 @@ th {
     padding-bottom: 25px;
 }
 
-/* Styles for input forms (username and password) */
-.form-group {
-    margin-bottom: 20px;
-}
+
 
 
 /* From Outages */
@@ -517,7 +514,7 @@ select option {
 
 /* From AddUser */
 .form-group select {
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
 
 .add-user-btn {
