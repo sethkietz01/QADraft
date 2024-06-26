@@ -17,7 +17,12 @@
     </div>
     <div class="form-group">
         <label asp-for="Password" class="control-label">New Password</label>
-        <input id="password-field" asp-for="Password" class="form-control" value=""/>
+        <input id="password-field" type="password" asp-for="Password" class="form-control" value=""/>
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Password" class="control-label">Confirm Password</label>
+        <input id="confirm-password-field" type="password" asp-for="Password" class="form-control" value=""/>
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -96,43 +101,55 @@
 
         function confirmEdit() {
             closeConfirmation();
-            password = document.getElementById("password-field").value.trim();
-            console.log("'");
-            console.log(password);
-            console.log("'");
 
+            // First check if the password was changed
+            password = document.getElementById("password-field").value.trim();
+            // If the value is blank and has not changed
             if (password == "") {
+                // Assign '-' as the password value. This value is arbitrary, any value will 
+                // work as long as it matches what is expected in the controller action
                 document.getElementById("password-field").value = "-";
+                // Submit the form
+                document.querySelector('input[type="submit"][value="Edit User"]').click();
+                return false;
             }
-            else {
+
+            // If it was changed, then do password validation
+            // Get the two password fields
+            var pass1 = document.getElementById("password-field");
+            var pass2 = document.getElementById("confirm-password-field");
+
+            if (pass1.value == pass2.value) {
+                // If they match, do password validation
+                password = document.getElementById("password-field").value.trim();
                 if (password.length < 8) {
                     alert("Password must be at least 8 characters long.");
-                    return false;
-                } else if (!/[A-Z]/.test(password))
-                {
-                    alert("Password must contain at least one uppercase letter.");
-                    return false;   
-                } else if (!/[^A-Za-z0-9]/.test(password)) {
-                    alert("Password must contain at least one special character.");
-                    return false;
-                } else if (!/\d/.test(password)) {
-                    alert("Password must contain at least one numeric character.");
-                    return false;
-                } else {
-                    closeConfirmation();
-                    // If password meets criteria, proceed with form submission
-                    document.querySelector('input[type="submit"][value="Edit User"]').click();
-                    return true;
                 }
+                else if (!/[A-Z]/.test(password)){
+                    alert("Password must contain at least one uppercase letter.");
+                }
+                else if (!/[^A-Za-z0-9]/.test(password)) {
+                    alert("Password must contain at least one special character.");
+                }
+                else if (!/\d/.test(password)) {
+                    alert("Password must contain at least one numeric character.");
+                }
+                else {
+                    // Otherwise, password meets criteria, proceed with form submission
+                    document.querySelector('input[type="submit"][value="Edit User"]').click();
+                }
+
+            }
+            else {
+                // If the passwords are different, lear the password fields
+                pass1.value = "";
+                pass2.value = "";
+                
+                // display an error
+                alert("Password must match");
             }
 
-            
-
-            console.log(password.value);
-            document.querySelector('input[type="submit"][value="Edit User"]').click();
-            console.log("Clicked");
-            closeConfirmationDialog();
-            return false;
         }
+
     </script>
 }
