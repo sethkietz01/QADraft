@@ -53,6 +53,14 @@ namespace QADraft.Controllers
             return View("Index", viewModel);
         }
 
+        // Test action for edit event info
+        [HttpPost]
+        public IActionResult EditEventInfo(int id)
+        {
+            Console.WriteLine(id);
+            return View("Index", "Home");
+        }
+
 
         // risky test, linked to JS method in Index.cshtml
         [HttpPost]

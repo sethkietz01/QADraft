@@ -117,6 +117,11 @@
  
 @section Scripts {
 <script>
+        document.addEventListener('DOMContentLoaded', function() {
+                // Highlight the current page's link
+                var qaMenuLink = document.getElementById('qa-menu-link'); 
+                qaMenuLink.classList.toggle('highlight-link');
+        });
                 // Function called by the delete button.
         function openConfirmationDialog(event) {
             event.preventDefault(); // Prevent default behavior

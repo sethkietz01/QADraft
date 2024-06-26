@@ -17,12 +17,12 @@
     </div>
     <div class="form-group">
         <label asp-for="Password" class="control-label"></label>
-        <input type="password" asp-for="Password" class="form-control" />
+        <input id="password" type="password" asp-for="Password" class="form-control" />
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label class="control-label">Confirm Password</label>
-        <input type="password" asp-for="Password" class="form-control" name="ConfirmPassword" />
+        <input id="confirmPassword" type="password" asp-for="Password" class="form-control" />
         <span class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -59,7 +59,9 @@
     </div>
     
     <div class="form-group">
-        <input type="submit" value="Add User" class="buttons form-buttons" />
+        <!-- Use a button instead of a form input to call javascript to check passwords -->
+        <button onclick="addUser()" class="buttons form-buttons">Add User</button>
+        <input type="submit" value="Add User" class="buttons form-buttons" hidden/>
         <!-- Cancel and redirect to home -->
         <button onclick="cancel()" class="buttons form-buttons">Cancel</button>
     </div>
@@ -72,6 +74,41 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
+        function addUser() {
+            // Get the two password fields
+            var pass1 = document.getElementById("password");
+            var pass2 = document.getElementById("confirmPassword");
+
+            // Verify that the two passwords are the same
+            if (pass1.value == pass2.value) {
+                password = document.getElementById("password").value.trim();
+                if (password.length < 8) {
+                    alert("Password must be at least 8 characters long.");
+                }
+                else if (!/[A-Z]/.test(password)){
+                    alert("Password must contain at least one uppercase letter.");
+                }
+                else if (!/[^A-Za-z0-9]/.test(password)) {
+                    alert("Password must contain at least one special character.");
+                }
+                else if (!/\d/.test(password)) {
+                    alert("Password must contain at least one numeric character.");
+                }
+
+                // If password meets criteria, proceed with form submission
+                document.querySelector('input[type="submit"][value="Add User"]').click();
+            }
+            else {
+                // If the passwords are different, lear the password fields
+                pass1.value = "";
+                pass2.value = "";
+                
+                // display an error
+                alert("Password must match");
+            }
+
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             // Highlight the current page's link
             var geekAccountsLink = document.getElementById('geek-accounts-link'); 

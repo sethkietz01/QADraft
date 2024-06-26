@@ -95,6 +95,12 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+                // Highlight the current page's link
+                var qaMenuLink = document.getElementById('qa-menu-link'); 
+                qaMenuLink.classList.toggle('highlight-link');
+        });
+
         function toggleDatePicker(checkbox) {
             console.log("Toggle Date Picker: ", checkbox.checked); // Debug output
             var datePickers = document.getElementById("datePickers");
@@ -136,32 +142,6 @@
 
             startDate.classList.remove("hidden-date");
             startDate.classList.add("visible-date");
-        }
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Highlight the current page's link
-        var qaMenuLink = document.getElementById('qa-menu-link'); 
-        qaMenuLink.classList.toggle('highlight-link');
-    });
-
-    function showDescription(event) {
-        event.preventDefault(); // Prevent default behavior
-
-            var startDate = document.getElementById("startDate");
-            var endDate = document.getElementById("endDate");
-
-            var startDateFormat = new Date(startDate.value);
-            var endDateFormat = new Date(endDate.value);
-
-
-            if (endDateFormat < startDateFormat)
-            {
-                endDate.value = startDate.value;
-            }
-
-            endDate.classList.remove("hidden-date");
-            endDate.classList.add("visible-date");
         }
     </script>
 }
