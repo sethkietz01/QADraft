@@ -161,6 +161,7 @@ body {
 
 header {
     margin-bottom: 20px;
+    width: 100%;
 }
 
 body {
@@ -278,6 +279,13 @@ th {
     clear: both;
 }
 
+    .dashboard .container {
+        max-width: 100vw; /* override the max width to be 100% of the screen */
+
+        /* test */
+        margin-bottom: 85px;
+    }
+
 .modal-open .modal {
     overflow-y: auto;
 }
@@ -290,22 +298,18 @@ th {
 
 }
 
-/* Styles for the link-bar container */
-.link-container {
-    display: flex;
-    position: relative;
-}
 .past-event {
     display: none; /* Hide past events by default */
 }
+
 /* Styles for the external links bar (vertical bar on the left) */
 .link-bar {
     background-color: #fff;
     border-right: 3px groove black;
-    height: 100vh;
+    height: 100%;
     width: 80px;
-    position: fixed;
-    top: 80px;
+    position: absolute;
+    top: 0;
     left: 0;
     display: flex;
     flex-direction: column;
@@ -322,17 +326,23 @@ th {
     max-width: 40px;
 }
 
+    .link-bar a:first-child {
+        display: flex;
+        margin-top: 75px;
+    }
+
 .calendar-container {
     height: 600px;
+    max-height: 600px;
     width: 40%;
     float: left;
     margin-left: 7%;
+    display: flex;
+    flex-direction: column;
 }
 
-.kalendar {
+.calendar {
     overflow: auto;
-    height: 600px;
-    width: 100%;
 }
 
 .event-calendar {
@@ -341,6 +351,7 @@ th {
 
     .event-calendar tr {
         border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+        display: table-row;
     }
 
     .event-calendar td {
@@ -542,3 +553,10 @@ select option {
         background-color: #b31f4f;
         border-color: #E6A65D
     }
+
+
+/* test */
+.dashboard {
+    display: flex;
+    flex-direction: column;
+}
