@@ -5,6 +5,12 @@
     Layout = ViewBag.Layout;
 }
 
+<style>
+    .editable {
+        width: 80%;
+    }
+</style>
+
 <div class="text-center">
     <h1 class="display-4">Welcome, @Context.Session.GetString("FirstName")!</h1>
 </div>
@@ -55,14 +61,23 @@
                         var time = eventItem.EventTime.ToString("h:mm tt");
 
                         <tr class="@if (isPastEvent) { <text>past-event</text> }" data-event-id="@eventItem.Id">
-                            <td class="editable" onclick="editEventDate(this)">@time <br /> @date </td>
-                            <td class="editable" onclick="editEventInformation(this)">@eventItem.EventInformation</td>
+                            <td>
+                                <form contenteditable="true" class="editable">
+                                    <text >@time <br/> @date</text>
+                                </form>
+                            </td>
+                            <td>
+                                <form method="post" asp-controller="Event" asp-action="EditEventInfo" 
+                                contenteditable="true" class="editable" onclick="editInfo(@eventItem.Id)" id="info_@eventItem.Id">
+                                    <text>@eventItem.EventInformation</text>
+                                    <input type="submit" id="submit_info_@eventItem.Id" value="@eventItem.Id" hidden/>
+                                </form>
+                            </td>
                             <td>
                                 <form method="post" asp-controller="Event" asp-action="DeleteEvent">
                                     <input type="submit" id="submit_@eventItem.Id" name="eventId" value="@eventItem.Id" hidden/>
                                     <button type="button"class="btn btn-danger btn-sm" onclick="deleteEvent(@eventItem.Id)">Delete</button>
                                 </form>
-                                
                             </td>
                         </tr>
                     }
@@ -177,6 +192,32 @@
             $('.past-event').toggle(); // Toggle visibility of past events
         });
         });
+        function editInfo(eventId) {
+            console.log("info_" + eventId + " clicked");
+
+            // Get the element that called function
+            var target = "info_" + eventId;
+            var textArea = document.getElementById(target);
+            // Add event listener for Enter key
+            textArea.addEventListener('keypress', function(event) {
+                if (event.key === "Enter") {
+                    // Prevent enter key from inserting line break
+                    event.preventDefault();
+                    // Get the new text
+                    var newText = textArea.querySelector('text').textContent;
+                    console.log(newText);
+
+                    // Submit the form
+                    var submitTarget = "#submit_info_" + eventId;
+                    var submitButton = document.querySelector(submitTarget);
+                    console.log(submitButton.value);
+                    submitButton.click();
+
+                }
+            });
+
+        }
+
 
         function editEventDate(td) {
             var currentValue = td.innerText.trim();
