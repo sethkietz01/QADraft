@@ -1,0 +1,134 @@
+﻿@{
+    var categoryDict = ViewBag.categoryDict as Dictionary<string, int>;
+    var natureDict = ViewBag.natureDict as Dictionary<string, int>;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donut to Bar Chart Conversion</title>
+</head>
+<body>
+    <button id="categoryBtn" onclick="call('category')" class="buttons form-buttons">Category</button>
+    <button id="natureBtn" onclick="call('nature')" class="buttons form-buttons">Nature</button>
+    <h1 id="chartDesc">Name here</h1>
+
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v6.js"></script>
+
+    <div id="container"></div>
+
+    <script>
+        // set the dimensions and margins of the graph
+        const margin = { top: 30, right: 30, bottom: 70, left: 60 },
+            width = 600 - margin.left - margin.right,
+            height = 400 - margin.top - margin.bottom;
+
+        // append the svg object to the div called 'container'
+        const svg = d3.select("#container")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        function call(type) {
+            let data = {}; // To store the current data
+            let title = document.getElementById('chartDesc');
+
+            if (type === 'category') {
+                data = @Html.Raw(Json.Serialize(categoryDict));
+                title.innerText = "Category";
+            }
+            if (type === 'nature') {
+                data = @Html.Raw(Json.Serialize(natureDict));
+                title.innerText = "Nature";
+            }
+            update(data, title.innerText); // Pass title text to update function
+        }
+
+        function update(data, axisTitle) {
+            const keys = Object.keys(data);
+            const values = Object.values(data);
+
+            // X scale
+            const x = d3.scaleBand()
+                .domain(keys)
+                .range([0, width])
+                .padding(0.1);
+
+            // Y scale
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(values)])
+                .nice()
+                .range([height, 0]);
+
+            // Update bars
+            const bars = svg.selectAll(".bar")
+                .data(keys);
+
+            bars.enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", d => x(d))
+                .attr("width", x.bandwidth() * 0.8) // Adjust the width of the bars here
+                .attr("y", d => y(data[d]))
+                .attr("height", d => height - y(data[d]))
+                .attr("fill", "steelblue")
+                .merge(bars)
+                .transition()
+                .duration(1000)
+                .attr("x", d => x(d))
+                .attr("y", d => y(data[d]))
+                .attr("width", x.bandwidth() * 0.8) // Adjust the width of the bars here
+                .attr("height", d => height - y(data[d]));
+
+            bars.exit().remove();
+
+            // Update x-axis
+            svg.select(".x-axis").remove();
+            svg.append("g")
+                .attr("class", "x-axis")
+                .attr("transform", `translate(0, ${height})`)
+                .call(d3.axisBottom(x))
+                .selectAll("text")
+                .style("text-anchor", "middle")
+                .attr("dx", "-.8em")
+                .attr("dy", "1em")
+                //.attr("transform", "rotate(-90)")
+                .style("font-size", "14px"); // Adjust font size of x-axis labels
+
+            // Update y-axis
+            svg.select(".y-axis").remove();
+            svg.append("g")
+                .attr("class", "y-axis")
+                .call(d3.axisLeft(y).ticks(10))
+                .selectAll("text")
+                .style("font-size", "14px"); // Adjust font size of y-axis labels
+
+            // Add X axis label
+            svg.select(".x-axis-title").remove();
+            svg.append("text")
+                .attr("class", "x-axis-title")
+                .attr("text-anchor", "middle")
+                .attr("x", width / 2)
+                .attr("y", height + margin.bottom - 10) // Adjust this value to position the title correctly
+                .text(axisTitle) // Use the dynamic title
+                .style("font-size", "16px"); // Adjust font size of x-axis title
+
+            // Add Y axis label
+            svg.select(".y-axis-title").remove();
+            svg.append("text")
+                .attr("class", "y-axis-title")
+                .attr("text-anchor", "middle")
+                .attr("transform", "rotate(-90)")
+                .attr("y", -margin.left + 20)
+                .attr("x", -margin.top - height / 2)
+                .text("Y Axis Title") // Replace with your y-axis title
+                .style("font-size", "16px"); // Adjust font size of y-axis title
+        }
+
+        call('category'); // Initial call to display category chart
+    </script>
+</body>
+</html>
