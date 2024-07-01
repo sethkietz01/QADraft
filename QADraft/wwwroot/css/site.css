@@ -362,17 +362,21 @@ th {
 }
 
 /* Styles for the links */
-.link-bar a img {
-    display: flex;
-    margin-top: 40px;
-    max-height: 30px;
-    max-width: 40px;
-}
-
-    .link-bar a:first-child {
+    .link-bar a img {
         display: flex;
-        margin-top: 75px;
+        margin-top: 40px;
+        max-height: 30px;
+        max-width: 40px;
     }
+
+        .link-bar a:first-child {
+            display: flex;
+            margin-top: 75px;
+        }
+
+#help-link {
+    margin-top: 25vh;
+}
 
 .calendar-container {
     height: 600px;
@@ -402,10 +406,11 @@ th {
     }
 
     .event-calendar td:nth-child(1) {
-        width: 30%;
+        width: 20%;
     }
 
-    .event-calendar td:nth-child(2) {
+    .event-calendar td:nth-child(3) {
+        width: 15%;
     }
         
     /* CSS for input field */
@@ -415,6 +420,17 @@ th {
         box-sizing: border-box;
         padding: 5px;
     }
+
+.embed-reports-container {
+    display: flex;
+    height: 600px;
+    width: 48%;
+    margin-left: 50%;
+    color: #f5f5f5;
+    justify-content: center;
+    align-items: center;
+    background-color: purple;
+}
 
          
 /* From Login */
