@@ -74,7 +74,7 @@
                             <td>
                                 <form method="post" asp-controller="Event" asp-action="DeleteEvent">
                                     <input type="submit" id="submit_@eventItem.Id" name="eventId" value="@eventItem.Id" hidden/>
-                                    <button type="button"class="btn btn-danger btn-sm" onclick="deleteEvent(@eventItem.Id)">Delete</button>
+                                    <button id="delete-event-button" type="button"class="buttons" onclick="deleteEvent(@eventItem.Id)">Delete</button>
                                 </form>
                             </td>
                         </tr>

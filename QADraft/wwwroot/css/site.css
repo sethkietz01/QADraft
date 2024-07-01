@@ -125,7 +125,6 @@ body {
     color: #fff;
     background-color: #861F41;
     border-color: #861F41;
-    /* tests */
     padding: 8px 12px;
     font-size: 1rem;
     font-weight: 400;
@@ -224,6 +223,11 @@ body {
             text-align: center;
         }
 
+#delete-event-button {
+    font-size: 0.9rem;
+    padding: 4px 8px;
+}
+
 .table-your-qas {
     padding: .5rem .5rem;
     padding-top: 0.5rem;
@@ -286,7 +290,7 @@ th {
 }
 
 
-.test-span {
+.severity-span {
     position: absolute;
     top: 10%;
     left: 25%;

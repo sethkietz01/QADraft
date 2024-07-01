@@ -110,39 +110,67 @@
 
         switch (severity)
         {
+            /*
             case '1':
-                color = "#ffe000";
+                color = "#00FF00 ";
                 break;
             case '2':
-                color = "#ffce00";
+                color = "#33FF00";
                 break;
             case '3':
-                color = "#ffb700";
+                color = "#66FF00";
                 break;
             case '4':
-                color = "#ffb000";
+                color = "#99FF00";
                 break;
             case '5':
-                color = "#ffa500";
+                color = "#CCFF00";
                 break;
             case '6':
-                color = "#ff9900";
+                color = "#CCFF00";
                 break;
             case '7':
-                color = "#ff8e00";
+                color = "#FFCC00";
                 break;
             case '8':
-                color = "#ff7b00";
+                color = "#FF9900";
                 break;
             case '9':
-                color = "#dc0505";
+                color = "#FF6600";
                 break;
             case '10':
-                color = "#dc0542";
+                color = "#FF0000";
                 break;
             default:
+                // should never reach this case
                 color = "#fff";
                 break;
+            */
+
+            case '1': 
+            case '2':
+            case '3':
+                color = "#00CC00";
+                break;
+            case '4':
+            case '5':
+                color = "#ffe803";
+                break;
+            case '6':
+            case '7':
+            case '8': 
+                color = "#FF9900";
+                break;
+            case '9':
+            case '10':
+                color = "#FF0000";
+                break;
+            default:
+                // should never reach this case
+                color = "#FFF";
+                break;
+
+
         }
         return color;
     }
@@ -173,7 +201,7 @@
 
             // Style a span
             /*
-            var span = cell.querySelector('.test-span');
+            var span = cell.querySelector('.severity-span');
             if (span) {
                 span.style.backgroundColor = severityColor;
             }
@@ -189,7 +217,7 @@
         
     });
 
-    var severitySpans = document.querySelectorAll('.test-span');
+    var severitySpans = document.querySelectorAll('.severity-span');
 
         severitySpans.forEach(function(span)
         {
