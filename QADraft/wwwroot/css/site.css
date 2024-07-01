@@ -211,7 +211,8 @@ body {
         }
 
     .table-qa td {
-        vertical-align: middle
+        vertical-align: middle;
+        padding: 12px 0;
     }
 
         .table-qa td:nth-child(5) {
@@ -224,6 +225,11 @@ body {
         }
 
 #delete-event-button {
+    font-size: 0.9rem;
+    padding: 4px 8px;
+}
+
+.table-buttons {
     font-size: 0.9rem;
     padding: 4px 8px;
 }

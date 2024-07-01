@@ -63,14 +63,14 @@
                         @* Create div to hold buttons *@
                         <div class="form-group">
                             @* Inputs that send action with POST. That value is used in ManageQA to determine the correct action to take *@
-                            <input id="updateButton" type="submit" name="action" value="View/Edit" class="buttons"  />
+                            <input id="updateButton" type="submit" name="action" value="View/Edit" class="buttons table-buttons"  />
                             @* The delete input is hidden and cannot be selected by the user *@
-                            <input id="deleteButton" type="submit" name="action" value="Delete QA" class="buttons" hidden/> 
+                            <input id="deleteButton" type="submit" name="action" value="Delete QA" class="buttons table-buttons" hidden/> 
                             @* Hidden input to pass the source with POST *@
                             <input type="hidden" name="source" value="AllGeekQAs" />
                             @* This button's onclick will open a confirmation dialog. In that dialog you can confirm the 
                             delete action which will trigger the delete button input *@
-                            <button id="deleteButton_@qa.Id" onclick="openConfirmationDialog(event)" class="buttons">Delete</button>
+                            <button id="deleteButton_@qa.Id" onclick="openConfirmationDialog(event)" class="buttons table-buttons">Delete</button>
                         </div>
 
                     </form>
