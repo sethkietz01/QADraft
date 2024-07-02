@@ -103,6 +103,10 @@
             var qaMenuLink = document.getElementById('qa-menu-link'); 
             qaMenuLink.classList.toggle('highlight-link');
 
+            // Change the color of the button that brings you to this page
+            var thisPageButton = document.getElementById('qa-descriptions-button');
+            thisPageButton.classList.toggle('button-for-current-page');
+
             // Populate categories dropdown
             categories.forEach(function(category) {
                 var option = document.createElement("option");

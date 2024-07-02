@@ -99,6 +99,10 @@
                 // Highlight the current page's link
                 var qaMenuLink = document.getElementById('qa-menu-link'); 
                 qaMenuLink.classList.toggle('highlight-link');
+
+                // Change the color of the button that brings you to this page
+                var thisPageButton = document.getElementById('your-qas-button');
+                thisPageButton.classList.toggle('button-for-current-page');
         });
 
         function toggleDatePicker(checkbox) {
