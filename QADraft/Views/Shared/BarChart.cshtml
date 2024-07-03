@@ -96,12 +96,21 @@
                 data = @Html.Raw(Json.Serialize(natureDict));
                 title.innerText = "Nature";
             } else {
-                // Filter natureMapping to get natures for the selected category
-                let filteredNatures = natureMapping.filter(nature => nature.categories.includes(type));
-                data = filteredNatures.reduce((acc, curr) => {
-                    acc[curr.nature] = +curr.severity; // Convert severity to number
-                    return acc;
-                }, {});
+                // Get data of all natures
+                init_data = @Html.Raw(Json.Serialize(natureDict));
+
+                // Initialize an object to store the structured data
+                data = {};
+
+                // Use the natureMapping to grab only those natures where category is equal to type
+                Object.keys(init_data).forEach(description => {
+                    const count = init_data[description];
+                    const entry = natureMapping.find(item => item.nature === description && item.categories.includes(type));
+                    if (entry) {
+                        data[description] = count; // Get the count of each nature
+                    }
+                });
+
                 title.innerText = type;
             }
             update(data, title.innerText); // Pass title text to update function
@@ -123,17 +132,36 @@
                 .nice()
                 .range([height, 0]);
 
+            // Define a color scale with a predefined color scheme
+            const colorScale = d3.scaleOrdinal()
+                .domain(keys) // Assuming keys are unique descriptions/natures
+                .range(d3.schemeCategory10); // You can use any color scheme, like schemeCategory10
+
+            // Calculate tick values dynamically
+            const maxY = d3.max(values);
+            const tickValues = d3.range(0, maxY + 1); // Generate an array of ticks from 0 to maxY
+
             // Update bars
             const bars = svg.selectAll(".bar")
                 .data(keys);
+
+            // Exit old bars
+            bars.exit()
+                .transition()
+                .duration(500)
+                .attr("height", 0) // Scale height to zero
+                .attr("y", height) // Move bars to the bottom of the chart
+                .style("opacity", 0) // Fade out bars
+                .remove();
 
             bars.enter().append("rect")
                 .attr("class", "bar")
                 .attr("x", d => x(d))
                 .attr("width", x.bandwidth() * 0.8) // Adjust the width of the bars here
-                .attr("y", d => y(data[d]))
+                .attr("y", height)
                 .attr("height", d => height - y(data[d]))
-                .attr("fill", "steelblue")
+                .attr("height", 0) // Start with zero height -------------------------------TEST-------------------------
+                .attr("fill", d => colorScale(d)) // Assign color
                 .merge(bars)
                 .transition()
                 .duration(1000)
@@ -142,7 +170,6 @@
                 .attr("width", x.bandwidth() * 0.8) // Adjust the width of the bars here
                 .attr("height", d => height - y(data[d]));
 
-            bars.exit().remove();
 
             // Update x-axis
             svg.select(".x-axis").remove();
@@ -161,7 +188,7 @@
             svg.select(".y-axis").remove();
             svg.append("g")
                 .attr("class", "y-axis")
-                .call(d3.axisLeft(y).ticks(10))
+                .call(d3.axisLeft(y).tickValues(tickValues).tickFormat(d3.format("d"))) // Specify unique whole number ticks
                 .selectAll("text")
                 .style("font-size", "12px"); // Adjust font size of y-axis labels
 
@@ -183,7 +210,7 @@
                 .attr("transform", "rotate(-90)")
                 .attr("y", -margin.left + 20)
                 .attr("x", -margin.top - height / 2)
-                .text("Severity") // Replace with your y-axis title
+                .text("Number of QAs") // Replace with your y-axis title
                 .style("font-size", "16px"); // Adjust font size of y-axis title
         }
 
