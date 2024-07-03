@@ -159,13 +159,12 @@ body {
     }
 
 .button-for-current-page {
-    background-image: radial-gradient(circle, rgba(230, 168, 93, 0.4), rgba(230, 168, 93, 0.9));
-    /* Adjust the size of the gradient circle to control the spread */
+    background-image: radial-gradient(circle, rgba(230, 168, 93, 0.3), rgba(230, 168, 93, 0.6));
     background-size: 200% 200%;
-    /* Center the gradient */
     background-position: center;
-    /* Smooth transition */
     transition: background-position 1s;
+
+    /*background-color: #703146; */
 }
 
 header {
@@ -644,9 +643,16 @@ select option {
         border-color: #E6A65D
     }
 
+.disabled-input {
+    pointer-events: none;
+    user-select: none;
+    background-color: rgba(135, 144, 154, 0.1);
+}
+
 
 /* test */
 .dashboard {
     display: flex;
     flex-direction: column;
 }
+
