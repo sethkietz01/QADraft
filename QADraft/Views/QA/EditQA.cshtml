@@ -26,7 +26,7 @@
     <div class="form-group">
         <label asp-for="CategoryOfError" class="control-label"></label>
         <select id="categorySelect" asp-for="CategoryOfError" class="form-control" id="categorySelect">
-            <option value="">Select Category</option>
+            <option class="placeholder" value="" disabled selected>Select Category</option>
             <!-- Populate categories dynamically with JavaScript -->
         </select>
         <span asp-validation-for="CategoryOfError" class="text-danger"></span>
@@ -34,14 +34,14 @@
     <div class="form-group">
         <label asp-for="NatureOfError" class="control-label"></label>
         <select id="natureSelect" asp-for="NatureOfError" class="form-control" id="natureSelect">
-            <option value="">Select Nature</option>
+            <option class="placeholder" value="" disabled selected>Select Nature</option>
             <!-- Populate natures dynamically with JavaScript -->
         </select>
         <span asp-validation-for="NatureOfError" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Severity" class="control-label"></label>
-        <input type="text" asp-for="Severity" class="form-control" id="severityInput" readonly />
+        <input type="text" asp-for="Severity" class="form-control disabled-input" id="severityInput" readonly />
         <span asp-validation-for="Severity" class="text-danger"></span>
     </div>
     <div class="form-group">

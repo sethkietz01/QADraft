@@ -86,6 +86,10 @@
             // Highlight the current page's link
             var geekAccountsLink = document.getElementById('geek-accounts-link'); 
             geekAccountsLink.classList.toggle('highlight-link');
+
+            // Change the color of the button that brings you to this page
+            var thisPageButton = document.getElementById('add-user-button');
+            thisPageButton.classList.toggle('button-for-current-page');
         });
 
         function openConfirmation() {
