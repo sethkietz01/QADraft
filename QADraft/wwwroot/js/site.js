@@ -29,3 +29,14 @@
 //    });
 //}
 
+
+function applyTheme(theme) {
+    let elements = document.querySelectorAll(".themed");
+
+    console.log(theme);
+
+    elements.forEach(function (element) {
+        element.classList.remove("default-theme", "test-theme");
+        element.classList.toggle(theme + "-theme");
+    });
+}

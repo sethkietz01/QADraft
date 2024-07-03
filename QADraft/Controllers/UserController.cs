@@ -268,6 +268,8 @@ namespace QADraft.Controllers
                 _context.SaveChanges();
             }
 
+            HttpContext.Session.SetString("Theme", theme);
+
             return View();
         }
 

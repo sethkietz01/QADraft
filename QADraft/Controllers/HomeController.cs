@@ -94,7 +94,8 @@ namespace QADraft.Controllers
                     HttpContext.Session.SetString("FirstName", user.FirstName);
                     HttpContext.Session.SetString("LastName", user.LastName);
                     HttpContext.Session.SetInt32("Id", user.Id);
-                    HttpContext.Session.SetString("Role", user.Role);   
+                    HttpContext.Session.SetString("Role", user.Role);
+                    HttpContext.Session.SetString("Theme", user.theme);
 
                     // Set the current DateTime as LastLogin for user in database
                     user.LastLogin = DateTime.Now;
@@ -121,6 +122,7 @@ namespace QADraft.Controllers
             HttpContext.Session.SetString("LastName", "");
             HttpContext.Session.SetInt32("Id", 0);
             HttpContext.Session.SetString("Role", "");
+            HttpContext.Session.SetString("Theme", "");
 
             // Direct the user back to the initial Login page
             return RedirectToAction("Login");
