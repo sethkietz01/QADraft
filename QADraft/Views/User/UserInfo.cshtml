@@ -40,3 +40,34 @@
 <form class="close" asp-controller="Home" asp-action="Index" method="get">
     <input type="submit" name="action" value="Close" class="buttons form-buttons" />
 </form>
+
+
+<button id="blue-buttons" class="buttons" onlick="changeToBlue()"></button>
+<button id="green-buttons" class="buttons" onlick="changeToGreen()"></button>
+<button id="purple-buttons" class="buttons" onlick="changeToPurple()"></button>
+
+<script>
+    function changeToBlue()
+    {
+        var userID = @Context.Session.GetInt32("Id");
+        var newColor = "blue";
+
+        updateUserButtonColors(userID, newColor);
+    }
+
+    function changeToGreen()
+    {
+        var userID = @Context.Session.GetInt32("Id");
+        var newColor = "green";
+
+        updateUserButtonColors(userID, newColor);
+    }
+
+    function changeToPurple()
+    {
+        var userID = @Context.Session.GetInt32("Id");
+        var newColor = "purple";
+
+        updateUserButtonColors(userID, newColor);
+    }
+</script>
