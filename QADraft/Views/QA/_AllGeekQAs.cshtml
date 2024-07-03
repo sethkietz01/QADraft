@@ -5,7 +5,7 @@
     Layout = ViewBag.Layout;
     string menu = ViewBag.menu;
 }
- 
+
 <!-- Load the partial view for the menu buttons -->
 @Html.Partial(@menu)
 <h2>All QAs</h2>
@@ -100,20 +100,21 @@
     </tbody>
 </table>
  
-<!-- Configure delete QA confirmation popup -->
-<div id="confirmationDialog" class="confirmation-dialog">
-    <div class="confirmation-content">
+<!-- Modal Popupf for Delete QA confirmation -->
+<dialog id="dialog">
+	<div class="confirmation-content">
         <!-- Confirmation text -->
         <p>Are you sure you want to delete this QA?</p>
         <!-- Confirmation button container -->
         <div class="confirmation-buttons">
             <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
             the deleteButton input. No will close the confirmation dialog -->
-            <button class="btn btn-danger" onclick="confirmDelete()">Yes</button>
-            <button class="btn btn-primary" onclick="closeConfirmationDialog()">No</button>
+            <button class="buttons" onclick="confirmDelete()">Yes</button> 
+            <button class="buttons-accent" onclick="window.dialog.close();">No</button>
         </div>
     </div>
-</div>
+	<button onclick="window.dialog.close();" class="x">❌</button>
+</dialog>
  
 @section Scripts {
 <script>
@@ -129,18 +130,12 @@
                 // Function called by the delete button.
         function openConfirmationDialog(event) {
             event.preventDefault(); // Prevent default behavior
- 
+            
             // Get the correct form to be submitted
             var parentForm = event.target.closest('form');
             window.currentForm = parentForm;
-            // Style the Confirmation Dialog elements to be shown
-            document.getElementById('confirmationDialog').style.display = 'block';
-        }
- 
-        // Function called by the No button in the confirmation dialog popup
-        function closeConfirmationDialog() {
-            // Style the Confirmtaion Dialog elements to be hidden
-            document.getElementById('confirmationDialog').style.display = 'none';
+            // Show the modal
+            window.dialog.showModal();
         }
  
         // Function called by the Yes button in the confirmation dialog popup
@@ -149,7 +144,7 @@
             // Using the form we saved in openConfirmationDialog(), use .click() on the form input to delete the QA
             window.currentForm.querySelector('input[type="submit"][name="action"][value="Delete QA"]').click();
             // If for some reason the page does not change, close the popup and return false (serves to close the function)
-            closeConfirmationDialog();
+            window.dialog.close();
             return false;
         }
 

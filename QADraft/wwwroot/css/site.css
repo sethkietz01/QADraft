@@ -158,6 +158,37 @@ body {
         opacity: 0.6;
     }
 
+.buttons-accent {
+    display: inline-block;
+    color: #fff;
+    background-color: #87909A;
+    border-color: #861F41;
+    padding: 8px 12px;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    vertical-align: middle;
+    text-decoration: none;
+    cursor: pointer;
+    border-color: transparent;
+    border-radius: 5px;
+}
+    .buttons-accent:hover {
+        color: #fff;
+        background-color: #747b82;
+        border-color: #E6A65D;
+        box-shadow: 0 0 5px rgba(230, 168, 93, 0.7);
+    }
+
+    .buttons-accent:active {
+        transform: translateY(1px) translateX(1px) !important;
+        color: #fff;
+        background-color: #b31f4f;
+        border-color: #E6A65D;
+    }
+
+
 .button-for-current-page {
     background-image: radial-gradient(circle, rgba(230, 168, 93, 0.3), rgba(230, 168, 93, 0.6));
     background-size: 200% 200%;
@@ -661,3 +692,41 @@ select option {
     flex-direction: column;
 }
 
+/*CSS for confirm delete modal*/
+dialog {
+    padding: 1rem 3rem;
+    background: white;
+    max-width: 400px;
+    padding-top: 2rem;
+    border-radius: 20px;
+    border: 0;
+    box-shadow: 0 5px 30px 0 rgb(0 0 0 / 10%);
+    animation: fadeIn 1s ease both;
+}
+
+.x {
+    filter: grayscale(1);
+    border: none;
+    background: none;
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    transition: ease filter, transform 0.3s;
+    cursor: pointer;
+    transform-origin: center;
+}
+ 
+    .x:hover {
+        filter: grayscale(0);
+        transform: scale(1.1);
+    }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
