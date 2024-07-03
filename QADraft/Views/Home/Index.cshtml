@@ -60,15 +60,20 @@
 
                         <tr class="@if (isPastEvent) { <text>past-event</text> }" data-event-id="@eventItem.Id">
                             <td>
-                                <form contenteditable="true" class="editable">
-                                    <text >@time <br/> @date</text>
+                                <form method="post" asp-controller="Event" asp-action="EditEventTime">
+                                    <input type="submit" id="submit_time_@eventItem.Id" name="id" value="@eventItem.Id" hidden/>
+                                    <div contenteditable="true" class="editable" onclick="editTime(@eventItem.Id)" id="time_@eventItem.Id">
+                                        <text >@time <br/> @date</text>
+                                    </div>
                                 </form>
                             </td>
                             <td>
-                                <form method="post" asp-controller="Event" asp-action="EditEventInfo" 
-                                contenteditable="true" class="editable" onclick="editInfo(@eventItem.Id)" id="info_@eventItem.Id">
-                                    <text>@eventItem.EventInformation</text>
-                                    <input type="submit" id="submit_info_@eventItem.Id" value="@eventItem.Id" hidden/>
+                                <form method="post" asp-controller="Event" asp-action="EditEventInfo">
+                                    <input type="submit" id="submit_info_@eventItem.Id" name="id" value="@eventItem.Id" hidden/>
+                                    <input type="text" id="text_info_@eventItem.Id" name="text" hidden />
+                                    <div contenteditable="true" class="editable" onclick="editInfo(@eventItem.Id)" id="info_@eventItem.Id">
+                                        <text>@eventItem.EventInformation</text>
+                                    </div>
                                 </form>
                             </td>
                             <td>
@@ -143,39 +148,39 @@
 
     <!-- Script to set the default date and time in the event time input -->
     <script>
-        $(document).ready(function () {
-            function setCurrentDateTime() {
-                const now = new Date();
-                const year = now.getFullYear();
-                const month = ('0' + (now.getMonth() + 1)).slice(-2);
-                const day = ('0' + now.getDate()).slice(-2);
-                const hours = ('0' + now.getHours()).slice(-2);
-                const minutes = ('0' + now.getMinutes()).slice(-2);
+        // $(document).ready(function () {
+        //     function setCurrentDateTime() {
+        //         const now = new Date();
+        //         const year = now.getFullYear();
+        //         const month = ('0' + (now.getMonth() + 1)).slice(-2);
+        //         const day = ('0' + now.getDate()).slice(-2);
+        //         const hours = ('0' + now.getHours()).slice(-2);
+        //         const minutes = ('0' + now.getMinutes()).slice(-2);
 
-                const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-                $('#eventTimeInput').val(formattedDateTime);
-            }
+        //         const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+        //         $('#eventTimeInput').val(formattedDateTime);
+        //     }
 
-            setCurrentDateTime();
+        //     setCurrentDateTime();
 
-            // Set the current date and time when the modal is opened
-            $('#addEventModal').on('shown.bs.modal', setCurrentDateTime);
-        });
+        //     // Set the current date and time when the modal is opened
+        //     $('#addEventModal').on('shown.bs.modal', setCurrentDateTime);
+        // });
 
-        function setCurrentDateTime() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = ('0' + (now.getMonth() + 1)).slice(-2);
-            const day = ('0' + now.getDate()).slice(-2);
-            const hours = ('0' + now.getHours()).slice(-2);
-            const minutes = ('0' + now.getMinutes()).slice(-2);
+        // function setCurrentDateTime() {
+        //     const now = new Date();
+        //     const year = now.getFullYear();
+        //     const month = ('0' + (now.getMonth() + 1)).slice(-2);
+        //     const day = ('0' + now.getDate()).slice(-2);
+        //     const hours = ('0' + now.getHours()).slice(-2);
+        //     const minutes = ('0' + now.getMinutes()).slice(-2);
 
-            const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-            $('#eventTimeInput').val(formattedDateTime);
+        //     const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+        //     $('#eventTimeInput').val(formattedDateTime);
 
-            // Set the minimum date and time to current date and time
-            $('#eventTimeInput').attr('min', formattedDateTime);
-        }
+        //     // Set the minimum date and time to current date and time
+        //     $('#eventTimeInput').attr('min', formattedDateTime);
+        // }
 
         $('AddEventForm').submit(function (event) {
             const selectedDateTime = new Date($('#eventTimeInput').val());
@@ -194,11 +199,8 @@
         });
         });
         function editInfo(eventId) {
-            console.log("info_" + eventId + " clicked");
-
             // Get the element that called function
-            var target = "info_" + eventId;
-            var textArea = document.getElementById(target);
+            var textArea = document.getElementById("info_"+eventId);
             // Add event listener for Enter key
             textArea.addEventListener('keypress', function(event) {
                 if (event.key === "Enter") {
@@ -206,15 +208,107 @@
                     event.preventDefault();
                     // Get the new text
                     var newText = textArea.querySelector('text').textContent;
-                    console.log(newText);
+                    // Save the new text to input to be sent during POSt
+                    var textInput = document.getElementById("text_info_"+eventId);
+                    textInput.value = newText;
+                    // Submit the form
+                    var submitButton = document.getElementById("submit_info_"+eventId);
+                    submitButton.click();
+                }
+            });
+
+        }
+
+        // function formateDateTime(DateTime) {
+        //     // Seperate the time from the string
+        //     var time = DateTime.slice(0, DateTime.indexOf('\n'));
+        //     // Check if the time is PM
+        //     var period = time.slice(time.length - 2, time.length);
+        //     var hourString = time.slice(0, time.indexOf(':'));
+        //     var hour = parseInt(hourString);
+        //     if (period == "PM") {
+        //         // Check if the time is after 12 (<= 12)
+        //         if (hour < 12) {
+        //             hour += 12;
+        //         }
+        //     }
+        //     else {
+        //         console.log("AM");
+        //         // Check if the time is midnight
+        //         if (hour == 12) {
+        //             // Convert to 00:XX
+        //             hour = "00";
+        //         }
+        //         // Add a leading 0 to times before 10
+        //         if (hour < 10) {
+        //             hour = "0" + hour;.
+        //         }
+        //     }
+        //     // Format the string
+        //     var formattedTime = "T" + hour + time.slice(time.indexOf(':'), time.length-3);
+        //     console.log(formattedTime);
+
+        //     // Seperate the date from the string
+        //     var date = DateTime.slice(DateTime.indexOf('\n') + 1, DateTime.length);
+        //     // Seperate the day, month, and year
+        //     var day = date.slice(0, 2);
+        //     var month = date.slice(3, 5);
+        //     var year = date.slice(6, 10);
+
+        //     var formattedDate = year + "-" + month + "-" + day;
+        //     console.log(formattedDate);
+
+        //     var formattedDateTime = formattedDate + formattedTime;
+        //     console.log(formattedDateTime)
+        //     return formattedDateTime;
+        // }
+
+        function editTime(eventId) {
+            //get the element that called function
+            var textArea = document.getElementById("time_"+eventId);
+            
+            // Get the current Date/Time
+            var currentValue = textArea.innerText.trim();
+            // Format to match datetime-local expected input
+            //var newTime = formateDateTime(currentValue);
+
+            var newDateInput = document.createElement('input');
+            newDateInput.type = 'datetime-local';
+            newDateInput.name = "time";
+
+            textArea.style.display = 'none';
+            textArea.parentElement.appendChild(newDateInput);
+            newDateInput.focus();
+
+            // Add event listener for Enter key
+            newDateInput.addEventListener('keypress', function(event) {
+                if (event.key === "Enter") {
+                    // Prevent enter key from inserting line break
+                    event.preventDefault();
+                    console.log(newDateInput.value);
 
                     // Submit the form
-                    var submitTarget = "#submit_info_" + eventId;
-                    var submitButton = document.querySelector(submitTarget);
-                    console.log(submitButton.value);
-                    submitButton.click();
+                    // document.getElementById("submit_time_"+eventId).click();
 
                 }
+            });
+
+            document.addEventListener("mousedown", (event) => {
+                // Check if the click was outside the newDateInput and textArea
+                if (!newDateInput.contains(event.target) && event.target !== textArea) {
+                    textArea.style.display = 'block';
+                    newDateInput.remove();
+                }
+                // Chcek if the date-time input is still the active element
+                else if (newDateInput == document.activeElement) {
+                    // Do nothing
+                }
+                // Check if there is an existing date input
+                else {
+                    textArea.style.display = 'none';
+                    textArea.parentElement.appendChild(newDateInput);
+                }
+
             });
 
         }

@@ -6,6 +6,7 @@ using QADraft.Utilities;
 using QADraft.ViewModels;
 using System;
 using System.Diagnostics;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace QADraft.Controllers
 {
@@ -55,10 +56,39 @@ namespace QADraft.Controllers
 
         // Test action for edit event info
         [HttpPost]
-        public IActionResult EditEventInfo(int id)
+        public IActionResult EditEventInfo(int id, string text)
         {
-            Console.WriteLine(id);
-            return View("Index", "Home");
+            // Get the Event that matches the passed id
+            var events = _context.Events.SingleOrDefault(e => e.Id == id);
+            // Verify that the Event was found and exists
+            if (events != null)
+            {
+                // Check if the new text is different from the old text
+                if (events.EventInformation != text)
+                {
+                    // Update the event to match the new text
+                    events.EventInformation = text;
+                    _context.SaveChanges();
+                }
+            }
+            // Return to the same page whether a change was made or not
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public IActionResult EditEventTime(int id, DateTime time)
+        {
+            // Get the Event that matches the passed id
+            var events = _context.Events.SingleOrDefault(e => e.Id == id);
+            // Verify that the Event was found and exists
+            if (events != null)
+            {
+                // Update the event to match the new time
+                events.EventTime = time;
+                _context.SaveChanges();
+            }
+            // Return to the same page whether a change was made or not
+            return RedirectToAction("Index", "Home");
         }
 
 
