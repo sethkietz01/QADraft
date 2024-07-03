@@ -550,7 +550,7 @@ namespace QADraft.Controllers
 
         // Display the DeleteQA page
         [HttpGet]
-        public IActionResult DeleteQA(int id)
+        public IActionResult DeleteQA(int id, string source)
         {
             // Verify that the user is logged in, if not direct them to login page
             if (!SessionUtil.IsAuthenticated(HttpContext))
@@ -575,9 +575,15 @@ namespace QADraft.Controllers
                 // Delete the fetched qa from the database and save the changes
                 _context.Remove(qa);
                 _context.SaveChanges();
+
+                // Use the source parmater to determine the source page and redirect accordingly
+                if (source == "Filter")
+                    return RedirectToAction("Filter");
+                else if (source == "AllGeekQAs")
+                    return RedirectToAction("AllGeekQAs");
             }
-            // Return the view (reloads the page)
-            return View();
+            // Return to the all geek qas list if something goes wrong
+            return View("AllGeekQAs");
         }
 
         // Automatically flag the user's account if the QA's severity is 10.
