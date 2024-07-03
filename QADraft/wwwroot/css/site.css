@@ -348,6 +348,11 @@ th {
     overflow-y: auto;
 }
 
+.modal-footer {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr; /* Two equal columns */
+}
+
 .text-center {
     width: 100%;
     top: 0;
