@@ -158,6 +158,16 @@ body {
         opacity: 0.6;
     }
 
+.button-for-current-page {
+    background-image: radial-gradient(circle, rgba(230, 168, 93, 0.4), rgba(230, 168, 93, 0.9));
+    /* Adjust the size of the gradient circle to control the spread */
+    background-size: 200% 200%;
+    /* Center the gradient */
+    background-position: center;
+    /* Smooth transition */
+    transition: background-position 1s;
+}
+
 header {
     margin-bottom: 20px;
     width: 100%;
@@ -211,7 +221,8 @@ body {
         }
 
     .table-qa td {
-        vertical-align: middle
+        vertical-align: middle;
+        padding: 12px 0;
     }
 
         .table-qa td:nth-child(5) {
@@ -224,6 +235,11 @@ body {
         }
 
 #delete-event-button {
+    font-size: 0.9rem;
+    padding: 4px 8px;
+}
+
+.table-buttons {
     font-size: 0.9rem;
     padding: 4px 8px;
 }
@@ -362,17 +378,21 @@ th {
 }
 
 /* Styles for the links */
-.link-bar a img {
-    display: flex;
-    margin-top: 40px;
-    max-height: 30px;
-    max-width: 40px;
-}
-
-    .link-bar a:first-child {
+    .link-bar a img {
         display: flex;
-        margin-top: 75px;
+        margin-top: 40px;
+        max-height: 30px;
+        max-width: 40px;
     }
+
+        .link-bar a:first-child {
+            display: flex;
+            margin-top: 75px;
+        }
+
+#help-link {
+    margin-top: 16vh;
+}
 
 .calendar-container {
     height: 600px;
@@ -385,6 +405,8 @@ th {
 }
 
 .calendar {
+    border: 1px solid black;
+    max-height: 600px;
     overflow: auto;
 }
 
@@ -392,29 +414,54 @@ th {
     width: 100%;
 }
 
+    .event-calendar tbody {
+        overflow: auto;
+        max-height: 30%; /* Adjust as needed; subtract the height of the header */
+    }
+
     .event-calendar tr {
         border-bottom: 1px solid rgba(0, 0, 0, 0.3);
         display: table-row;
     }
 
-    .event-calendar td {
-        padding: 10px 0;
+    .event-calendar td, th {
+        padding: 10px 20px;
     }
 
     .event-calendar td:nth-child(1) {
-        width: 30%;
+        width: 20%;
     }
 
-    .event-calendar td:nth-child(2) {
+    .event-calendar td:nth-child(3) {
+        width: 15%;
+    }
+
+    .event-calendar th {
+        top: 0;
+        position: sticky;
+        background-color: #f5f5f5;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+        z-index: 999;
     }
         
-    /* CSS for input field */
-    .editable input {
-        border: none;
-        width: 90%;
-        box-sizing: border-box;
-        padding: 5px;
-    }
+/* CSS for input field */
+.editable input {
+    border: none;
+    width: 90%;
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+.embed-reports-container {
+    display: flex;
+    height: 600px;
+    width: 48%;
+    margin-left: 50%;
+    color: #f5f5f5;
+    justify-content: center;
+    align-items: center;
+    background-color: purple;
+}
 
          
 /* From Login */
