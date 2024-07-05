@@ -24,7 +24,7 @@ body {
 
 /* From Layout */
 .navbar {
-    background-color: #861F41;
+    /* background-color: #861F41;*/
     padding: 10px;
     vertical-align: middle;
     border-bottom: 3px solid rgba(0, 0, 0, 0.3);
@@ -284,10 +284,6 @@ body {
 header {
     margin-bottom: 20px;
     width: 100%;
-}
-
-body {
-    background-color: #f5f5f5;
 }
 
 #settings-icon {
