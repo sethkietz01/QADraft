@@ -162,20 +162,21 @@
     </tbody>
 </table>
 
-<!-- Configure delete QA confirmation popup -->
-<div id="confirmationDialog" class="confirmation-dialog">
-    <div class="confirmation-content">
+<!-- Modal Popupf for Delete QA confirmation -->
+<dialog id="dialog">
+	<div class="confirmation-content">
         <!-- Confirmation text -->
         <p>Are you sure you want to delete this QA?</p>
         <!-- Confirmation button container -->
         <div class="confirmation-buttons">
             <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
             the deleteButton input. No will close the confirmation dialog -->
-            <button class="btn-danger" onclick="confirmDelete()">Yes</button>
-            <button class="btn-primary" onclick="closeConfirmationDialog()">No</button>
+            <button class="buttons" onclick="confirmDelete()">Yes</button> 
+            <button class="buttons-accent" onclick="window.dialog.close();">No</button>
         </div>
     </div>
-</div>
+	<button onclick="window.dialog.close();" class="x">❌</button>
+</dialog>
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -226,20 +227,17 @@
             });
         });
 
+        // Function called by the delete button to open confirmation modal
         function openConfirmationDialog(event) {
             event.preventDefault(); // Prevent default behavior
-
-            // Show the confirmation dialog
-            console.log("openconfirm");
+            
+            // Get the correct form to be submitted
             var parentForm = event.target.closest('form');
             window.currentForm = parentForm;
-            document.getElementById('confirmationDialog').style.display = 'block';
+            // Show the modal
+            window.dialog.showModal();
         }
 
-        function closeConfirmationDialog() {
-            console.log("close confirm");
-            document.getElementById('confirmationDialog').style.display = 'none';
-        }
 
         function confirmDelete() {
             console.log("confirmdelete");

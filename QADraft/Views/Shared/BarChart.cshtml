@@ -160,15 +160,16 @@
                 .attr("width", x.bandwidth() * 0.8) // Adjust the width of the bars here
                 .attr("y", height)
                 .attr("height", d => height - y(data[d]))
-                .attr("height", 0) // Start with zero height -------------------------------TEST-------------------------
+                .attr("height", 0) // Start with zero height
                 .attr("fill", d => colorScale(d)) // Assign color
                 .merge(bars)
                 .transition()
                 .duration(1000)
-                .attr("x", d => x(d))
+                .attr("x", d => x(d) + x.bandwidth() * 0.1)
                 .attr("y", d => y(data[d]))
                 .attr("width", x.bandwidth() * 0.8) // Adjust the width of the bars here
                 .attr("height", d => height - y(data[d]));
+
 
 
             // Update x-axis

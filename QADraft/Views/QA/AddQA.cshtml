@@ -18,7 +18,7 @@
     </div>
     <div class="form-group">
         <label asp-for="FoundById" class="control-label">Found By</label>
-        <select id="found-by" asp-for="FoundById" class="form-control" asp-items="Model.Users">
+        <select id="found-by" asp-for="FoundById" class="form-control" asp-items="Model.Coordinators">
             <option class="placeholder" value="" disabled selected>Select user</option>
         </select>
         <span asp-validation-for="FoundById" class="text-danger"></span>
@@ -71,10 +71,11 @@
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
-        <!-- Form Submit -->
-        <input type="submit" value="Add QA" hidden/>
+    <!-- Form Submit -->
+    <input type="submit" value="Add QA" hidden/>
 </form>
 
+<!-- Submit QA and Cancel buttons -->
 <div class="button-container">
     <button onclick="openConfirmation()" class="buttons form-buttons">Submit</button>
 
@@ -83,6 +84,22 @@
         <button type="submit" class="buttons form-buttons">Cancel</button>
     </form>
 </div>
+
+<!-- Modal Popupf for Delete QA confirmation -->
+<dialog id="dialog">
+	<div class="confirmation-content">
+        <!-- Confirmation text -->
+        <p>Press OK to submit the QA Report.</p>
+        <!-- Confirmation button container -->
+        <div class="confirmation-buttons">
+            <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
+            the deleteButton input. No will close the confirmation dialog -->
+            <button class="buttons" onclick="confirmAddQA()">OK</button> 
+            <button class="buttons-accent" onclick="window.dialog.close();">Cancel</button>
+        </div>
+    </div>
+	<button onclick="window.dialog.close();" class="x">❌</button>
+</dialog>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
@@ -181,15 +198,16 @@
         });
 
         function openConfirmation() {
-
             // Show the confirmation dialog
-            var confirmed = confirm("Press OK to submit the QA Report");
+            window.dialog.showModal();
+        }
 
+        function confirmAddQA() {
+            // If 'OK' is clicked, submit the form
+            document.querySelector('input[type="submit"][value="Add QA"]').click();
 
-            if (confirmed) {
-                // If 'Confirm' is clicked, submit the form
-                document.querySelector('input[type="submit"][value="Add QA"]').click();
-            }
+            // Close the modal
+            window.dialog.close();
         }
 
         function validateDates() {

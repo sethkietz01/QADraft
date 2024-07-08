@@ -127,7 +127,8 @@
                 var thisPageButton = document.getElementById('all-geek-qas-button');
                 thisPageButton.classList.toggle('button-for-current-page');
         });
-                // Function called by the delete button.
+        
+        // Function called by the delete button to open confirmation modal
         function openConfirmationDialog(event) {
             event.preventDefault(); // Prevent default behavior
             
@@ -140,7 +141,6 @@
  
         // Function called by the Yes button in the confirmation dialog popup
         function confirmDelete() {
-            
             // Using the form we saved in openConfirmationDialog(), use .click() on the form input to delete the QA
             window.currentForm.querySelector('input[type="submit"][name="action"][value="Delete QA"]').click();
             // If for some reason the page does not change, close the popup and return false (serves to close the function)

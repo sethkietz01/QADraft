@@ -51,5 +51,7 @@ namespace QADraft.Models
 
         [NotMapped]
         public List<SelectListItem>? Users { get; set; }
+        [NotMapped]
+        public List<SelectListItem>? Coordinators { get; set; }
     }
 }

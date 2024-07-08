@@ -81,8 +81,8 @@
                             </td>
                             <td>
                                 <form method="post" asp-controller="Event" asp-action="DeleteEvent">
-                                    <input type="submit" id="submit_@eventItem.Id" name="eventId" value="@eventItem.Id" hidden/>
-                                    <button id="delete-event-button" type="button"class="buttons" onclick="deleteEvent(@eventItem.Id)">Delete</button>
+                                    <input type="submit" id="submit_delete" name="eventId" value="@eventItem.Id" hidden/>
+                                    <button id="delete-event-button" type="button"class="buttons" onclick="openConfirmationDialog(event)">Delete</button>
                                 </form>
                             </td>
                         </tr>
@@ -139,6 +139,23 @@
         </div>
     </div>
 </body>
+
+<!-- Modal Popupf for Delete Event confirmation -->
+<dialog id="dialog">
+	<div class="confirmation-content">
+        <!-- Confirmation text -->
+        <p>Are you sure you want to delete this Event?</p>
+        <!-- Confirmation button container -->
+        <div class="confirmation-buttons">
+            <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
+            the deleteButton input. No will close the confirmation dialog -->
+            <button class="buttons" onclick="deleteEvent()">Yes</button> 
+            <button class="buttons-accent" onclick="window.dialog.close();">No</button>
+        </div>
+    </div>
+	<button onclick="window.dialog.close();" class="x">❌</button>
+</dialog>
+
 
 @section Scripts {
     <!-- JQuery and Bootstrap JS from CDN -->
@@ -426,12 +443,25 @@
             });
         }
 
+
+        // Function called by the delete button to open confirmation modal
+        function openConfirmationDialog(event) {
+            event.preventDefault(); // Prevent default behavior
+            
+            // Get the correct form to be submitted
+            var parentForm = event.target.closest('form');
+            window.currentForm = parentForm;
+            // Show the modal
+            window.dialog.showModal();
+        }
+
+
         function deleteEvent(eventId) {
-            if (confirm('Are you sure you want to delete this event?')) {
-                // Perform the delete action here, similar to your previous function
-                var target = "submit_" + eventId;
-                document.getElementById(target).click();
-            }
+           // Using the form we saved in openConfirmationDialog(), use .click() on the form input to delete the QA
+            window.currentForm.querySelector('input[type="submit"][id="submit_delete"]').click();
+            // If for some reason the page does not change, close the popup and return false (serves to close the function)
+            window.dialog.close();
+            return false;
         }
 
     </script>

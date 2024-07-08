@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System;
 using QADraft.Utilities;
 using Microsoft.Extensions.Configuration.UserSecrets;
+using NuGet.Packaging;
 
 namespace QADraft.Controllers
 {
@@ -55,12 +56,22 @@ namespace QADraft.Controllers
                 Text = $"{u.FirstName} {u.LastName}"
             }).ToList();
 
-            // Create a new GeekQA instance and assign it the current DateTime and list of users.
+            // Get every coordinator id and name and place into a list
+            var coordinators = _context.Users.Where(u => u.Role == "Coordinator" || u.Role == "Admin" || u.Role == "Super Admin")
+                .Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = $"{u.FirstName} {u.LastName}"
+                })
+                .ToList();
+
+            // Create a new GeekQA instance and assign it the current DateTime and the combined list of users.
             GeekQA model = new GeekQA
             {
                 ErrorDate = DateTime.Now,
                 FoundOn = DateTime.Now,
-                Users = users
+                Users = users,
+                Coordinators = coordinators
             };
 
             // Return the AddQA view with the GeekQA instance model. This will auto-fill the related input fields.
@@ -462,11 +473,22 @@ namespace QADraft.Controllers
                     Text = $"{u.FirstName} {u.LastName}"
                 }).ToList();
 
+                // Get every coordinator id and name and place into a list
+                var coordinators = _context.Users.Where(u => u.Role == "Coordinator" || u.Role == "Admin" || u.Role == "Super Admin")
+                    .Select(u => new SelectListItem
+                    {
+                        Value = u.Id.ToString(),
+                        Text = $"{u.FirstName} {u.LastName}"
+                    })
+                    .ToList();
+
                 // Verify that users were found
-                if (users != null)
+                if (users != null && coordinators != null)
                 {
                     // Assign the list of users to qa.Users and 
                     qa.Users = users;
+                    // Assign the list of coordinators(and above) to qa.Coordinators
+                    qa.Coordinators = coordinators;
                     // Pass the source into the ViewBag
                     ViewBag.source = source;
                     // Pass the user's role and name into the ViewBag to compare
