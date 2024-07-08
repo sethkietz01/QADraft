@@ -8,6 +8,27 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/QADraft.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap">
+
+    <script>
+        function applyTheme() {
+            var userTheme = '@Context.Session.GetString("Theme")';
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+
+            if (userTheme === "test") {
+                link.href = "/css/testTheme.css";
+            }
+            else {
+                link.href = "/css/defaultTheme.css";
+            }
+            
+            document.head.appendChild(link);
+        }
+
+        applyTheme();
+    </script>
+
 </head>
     <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
 <body>
@@ -47,6 +68,7 @@
                                     </label>
                                     <div class="settings-dropdown">
                                         <a asp-area="" asp-controller="User" asp-action="UserInfo">Account Info</a>
+                                        <a asp-area="" asp-controller="User" asp-action="UserThemes">Themes</a>
                                         <a asp-area="" asp-controller="Home" asp-action="Logout">Logout</a>
                                     </div>
                                 </div>

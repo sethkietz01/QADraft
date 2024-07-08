@@ -94,9 +94,12 @@ namespace QADraft.Controllers
             // Assign the appropriate layout
             ViewBag.layout = SessionUtil.GetLayout(HttpContext);
 
+            Console.WriteLine("add user post");
+
             // Verify that the user Model passed is valid
             if (ModelState.IsValid)
             {
+                Console.WriteLine("valid");
                 // If it is, hash the password before it is stored in the database
                 user.Password = PasswordHasher.HashPassword(user.Password);
                 // Add the user to the database and save the changes made

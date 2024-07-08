@@ -19,7 +19,5 @@ namespace QADraft.Models
         public DateTime endDate { get; set;}
         public string theme { get; set; }
 
-
-
     }
 }

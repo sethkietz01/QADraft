@@ -113,12 +113,41 @@
 
                 title.innerText = type;
             }
+
+            
+            // Sort the data descending
+            var dataSorted = Object.keys(data).map(function(key) {
+              return [key, data[key]];
+            });
+
+            // Sort the array based on the second element
+            dataSorted.sort(function(first, second) {
+              return second[1] - first[1];
+            });
+            
             update(data, title.innerText); // Pass title text to update function
         }
 
         function update(data, axisTitle) {
             const keys = Object.keys(data);
             const values = Object.values(data);
+
+            // Bubble sort the data descending
+            for (var i = 0; i < values.length; i++) {
+                for (var j = 0; j < values.length - i - 1; j++) {
+                    if (values[j] < values[j+1]) {
+                        // Swap keys
+                        var keyTemp = keys[j];
+                        keys[j] = keys[j+1];
+                        keys[j+1] = keyTemp;
+
+                        // Swap values
+                        var valuesTemp = values[j];
+                        values[j] = values[j+1];
+                        values[j+1] = valuesTemp;
+                    }
+                }
+            }
 
             // X scale
             const x = d3.scaleBand()

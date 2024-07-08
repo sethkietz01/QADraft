@@ -106,23 +106,21 @@
         function confirmEdit() {
             closeConfirmation();
 
+            // Get the two password fields
+            var pass1 = document.getElementById("password-field");
+            var pass2 = document.getElementById("confirm-password-field");
+
             // First check if the password was changed
-            password = document.getElementById("password-field").value.trim();
-            // If the value is blank and has not changed
-            if (password == "") {
+            if (pass1.value.trim() == "" && pass2.value.trim() == "") {
                 // Assign '-' as the password value. This value is arbitrary, any value will 
-                // work as long as it matches what is expected in the controller action
+                // work as long as it matches what is expected in the controller action. The
+                // controller will catch this value and leave the password unchanged
                 document.getElementById("password-field").value = "-";
                 // Submit the form
                 document.querySelector('input[type="submit"][value="Edit User"]').click();
                 return false;
             }
-
-            // If it was changed, then do password validation
-            // Get the two password fields
-            var pass1 = document.getElementById("password-field");
-            var pass2 = document.getElementById("confirm-password-field");
-
+            // If either were changed, do password validation
             if (pass1.value == pass2.value) {
                 // If they match, do password validation
                 password = document.getElementById("password-field").value.trim();

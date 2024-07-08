@@ -5,11 +5,10 @@
     Layout = ViewBag.Layout;
 }
 
-<partial name="_GeeksMenu" />
 <h2>Add User</h2>
 
 <!-- Form to get details of the user being added -->
-<form asp-action="AddUser" method="post">
+<form asp-controller="User" asp-action="AddUser" method="post">
     <div class="form-group">
         <label asp-for="Username" class="control-label"></label>
         <input asp-for="Username" class="form-control" />
@@ -65,9 +64,12 @@
         <!-- Cancel and redirect to home -->
         <button onclick="cancel()" class="buttons form-buttons">Cancel</button>
     </div>
+
+    <!--  -->
+    <input type="hidden" asp-for="theme" value="default" />
 </form>
 
-<form id="cancel-form" asp-area="" asp-controller="Home" asp-action="Index" method="get">
+<form id="cancel-form" asp-area="" asp-controller="User" asp-action="GeekAccounts" method="get">
     <button type="submit" class="buttons form-buttons" hidden></button>
 </form>
 
@@ -96,10 +98,11 @@
                 }
 
                 // If password meets criteria, proceed with form submission
+                console.log("met");
                 document.querySelector('input[type="submit"][value="Add User"]').click();
             }
             else {
-                // If the passwords are different, lear the password fields
+                // If the passwords are different, clear the password fields
                 pass1.value = "";
                 pass2.value = "";
                 
@@ -114,9 +117,6 @@
             var geekAccountsLink = document.getElementById('geek-accounts-link'); 
             geekAccountsLink.classList.toggle('highlight-link');
 
-            // Change the color of the button that brings you to this page
-            var thisPageButton = document.getElementById('add-user-button');
-            thisPageButton.classList.toggle('button-for-current-page');
         });
 
         function cancel()
