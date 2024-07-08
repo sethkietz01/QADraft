@@ -14,6 +14,7 @@ using System;
 using QADraft.Utilities;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using NuGet.Packaging;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace QADraft.Controllers
 {
@@ -27,8 +28,6 @@ namespace QADraft.Controllers
             _context = context;
             _viewEngine = viewEngine;
         }
-
-
 
         // Display the AddQA page
         [HttpGet]
@@ -66,7 +65,7 @@ namespace QADraft.Controllers
                 .ToList();
 
             // Create a new GeekQA instance and assign it the current DateTime and the combined list of users.
-            GeekQA model = new GeekQA
+            GeekQA qa = new GeekQA
             {
                 ErrorDate = DateTime.Now,
                 FoundOn = DateTime.Now,
@@ -75,7 +74,7 @@ namespace QADraft.Controllers
             };
 
             // Return the AddQA view with the GeekQA instance model. This will auto-fill the related input fields.
-            return View(model);
+            return View(qa);
         }
 
         // Process the AddQA POST request
@@ -100,6 +99,7 @@ namespace QADraft.Controllers
             // Verify that the submitted model state is valid (checks types and if all required model attributes are there)
             if (ModelState.IsValid)
             {
+                Console.WriteLine("valid");
                 try
                 {
                     // Set the currently logged in User for the "SubmittedBy" field.
@@ -122,16 +122,28 @@ namespace QADraft.Controllers
                     ModelState.AddModelError(string.Empty, "An error occurred while saving the QA. Please try again.");
                 }
             }
+            Console.WriteLine("notvalid");
 
-            // If model state is invalid, repopulate the users list
+            // Get every user's id and name and place into a list
             model.Users = _context.Users.Select(u => new SelectListItem
             {
                 Value = u.Id.ToString(),
                 Text = $"{u.FirstName} {u.LastName}"
             }).ToList();
 
+            // Get every coordinator id and name and place into a list
+            model.Coordinators = _context.Users.Where(u => u.Role == "Coordinator" || u.Role == "Admin" || u.Role == "Super Admin")
+                .Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = $"{u.FirstName} {u.LastName}"
+                })
+                .ToList();
+
+            Console.WriteLine(model.CategoryOfError);
+
             // Direct the user back to the same page
-            return View(model);
+            return View("AddQA", model);
         }
 
         // Display the Filter page
@@ -441,6 +453,7 @@ namespace QADraft.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+
         // Display the Edit(View)QA page
         // View and Edit QA are consolidated into the same page
         [HttpGet]
@@ -566,6 +579,16 @@ namespace QADraft.Controllers
                 Value = u.Id.ToString(),
                 Text = $"{u.FirstName} {u.LastName}"
             }).ToList();
+
+            // Get every coordinator id and name and place into a list
+            model.Coordinators = _context.Users.Where(u => u.Role == "Coordinator" || u.Role == "Admin" || u.Role == "Super Admin")
+                .Select(u => new SelectListItem
+                {
+                    Value = u.Id.ToString(),
+                    Text = $"{u.FirstName} {u.LastName}"
+                })
+                .ToList();
+
             // Return the view with the passed model along with the generated Users list.
             return View(model);
         }

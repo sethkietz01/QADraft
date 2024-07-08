@@ -155,9 +155,11 @@
         var categories = Array.from(new Set(natureMapping.flatMap(m => m.categories)));
         
         document.addEventListener("DOMContentLoaded", function() {
+
             var categorySelect = document.getElementById("categorySelect");
             var natureSelect = document.getElementById("natureSelect");
             var severityInput = document.getElementById("severityInput");
+
 
             // Highlight the current page's link
             var addQaLink = document.getElementById('add-qa-link'); 
@@ -188,6 +190,18 @@
                     });
                 }
             });
+
+            // Update category and nature dropdowns with value from view model (if there is one)
+            var categoryVal = "@Model.CategoryOfError";
+            var natureVal = "@Model.NatureOfError";
+
+            console.log(categoryVal + ":" + natureVal);
+
+            if (!categoryVal == "") {
+                categorySelect.value = categoryVal;
+                categorySelect.dispatchEvent(new Event('change'));
+                natureSelect.value = natureVal;
+            }
 
             // Update severity when nature changes
             natureSelect.addEventListener("change", function() {
@@ -232,10 +246,6 @@
             var description = document.getElementById("description");
 
 
-            // Validate dates before form submission
-            if (! validateDates()) {
-                event.preventDefault(); // Prevent form submission
-            }
 
             // Automatically populate the customer name and unit ID with N/A if they are left blank
             if (committedBy.selectedIndex !== -1 && foundBy.selectedIndex !== -1 && category.selectedIndex !== -1 && nature.selectedIndex !== -1 && description.value.trim() !== "")

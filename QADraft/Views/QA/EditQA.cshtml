@@ -24,16 +24,16 @@
         <span asp-validation-for="FoundById" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="CategoryOfError" class="control-label"></label>
-        <select id="categorySelect" asp-for="CategoryOfError" class="form-control" id="categorySelect">
+        <label asp-for="CategoryOfError" class="control-label">Category of Error</label>
+        <select asp-for="CategoryOfError" class="form-control" id="categorySelect">
             <option class="placeholder" value="" disabled selected>Select Category</option>
             <!-- Populate categories dynamically with JavaScript -->
         </select>
         <span asp-validation-for="CategoryOfError" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="NatureOfError" class="control-label"></label>
-        <select id="natureSelect" asp-for="NatureOfError" class="form-control" id="natureSelect">
+        <label asp-for="NatureOfError" class="control-label">Nature of Error</label>
+        <select asp-for="NatureOfError" class="form-control" id="natureSelect">
             <option class="placeholder" value="" disabled selected>Select Nature</option>
             <!-- Populate natures dynamically with JavaScript -->
         </select>

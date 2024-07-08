@@ -40,8 +40,12 @@ namespace QADraft.Models
         [StringLength(50)]
         public string UnitId { get; set; }
 
+        // Validation attribute for ErrorDate being before FoundOn
+        [DateBefore(nameof(FoundOn), ErrorMessage = "Error Date must be before Found On Date.")]
         public DateTime ErrorDate { get; set; }
 
+        // Validation attribute for FoundOn being before the current date
+        [DateBeforeNow()]
         public DateTime FoundOn { get; set; }
 
         public string Description { get; set; }
@@ -53,5 +57,52 @@ namespace QADraft.Models
         public List<SelectListItem>? Users { get; set; }
         [NotMapped]
         public List<SelectListItem>? Coordinators { get; set; }
+    }
+
+    // Validation class to check if Error Date is before Found On date
+    public class DateBeforeAttribute : ValidationAttribute
+    {
+        private readonly string _comparisonProperty;
+        
+        public DateBeforeAttribute(string comparisonProperty)
+        {
+            _comparisonProperty = comparisonProperty;
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var propertyInfo = validationContext.ObjectType.GetProperty(_comparisonProperty);
+            if (propertyInfo == null)
+            {
+                return new ValidationResult($"Unknown property {_comparisonProperty}");
+            }
+
+            var comparisonValue = propertyInfo.GetValue(validationContext.ObjectInstance) as DateTime?;
+
+            if (value != null && comparisonValue != null && (DateTime)value > comparisonValue)
+            {
+                return new ValidationResult(ErrorMessage ?? $"{validationContext.DisplayName} must be before {_comparisonProperty}");
+            }
+
+            return ValidationResult.Success;
+        }
+    }
+
+    public class DateBeforeNow : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            if (value != null)
+            {
+                DateTime currentValue = (DateTime)value;
+
+                if (currentValue > DateTime.Today.Date)
+                {
+                    return new ValidationResult(ErrorMessage ?? $"{validationContext.DisplayName} must be before today's date.");
+                }
+            }
+
+            return ValidationResult.Success;
+        }
     }
 }
