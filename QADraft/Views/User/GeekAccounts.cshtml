@@ -18,6 +18,7 @@
             <th onclick="sortTable(3)">Email<span class="arrow"></th>
             <th onclick="sortTable(4)">Role<span class="arrow"></th>
             <th onclick="sortTable(5)">Created <span class="arrow"></th>
+            <th onclick="sortTable(6)">Employed<span class="arrow"></th>
             <th class="noSort">Action</th>
         </tr>
     </thead>
@@ -31,6 +32,7 @@
                 <td>@qa.Email</td>
                 <td>@qa.Role</td>
                 <td>@qa.CreatedAt.ToString("yyyy-MM-dd")</td>
+                <td>@qa.isActive</td>
                 <td>
                     <a class="buttons" asp-area="" asp-controller="User" asp-action="EditUser" asp-route-Id="@qa.Id">Edit</a>
                 </td>
