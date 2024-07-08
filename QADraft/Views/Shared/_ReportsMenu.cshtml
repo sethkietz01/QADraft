@@ -183,14 +183,30 @@
             var severity = cell.getAttribute('data-severity');
             var severityColor = getSeverityColor(severity);
             var backgroundColor = '#000';
+
+            var userTheme = '@Context.Session.GetString("Theme")';
         
             if (index % 2 === 0) 
             {
-                backgroundColor = '#f5f5f5';
+                if (userTheme === "dark")
+                    {
+                        backgroundColor = '#2c2c2c'
+                    }
+                    else
+                    {
+                        backgroundColor = '#f5f5f5';
+                    }
             } 
             else 
             {
-                backgroundColor = '#eaeaea';
+                if (userTheme === "dark")
+                {
+                    backgroundColor = '#3b3b3b';
+                }
+                else
+                {
+                    backgroundColor = '#eaeaea';
+                }
             }
 
             // Color the whole cell
@@ -212,8 +228,15 @@
 
             // Hollow radial gradient
             cell.style.background = `radial-gradient(circle, rgba(255,255,255,0) 20%, ${severityColor} 40%,  ${backgroundColor} 45%)`;
-            cell.style.borderBottom = '1px solid #aaaaaa';
 
+            if (userTheme === "dark")
+            {
+                cell.style.borderBottom = '1px solid #000';
+            }
+            else
+            {
+                cell.style.borderBottom = '1px solid #aaaaaa';
+            }
         
     });
 

@@ -35,4 +35,26 @@ body {
 
 .link-bar {
     background-color: #f8f9fa;
+    border-right: 3px groove black;
 }
+
+.button-for-current-page {
+    background-image: radial-gradient(circle, rgba(230, 168, 93, 0.2), rgba(230, 168, 93, 0.8));
+    background-size: 200% 100%;
+    background-position: center;
+    transition: background-position 2s;
+    border-color: #E6A65D;
+}
+
+
+    .table-your-qas tr {
+        border-bottom: 1px solid #aaaaaa;
+    }
+
+        .table-your-qas tr:nth-child(even) {
+            background-color: #eaeaea;
+        }
+
+        .table-your-qas tr:nth-child(odd) {
+            background-color: #f5f5f5;
+        }
