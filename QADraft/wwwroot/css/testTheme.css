@@ -1,0 +1,95 @@
+﻿.buttons {
+    color: #fff;
+    background-color: #4A4A4A;
+    border-color: #4A4A4A;
+}
+
+    .buttons:hover {
+        color: #fff;
+        background-color: #C5CFDA;
+        border-color: #E6A65D;
+        box-shadow: 0 0 5px rgba(230, 168, 93, 0.7);
+    }
+
+    .buttons:active {
+        transform: translateY(1px) translateX(1px) !important;
+        color: #fff;
+        background-color: #b31f4f;
+        border-color: #E6A65D;
+    }
+
+    .buttons[disabled] {
+        background-color: #ccc;
+        color: #666;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+.navbar {
+    background-color: #4A4A4A;
+}
+
+body {
+    background-color: #2c2c2c;
+    color: #fff;
+}
+
+.dashboard {
+    background-color: #2c2c2c;
+}
+
+.link-bar {
+    background-color: #4A4A4A;
+    color: fff;
+    border-right: 1px solid black !important;
+}
+
+.footer {
+    background-color: #4A4A4A;
+    color: #fff;
+    border-top: 1px solid #000 !important;
+}
+
+.text-muted {
+    color: #fff !important;
+}
+
+.event-calendar th {
+    background-color: #2c2c2c;
+}
+
+#help-link {
+    filter: invert(100%);
+}
+
+.form-control {
+    background-color: #4A4A4A;
+    border-color: #000;
+    color: #fff;
+}
+
+    .form-control:focus {
+        background-color: #4A4A4A;
+        color: #fff;
+    }
+    
+    .form-control::placeholder {
+        color: #fff;
+    }
+
+
+.form-control,
+select,
+select option {
+    background-color: #4A4A4A;
+    color: #fff;
+}
+
+    select:focus,
+    select option:focus,
+    select option:hover {
+        background-color: #4A4A4A;
+        color: #fff;
+    }
+
+

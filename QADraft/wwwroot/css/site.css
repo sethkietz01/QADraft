@@ -24,7 +24,7 @@ body {
 
 /* From Layout */
 .navbar {
-    background-color: #861F41;
+    /* background-color: #861F41;*/
     padding: 10px;
     vertical-align: middle;
     border-bottom: 3px solid rgba(0, 0, 0, 0.3);
@@ -122,9 +122,9 @@ body {
 /* Styles for all buttons across the website */
 .buttons {
     display: inline-block;
-    color: #fff;
+    /* color: #fff;
     background-color: #861F41;
-    border-color: #861F41;
+    border-color: #861F41; */
     padding: 8px 12px;
     font-size: 1rem;
     font-weight: 400;
@@ -137,6 +137,7 @@ body {
     border-radius: 5px;
 }
 
+/*
     .buttons:hover {
         color: #fff;
         background-color: #b31f4f;
@@ -157,6 +158,86 @@ body {
         cursor: not-allowed;
         opacity: 0.6;
     }
+*/
+
+/*.test-theme-buttons {
+    display: inline-block;
+    color: #fff;
+    background-color: #87909A;
+    border-color: #87909A;
+    padding: 8px 12px;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    vertical-align: middle;
+    text-decoration: none;
+    cursor: pointer;
+    border-color: transparent;
+    border-radius: 5px;
+}
+
+    .test-theme-buttons:hover {
+        color: #fff;
+        background-color: #C5CFDA;
+        border-color: #E6A65D;
+        box-shadow: 0 0 5px rgba(230, 168, 93, 0.7);
+    }
+
+    .test-theme-buttons:active {
+        transform: translateY(1px) translateX(1px) !important;
+        color: #fff;
+        background-color: #C5CFDA;
+        border-color: #E6A65D;
+    }
+
+    .test-theme-buttons[disabled] {
+        background-color: #ccc;
+        color: #666;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+.test-theme-navbar {
+    background-color: #87909A;
+    padding: 10px;
+    vertical-align: middle;
+    border-bottom: 3px solid rgba(0, 0, 0, 0.3);
+    z-index: 1;
+/
+
+.default-theme {
+    background-color: #861F41;
+    color: #fff;
+}
+
+.default-theme-buttons {
+    border-color: #861F41;
+}
+
+
+
+.test-theme {
+    background-color: #6b6b6b;
+}
+
+.test-theme-buttons {
+    display: inline-block;
+    color: #fff;
+    background-color: #6b6b6b;
+    border-color: #6b6b6b;
+    padding: 8px 12px;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    vertical-align: middle;
+    text-decoration: none;
+    cursor: pointer;
+    border-color: transparent;
+    border-radius: 5px;
+}
+    */
 
 .buttons-accent {
     display: inline-block;
@@ -189,6 +270,8 @@ body {
     }
 
 
+
+
 .button-for-current-page {
     background-image: radial-gradient(circle, rgba(230, 168, 93, 0.3), rgba(230, 168, 93, 0.6));
     background-size: 200% 200%;
@@ -201,10 +284,6 @@ body {
 header {
     margin-bottom: 20px;
     width: 100%;
-}
-
-body {
-    background-color: #f5f5f5;
 }
 
 #settings-icon {
@@ -684,6 +763,16 @@ select option {
     pointer-events: none;
     user-select: none;
     background-color: rgba(135, 144, 154, 0.1);
+}
+
+.themes-container {
+    display: flex;
+}
+
+.themes-divider {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-right: 100px;
 }
 
 

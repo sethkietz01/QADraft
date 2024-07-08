@@ -209,7 +209,7 @@ namespace QADraft.Controllers
             ViewBag.layout = SessionUtil.GetLayout(HttpContext);
 
             // Fetch the user from the database who's ID matches the ID of the current user
-            var user = _context.Users.SingleOrDefault(u => u.Id == SessionUtil.GetId(HttpContext) );
+            var user = _context.Users.SingleOrDefault(u => u.Id == SessionUtil.GetId(HttpContext));
             // Verify that the user exists and was found
             if (user != null)
             {
@@ -217,6 +217,59 @@ namespace QADraft.Controllers
                 return View(user);
             }
             // If the user was not found, return an empty view
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult UserThemes()
+        {
+            // Verify that the user is logged in, if not direct them to login page
+            if (!SessionUtil.IsAuthenticated(HttpContext))
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Geek", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult UserThemes(int id, string theme)
+        {
+            // Verify that the user is logged in, if not direct them to login page
+            if (!SessionUtil.IsAuthenticated(HttpContext))
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Geek", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
+            var user = _context.Users.Find(id);
+
+            if (user != null)
+            {
+                user.theme = theme;
+                _context.Update(user);
+                _context.SaveChanges();
+            }
+
+            HttpContext.Session.SetString("Theme", theme);
+
             return View();
         }
 
