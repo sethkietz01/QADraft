@@ -2,22 +2,37 @@
     ViewData["Title"] = "Login";
 }
 
+<style>
+    .validation-summary-errors ul{
+        padding: 0;
+    }
+
+    .validation-summary-errors li {
+        list-style-type: none; 
+    }
+</style>
+
 <div class="login">
     <!-- Container for login -->
     <div class="container">
         <!-- Login label -->
         <h2 class="text-center">Login</h2>
         <form asp-action="Login" method="post">
+            <!-- Display validation summary without bullet points -->
+            <div asp-validation-summary="All" class="text-danger"></div>
+            
             <!-- Label and text input for username -->
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" class="form-control" id="username" name="username" required>
             </div>
+            
             <!-- Label and password input for password -->
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" name="password" required>
             </div>
+            
             <!-- Form Submit button -->
             <button type="submit" class="buttons form-buttons">Login</button>
         </form>

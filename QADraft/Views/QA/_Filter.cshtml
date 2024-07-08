@@ -200,6 +200,24 @@
         }
 
         function resetFilters() {
+
+            // Create a new form element
+            const form = document.createElement('form');
+
+            // Set the action attribute to "Filter"
+            form.setAttribute('asp-action', 'Filter');
+
+            // Optionally, set other attributes if needed, e.g., method="GET" or method="POST"
+            form.setAttribute('method', 'GET');
+
+            // Append the form to the document body (or any other desired location)
+            document.body.appendChild(form);
+
+            // Immediately submit the form
+            form.submit();
+
+
+            /*
             document.getElementById("filterForm").reset();
 
             // Explicitly reset individual form fields
@@ -214,6 +232,8 @@
             // Reset date picker values
             $('#startDate').datepicker('setDate', null);
             $('#endDate').datepicker('setDate', null);
+
+            */
         }
 
         $(document).ready(function () {

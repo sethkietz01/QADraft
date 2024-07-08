@@ -1,0 +1,150 @@
+﻿.buttons {
+    color: #fff;
+    background-color: #4A4A4A;
+    border-color: #4A4A4A;
+}
+
+    .buttons:hover {
+        color: #fff;
+        background-color: #7c7c7c;
+        border-color: #fff;
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+    }
+
+    .buttons:active {
+        transform: translateY(1px) translateX(1px) !important;
+        color: #fff;
+        background-color: #7c7c7c;
+        border-color: #fff;
+    }
+
+    .buttons[disabled] {
+        background-color: #ccc;
+        color: #666;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+.button-for-current-page {
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+}
+
+.navbar {
+    background-color: #4A4A4A;
+}
+
+body {
+    background-color: #2c2c2c;
+    color: #fff;
+}
+
+.dashboard {
+    background-color: #2c2c2c;
+}
+
+.link-bar {
+    background-color: #3b3b3b;
+    color: #fff;
+    border-right: 3px groove #010101;
+}
+
+.footer {
+    background-color: #4A4A4A;
+    color: #fff;
+    border-top: 1px solid #000 !important;
+}
+
+.text-muted {
+    color: #fff !important;
+}
+
+.event-calendar th {
+    background-color: #2c2c2c;
+}
+
+#help-link {
+    filter: invert(100%);
+}
+
+.form-control {
+    background-color: #4A4A4A;
+    border-color: #000;
+    color: #fff;
+}
+
+    .form-control:focus {
+        background-color: #4A4A4A;
+        color: #fff;
+    }
+
+    .form-control::placeholder {
+        color: #fff;
+    }
+
+
+
+select option {
+    background-color: #4A4A4A;
+    color: #fff;
+}
+
+    select:focus,select
+    select option:focus,
+    select option:hover {
+        background-color: #4A4A4A;
+        color: #fff;
+    }
+
+.event-calendar th {
+    box-shadow: 0 1px 0 #4A4A4A;
+}
+
+.calendar {
+    border: 1px solid #4A4A4A;
+}
+
+    .calendar tr {
+        border-color: #4A4A4A;
+    }
+
+.table-your-qas tr {
+    border-bottom: 1px solid #000;
+}
+
+    .table-your-qas tr:nth-child(even) {
+        background-color: #3b3b3b;
+    }
+
+    .table-your-qas tr:nth-child(odd) {
+        background-color: #2c2c2c;
+    }
+
+.table-qa tr {
+    border-bottom: 1px solid #000;
+}
+
+    .table-qa tr:nth-child(even) {
+        background-color: #3b3b3b;
+    }
+
+    .table-qa tr:nth-child(odd) {
+        background-color: #2c2c2c;
+    }
+
+
+.modal-content {
+    background-color: #2c2c2c;
+}
+
+    .modal-content
+    select option {
+    background-color: #4A4A4A;
+    color: #fff;
+}
+
+        select:focus,select
+        select option:focus,
+        select option:hover {
+            background-color: #4A4A4A;
+            color: #fff;
+        }

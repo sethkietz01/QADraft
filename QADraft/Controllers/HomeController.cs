@@ -105,6 +105,7 @@ namespace QADraft.Controllers
                     return RedirectToAction("Index");
                 }
             }
+            ModelState.AddModelError(string.Empty, "Invalid login attempt");
             // If the login attempt fails (username or password don't match database) resend the login screen
             return View();
         }
