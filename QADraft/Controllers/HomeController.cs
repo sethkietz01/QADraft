@@ -10,13 +10,43 @@ namespace QADraft.Controllers
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly SnipeItApiClient _snipeItApiClient;
 
         // HomeController constructor
         public HomeController(ApplicationDbContext context)
         {
             // Assigned the context to local variable
             _context = context;
+            _snipeItApiClient = new SnipeItApiClient();
         }
+
+        //TEST----------------------------------------------------------
+        public async Task<IActionResult> Test()
+        {
+            try
+            {
+                DateTime StartDate = new DateTime(2024, 01, 01);
+                DateTime EndDate = new DateTime(2024, 08, 31);
+
+
+                int totalCheckedout = await _snipeItApiClient.ActivityReportBetween("checkout", StartDate, EndDate);
+                Console.WriteLine($"Total Checked Out: {totalCheckedout}");
+
+                int currentCheckedout = await _snipeItApiClient.GetStatusCount("Checked Out");
+                Console.WriteLine($"Current Checked Out id:{currentCheckedout}");
+
+                // Process output as needed
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);  
+                // Handle exception appropriately
+                return RedirectToAction("PermissionsDenied");
+            }
+
+        }
+
 
         // Display the index / home page
         public IActionResult Index()

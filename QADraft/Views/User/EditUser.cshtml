@@ -5,7 +5,6 @@
     Layout = ViewBag.Layout;
 }
 
-<partial name="_GeeksMenu" />
 <h2>Edit User</h2>
 
 <!-- Form to get updated information on the user being edited -->
@@ -65,22 +64,46 @@
     <!-- Form to passthrough user's theme -->
     <input type="hidden" asp-for="theme" />
 </form>
-
 <div>
-    <button onclick="openConfirmation()" class="btn buttons form-buttons">Save Changes</button>
+    <button onclick="window.dialog.showModal()" class="btn buttons form-buttons">Save Changes</button>
+    <button onclick="cancel()" class="buttons form-buttons">Cancel</button>
 </div>
 
-<!-- Edit User Confirm Popup -->
-<div id="confirmationDialog" class="confirmation-dialog">
-    <div class="confirmation-content">
-        <p>Press Confirm to Edit this User's information.'</p>
+<!-- Form to cancel and go back to Geek Accounts page -->
+<form id="cancel-form" asp-area="" asp-controller="User" asp-action="GeekAccounts" method="get">
+    <button type="submit" class="buttons form-buttons" hidden></button>
+</form>
+
+<!-- Modal Popup for confirm user edit -->
+<dialog id="dialog">
+	<div class="confirmation-content">
+        <!-- Confirmation text -->
+        <p>Press Confirm to Edit this User's information.</p>
+        <!-- Confirmation button container -->
         <div class="confirmation-buttons">
-            <button class="btn btn-danger" onclick="confirmEdit()">Confirm</button>
-            <button class="btn btn-secondary" onclick="closeConfirmation()">Cancel</button>
+            <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
+            the deleteButton input. No will close the confirmation dialog -->
+            <button class="buttons" onclick="confirmEdit()">Confirm</button> 
+            <button class="buttons-accent" onclick="window.dialog.close();">No</button>
         </div>
     </div>
-</div>
+	<button onclick="window.dialog.close();" class="x">❌</button>
+</dialog>
 
+<!-- Dynamic Modal Popup for password error messages -->
+<dialog id="dialog">
+	<div class="confirmation-content">
+        <!-- Dynamic text -->
+        <p id="password-error"></p>
+        <!-- Confirmation button container -->
+        <div class="confirmation-buttons">
+            <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
+            the deleteButton input. No will close the confirmation dialog -->
+            <button class="buttons" onclick="window.dialog.close();">OK</button>
+        </div>
+    </div>
+	<button onclick="window.dialog.close();" class="x">❌</button>
+</dialog>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
@@ -96,19 +119,7 @@
             thisPageButton.classList.toggle('button-for-current-page');
         });
 
-        function openConfirmation() {
-            console.log("OpenConfirmation");
-
-            // Show the confirmation dialog
-            document.getElementById('confirmationDialog').style.display = 'block';
-        }
-
-        function closeConfirmation() {
-            document.getElementById('confirmationDialog').style.display = 'none';
-        }
-
         function confirmEdit() {
-            closeConfirmation();
 
             // Get the two password fields
             var pass1 = document.getElementById("password-field");
@@ -129,16 +140,16 @@
                 // If they match, do password validation
                 password = document.getElementById("password-field").value.trim();
                 if (password.length < 8) {
-                    alert("Password must be at least 8 characters long.");
+                    displayModal("Password must be at least 8 characters long.");
                 }
                 else if (!/[A-Z]/.test(password)){
-                    alert("Password must contain at least one uppercase letter.");
+                    displayModal("Password must contain at least one uppercase letter.");
                 }
                 else if (!/[^A-Za-z0-9]/.test(password)) {
-                    alert("Password must contain at least one special character.");
+                    displayModal("Password must contain at least one special character.");
                 }
                 else if (!/\d/.test(password)) {
-                    alert("Password must contain at least one numeric character.");
+                    displayModal("Password must contain at least one numeric character.");
                 }
                 else {
                     // Otherwise, password meets criteria, proceed with form submission
@@ -152,9 +163,24 @@
                 pass2.value = "";
                 
                 // display an error
-                alert("Password must match");
+                displayModal("Password must match");
             }
 
+        }
+
+        function displayModal(message) {
+            // Set the text of the modal to the message string
+            document.getElementById("password-error").innerHTML = message;
+            // Show the popup
+            window.dialog.showModal();
+
+        }
+
+        function cancel()
+        {
+            var cancelForm = document.getElementById("cancel-form");
+
+            cancelForm.submit();
         }
 
     </script>

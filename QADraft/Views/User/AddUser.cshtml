@@ -73,6 +73,23 @@
     <button type="submit" class="buttons form-buttons" hidden></button>
 </form>
 
+
+<!-- Dynamic Modal Popup for password error messages -->
+<dialog id="dialog">
+	<div class="confirmation-content">
+        <!-- Dynamic text -->
+        <p id="password-error"></p>
+        <!-- Confirmation button container -->
+        <div class="confirmation-buttons">
+            <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
+            the deleteButton input. No will close the confirmation dialog -->
+            <button class="buttons" onclick="window.dialog.close();">OK</button>
+        </div>
+    </div>
+	<button onclick="window.dialog.close();" class="x">❌</button>
+</dialog>
+
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
@@ -85,16 +102,16 @@
             if (pass1.value == pass2.value) {
                 password = document.getElementById("password").value.trim();
                 if (password.length < 8) {
-                    alert("Password must be at least 8 characters long.");
+                    displayModal("Password must be at least 8 characters long.");
                 }
                 else if (!/[A-Z]/.test(password)){
-                    alert("Password must contain at least one uppercase letter.");
+                    displayModal("Password must contain at least one uppercase letter.");
                 }
                 else if (!/[^A-Za-z0-9]/.test(password)) {
-                    alert("Password must contain at least one special character.");
+                    displayModal("Password must contain at least one special character.");
                 }
                 else if (!/\d/.test(password)) {
-                    alert("Password must contain at least one numeric character.");
+                    displayModal("Password must contain at least one numeric character.");
                 }
 
                 // If password meets criteria, proceed with form submission
@@ -107,8 +124,16 @@
                 pass2.value = "";
                 
                 // display an error
-                alert("Password must match");
+                displayModal("Password must match");
             }
+
+        }
+
+        function displayModal(message) {
+            // Set the text of the modal to the message string
+            document.getElementById("password-error").innerHTML = message;
+            // Show the popup
+            window.dialog.showModal();
 
         }
 
