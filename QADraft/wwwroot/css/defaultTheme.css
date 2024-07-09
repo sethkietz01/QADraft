@@ -38,6 +38,8 @@ body {
     border-right: 3px groove black;
 }
 
+
+
 .button-for-current-page {
     background-image: radial-gradient(circle, rgba(230, 168, 93, 0.2), rgba(230, 168, 93, 0.8));
     background-size: 200% 100%;
@@ -58,3 +60,20 @@ body {
         .table-your-qas tr:nth-child(odd) {
             background-color: #f5f5f5;
         }
+
+.buttons-accent {
+    background-color: #87909A;
+    border-color: #861F41;
+}
+
+    .buttons-accent:hover {
+        background-color: #747b82;
+        border-color: #E6A65D;
+        box-shadow: 0 0 5px rgba(230, 168, 93, 0.7);
+    }
+
+.disabled-input {
+    pointer-events: none;
+    user-select: none;
+    background-color: rgba(135, 144, 154, 0.1);
+}

@@ -7,6 +7,8 @@
 <h1>Themes</h1>
 <div class="themes-container">
     <div class="themes-divider">
+        <img class="theme-images" src="~/images/defaultThemeIcon.png">
+
         <form id="form-items" asp-action="UserThemes" method="post">
             <input type="hidden" asp-for="Id" value="@Context.Session.GetInt32("Id")" />
             <input type="hidden" asp-for="theme" value="default" />
@@ -15,6 +17,8 @@
     </div>
 
     <div class="themes-divider">
+        <img class="theme-images" src="~/images/darkThemeIcon.png">
+
         <form id="form-items" asp-action="UserThemes" method="post">
             <input type="hidden" asp-for="Id" value="@Context.Session.GetInt32("Id")" />
             <input type="hidden" asp-for="theme" value="dark" />
