@@ -149,8 +149,8 @@
         <div class="confirmation-buttons">
             <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
             the deleteButton input. No will close the confirmation dialog -->
-            <button class="buttons" onclick="deleteEvent()">Yes</button> 
-            <button class="buttons-accent" onclick="window.dialog.close();">No</button>
+            <button id="confirm-delete-event-button" class="buttons" onclick="deleteEvent()">Yes</button> 
+            <button id="cancel-delete-event-button" class="buttons buttons-accent" onclick="window.dialog.close();">No</button>
         </div>
     </div>
 	<button onclick="window.dialog.close();" class="x">❌</button>

@@ -32,7 +32,7 @@
             <label for="committedBy">Committed By:</label>
             <!-- Create the drop down selection for CommitedBy -->
             <select id="committedBy" name="committedBy" class="form-control">
-                <option value="">Select User</option>
+                <option value="">Any User</option>
                 <!-- Populate the dropdown with user list passed through the ViewBag -->
                 @foreach (var user in ViewBag.Users)
                 {
@@ -47,7 +47,7 @@
             <label for="loggedBy">Logged By:</label>
             <!-- Create the drop down selection for LoggedBy -->
             <select id="loggedBy" name="loggedBy" class="form-control">
-                <option value="">Select User</option>
+                <option value="">Any User</option>
                 <!-- Populate the dropdown with user list passed through the ViewBag -->
                 @foreach (var user in ViewBag.Users)
                 {
@@ -62,7 +62,7 @@
             <label for="category">Category:</label>
             <!-- Create the dropdown selection for Category-->
             <select id="category" name="category" class="form-control">
-                <option value="">Select Category</option>
+                <option value="">Any Category</option>
                 <!-- Populate the dropdown with categories list passed through the ViewBag -->
                 @foreach (var category in ViewBag.Categories)
                 {
@@ -78,6 +78,10 @@
             <button type="button" class="buttons" onclick="resetFilters()">Reset Filters</button>
         </div>
     </form>
+</div>
+
+<div id="query-results-header">
+
 </div>
 
 <!-- Place the QA table under the filter options-->
@@ -200,24 +204,6 @@
         }
 
         function resetFilters() {
-
-            // Create a new form element
-            const form = document.createElement('form');
-
-            // Set the action attribute to "Filter"
-            form.setAttribute('asp-action', 'Filter');
-
-            // Optionally, set other attributes if needed, e.g., method="GET" or method="POST"
-            form.setAttribute('method', 'GET');
-
-            // Append the form to the document body (or any other desired location)
-            document.body.appendChild(form);
-
-            // Immediately submit the form
-            form.submit();
-
-
-            /*
             document.getElementById("filterForm").reset();
 
             // Explicitly reset individual form fields
@@ -233,7 +219,23 @@
             $('#startDate').datepicker('setDate', null);
             $('#endDate').datepicker('setDate', null);
 
-            */
+
+            storeFilterSelections();
+
+            // Create a new form element
+            const form = document.createElement('form');
+
+            // Set the action attribute to "Filter"
+            form.setAttribute('asp-action', 'Filter');
+
+            // Optionally, set other attributes if needed, e.g., method="GET" or method="POST"
+            form.setAttribute('method', 'GET');
+
+            // Append the form to the document body (or any other desired location)
+            document.body.appendChild(form);
+
+            // Immediately submit the form
+            form.submit();
         }
 
         $(document).ready(function () {
@@ -293,6 +295,33 @@
             endDate.classList.remove("hidden-date");
             endDate.classList.add("visible-date");
         }
+
+
+        // Function to store current filter selections in local storage
+        function storeFilterSelections() {
+            localStorage.setItem('committedBy', document.getElementById('committedBy').value);
+            localStorage.setItem('loggedBy', document.getElementById('loggedBy').value);
+            localStorage.setItem('category', document.getElementById('category').value);
+            // Add more selections as needed
+        }
+
+        // Function to restore filter selections from local storage
+        function restoreFilterSelections() {
+            document.getElementById('committedBy').value = localStorage.getItem('committedBy') || '';
+            document.getElementById('loggedBy').value = localStorage.getItem('loggedBy') || '';
+            document.getElementById('category').value = localStorage.getItem('category') || '';
+            // Restore more selections as needed
+        }
+
+        // Event listener to store selections before form submission
+        document.getElementById('filterForm').addEventListener('submit', function() {
+            storeFilterSelections();
+        });
+
+        // Call restore function on document load to restore selections
+        document.addEventListener('DOMContentLoaded', function() {
+            restoreFilterSelections();
+        });
     </script>
 }
 <!--
