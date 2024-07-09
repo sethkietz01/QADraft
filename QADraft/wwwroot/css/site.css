@@ -641,11 +641,6 @@ select option {
         border-color: #E6A65D
     }
 
-.disabled-input {
-    pointer-events: none;
-    user-select: none;
-    background-color: rgba(135, 144, 154, 0.1);
-}
 
 .themes-container {
     display: flex;
