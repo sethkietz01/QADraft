@@ -1,7 +1,7 @@
 ﻿@model List<QADraft.Models.User>
 
 @{
-    ViewData["Title"] = "Geek Accounts";
+    ViewData["Title"] = "Inactive Accounts";
     Layout = ViewBag.Layout;
 }
 
@@ -25,7 +25,7 @@
     <tbody>
         @foreach (var qa in Model)
         {
-            if (@qa.isActive)
+            if (! @qa.isActive)
             {
                 <tr>
                     <td>@qa.Username</td>
@@ -37,15 +37,6 @@
                     <td>@qa.isActive</td>
                     <td>
                         <a class="buttons" asp-area="" asp-controller="User" asp-action="EditUser" asp-route-Id="@qa.Id">Edit</a>
-                            
-                        @if (! qa.isFlagged)
-                        {
-                            <button class="buttons" onclick="flagAccount(@qa.Id)">Flag</button>
-                        }
-                        else
-                        {
-                            <button class="buttons" onclick="unflagAccount(@qa.Id)">Unflag</button>
-                        }
                     </td>
                 </tr>
             }
@@ -60,35 +51,7 @@
         geekAccountsLink.classList.toggle('highlight-link');
 
         // Change the color of the button that brings you to this page
-            var thisPageButton = document.getElementById('geek-accounts-button');
+            var thisPageButton = document.getElementById('inactive-accounts-button');
             thisPageButton.classList.toggle('button-for-current-page');
     });
-
-    function flagAccount(userId) {
-        console.log(userId);
-
-        fetch(`/User/FlagAccount?id=${userId}`, {
-            method: 'POST'
-        }).then(response => {
-            if (response.ok) {
-                // Handle success if needed
-                location.reload(); // Refresh the page or update UI
-            } else {
-                // Handle error if needed
-            }
-        });
-    }
-
-    function unflagAccount(userId) {
-        fetch(`/User/UnflagAccount?id=${userId}`, {
-            method: 'POST'
-        }).then(response => {
-            if (response.ok) {
-                // Handle success if needed
-                location.reload(); // Refresh the page or update UI
-            } else {
-                // Handle error if needed
-            }
-        });
-    }
 </script>

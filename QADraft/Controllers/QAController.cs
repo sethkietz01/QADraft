@@ -628,7 +628,7 @@ namespace QADraft.Controllers
                     return RedirectToAction("AllGeekQAs");
             }
             // Return to the all geek qas list if something goes wrong
-            return View("AllGeekQAs");
+            return RedirectToAction("AllGeekQAs");
         }
 
         // Automatically flag the user's account if the QA's severity is 10.

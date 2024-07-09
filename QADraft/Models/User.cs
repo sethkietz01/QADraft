@@ -18,6 +18,8 @@ namespace QADraft.Models
         public DateTime startDate { get; set;}
         public DateTime endDate { get; set;}
         public string theme { get; set; }
+        public string FlagDescription { get; set; }
+
 
     }
 }
