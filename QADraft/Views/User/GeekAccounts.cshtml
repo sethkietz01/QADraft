@@ -40,7 +40,8 @@
                             
                         @if (! qa.isFlagged)
                         {
-                            <button class="buttons" onclick="flagAccount(@qa.Id)">Flag</button>
+                            @*<button class="buttons" onclick="flagAccount(@qa.Id)">Flag</button>*@
+                            <button id="flag-account-button" class="buttons" onclick="openConfirmationDialog(event, @qa.Id)">Flag</button>
                         }
                         else
                         {
@@ -53,42 +54,76 @@
     </tbody>
 </table>
 
+<dialog id="dialog">
+	<div class="confirmation-content">
+        <!-- Confirmation text -->
+        <p>Enter the reason you are flagging this account</p>
+        <!-- Confirmation button container -->
+        <div class="description-area">
+            <textarea id="flag-description"></textarea>
+        </div>
+        <div class="confirmation-buttons">
+            <button id="confirm-delete-event-button" class="buttons" onclick="flagAccount()">Confirm</button> 
+            <button id="cancel-delete-event-button" class="buttons buttons-accent" onclick="window.dialog.close();">Cancel</button>
+        </div>
+    </div>
+	<button onclick="window.dialog.close();" class="x">❌</button>
+</dialog>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Highlight the current page's link
-        var geekAccountsLink = document.getElementById('geek-accounts-link'); 
-        geekAccountsLink.classList.toggle('highlight-link');
+    // Highlight the current page's link
+    var geekAccountsLink = document.getElementById('geek-accounts-link'); 
+    geekAccountsLink.classList.toggle('highlight-link');
 
-        // Change the color of the button that brings you to this page
-            var thisPageButton = document.getElementById('geek-accounts-button');
-            thisPageButton.classList.toggle('button-for-current-page');
+    // Change the color of the button that brings you to this page
+        var thisPageButton = document.getElementById('geek-accounts-button');
+        thisPageButton.classList.toggle('button-for-current-page');
     });
 
-    function flagAccount(userId) {
-        console.log(userId);
+    function flagAccount() {
+    var userId = document.getElementById('id-input').value;
+    var flagDescription = document.getElementById('flag-description').value;
 
-        fetch(`/User/FlagAccount?id=${userId}`, {
-            method: 'POST'
-        }).then(response => {
-            if (response.ok) {
-                // Handle success if needed
-                location.reload(); // Refresh the page or update UI
-            } else {
-                // Handle error if needed
-            }
-        });
+    console.log(userId);
+
+    fetch(`/User/FlagAccount?id=${userId}&flagDescription=${flagDescription}`, {
+        method: 'POST'
+    }).then(response => {
+        if (response.ok) {
+            // Handle success if needed
+            location.reload(); // Refresh the page or update UI
+        } else {
+            // Handle error if needed
+        }
+    });
     }
 
     function unflagAccount(userId) {
-        fetch(`/User/UnflagAccount?id=${userId}`, {
-            method: 'POST'
-        }).then(response => {
-            if (response.ok) {
-                // Handle success if needed
-                location.reload(); // Refresh the page or update UI
-            } else {
-                // Handle error if needed
-            }
-        });
+    fetch(`/User/UnflagAccount?id=${userId}`, {
+        method: 'POST'
+    }).then(response => {
+        if (response.ok) {
+            // Handle success if needed
+            location.reload(); // Refresh the page or update UI
+        } else {
+            // Handle error if needed
+        }
+    });
+    }
+
+    // Function called by the delete button to open confirmation modal
+    function openConfirmationDialog(event, id) {
+        event.preventDefault(); // Prevent default behavior
+        
+        var idInput = document.createElement('input');
+        idInput.setAttribute('id', 'id-input');
+        idInput.setAttribute('type', 'hidden');
+        idInput.setAttribute('value', id);
+
+        document.body.appendChild(idInput);
+        
+        // Show the modal
+        window.dialog.showModal();
     }
 </script>

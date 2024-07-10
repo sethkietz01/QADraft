@@ -1,0 +1,42 @@
+﻿@model List<QADraft.Models.User>
+
+@{
+    ViewData["Title"] = "Flagged Accounts";
+    Layout = ViewBag.Layout;
+}
+
+<partial name="_GeeksMenu" />
+<h2>Flagged Accounts</h2>
+
+<!-- Table that displays all 'flagged' accounts -->
+<table id="table" class="table-qa">
+    <thead>
+        <tr>
+            <th onclick="sortTable(0)">User<span class="arrow"></th>
+            <th onclick="sortTable(6)">Description<span class="arrow"></th>
+        </tr>
+    </thead>
+    <tbody> 
+        @foreach (var user in Model.Where(u => u.isFlagged == true))
+        {
+            <tr>
+                <td>@user.FirstName @user.LastName</td>
+                <td>@user.FlagDescription</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Highlight the current page's link
+        var qaMenuLink = document.getElementById('geek-accounts-link'); 
+        qaMenuLink.classList.toggle('highlight-link');
+
+        // Change the color of the button that brings you to this page
+        var thisPageButton = document.getElementById('view-flagged-accounts-button');
+        thisPageButton.classList.toggle('button-for-current-page');
+    });
+</script>

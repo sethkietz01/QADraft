@@ -302,13 +302,14 @@ namespace QADraft.Controllers
         }
 
         [HttpPost]
-        public IActionResult FlagAccount(int id)
+        public IActionResult FlagAccount(int id, string flagDescription)
         {
             var user = _context.Users.FirstOrDefault(u => u.Id == id);
 
             if (user != null) 
             {
                 user.isFlagged = true;
+                user.FlagDescription = flagDescription;
                 _context.SaveChanges();
             }
 
@@ -323,10 +324,72 @@ namespace QADraft.Controllers
             if (user != null)
             {
                 user.isFlagged = false;
+                user.FlagDescription = "";
                 _context.SaveChanges();
             }
 
             return RedirectToAction("GeekAccounts");
         }
-    }
+
+        [HttpGet]
+        public IActionResult FlaggedAccounts()
+        {
+            // Verify that the user is logged in, if not direct them to login page
+            if (!SessionUtil.IsAuthenticated(HttpContext))
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Coordinator", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
+            var flaggedAccounts = _context.Users
+                .ToList();
+
+            //return PartialView("FlaggedAccounts", flaggedAccounts);
+            return View("FlaggedAccounts", flaggedAccounts);
+
+        }
+
+            /*
+            // Display the FlaggedAccounts page
+            [HttpGet]
+            public IActionResult FlaggedAccounts()
+            {
+                // Verify that the user is logged in, if not direct them to login page
+                if (!SessionUtil.IsAuthenticated(HttpContext))
+                {
+                    return RedirectToAction("Login");
+                }
+
+                // Verify that the user has the permissions to view this page
+                if (!SessionUtil.CheckPermissions("Coordinator", HttpContext))
+                {
+                    return RedirectToAction("PermissionsDenied", "Home");
+                }
+
+                // Assign the appropriate layout
+                //ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
+                // Get the appropriate navigation menu
+                //ViewBag.menu = SessionUtil.GetQAMenu(HttpContext);
+
+                var flaggedAccounts = _context.Users
+                    .Include(q => q.LastName)
+                    .Include(q => q.FirstName)
+                    .Include(q => q.FlagDescription)
+                    .Where(q => q.isFlagged == true) 
+                    .ToList();
+
+                // Return the view with the list of flagged accounts
+                return PartialView("FlaggedAccounts", flaggedAccounts);
+            }
+            */
+        }
 }
