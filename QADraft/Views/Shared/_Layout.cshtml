@@ -86,7 +86,7 @@
                             <li class="nav-item">
                                 <div class="dropdown">
                                     <input type="checkbox" id="dropdown" name="dropdown" class="dropdown">
-                                    <label class="for-dropdown" for="dropdown">
+                                    <label id="dropdown-label" class="for-dropdown" for="dropdown">
                                         <img id="settings-icon" src="~/images/settings.png" alt="Settings">
                                     </label>
                                     <div class="settings-dropdown">
@@ -133,3 +133,23 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var checkbox = document.getElementById('dropdown');
+    var dropdown = document.querySelector('.settings-dropdown');
+    var dropdownLabel = document.getElementById('dropdown-label');
+
+    document.addEventListener('click', function(e) {
+        if (!dropdownLabel.contains(e.target) && !checkbox.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.remove('open');
+            checkbox.checked = false;
+        }
+    });
+
+    dropdownLabel.addEventListener('click', function() {
+        dropdown.classList.toggle('open');
+    });
+});
+</script>

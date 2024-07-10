@@ -51,6 +51,31 @@ namespace QADraft.Controllers
             return View(qas);
         }
 
+        [HttpGet]
+        public IActionResult InactiveAccounts()
+        {
+            // Verify that the user is logged in, if not direct them to login page
+            if (!SessionUtil.IsAuthenticated(HttpContext))
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Coordinator", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
+            // Fetch a list of all the users in the database
+            var qas = _context.Users
+                .ToList();
+            // Return the view with the list of users
+            return View(qas);
+        }
+
 
         // Display the AddUser page
         [HttpGet]
@@ -276,5 +301,32 @@ namespace QADraft.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult FlagAccount(int id)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Id == id);
+
+            if (user != null) 
+            {
+                user.isFlagged = true;
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("GeekAccounts");
+        }
+
+        [HttpPost]
+        public IActionResult UnflagAccount(int id)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Id == id);
+
+            if (user != null)
+            {
+                user.isFlagged = false;
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("GeekAccounts");
+        }
     }
 }
