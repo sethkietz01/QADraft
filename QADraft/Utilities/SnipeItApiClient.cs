@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Identity.Client;
+using Microsoft.CodeAnalysis.Elfie.Model.Tree;
 
 public class SnipeItApiClient
 {
@@ -43,7 +44,6 @@ public class SnipeItApiClient
                 List<ActivityReport> activityReports = rows.Select(row =>
                 new ActivityReport
                 {
-                    id = (int)row["id"],
                     item = new Item
                     {
                         id = (int)row["item"]["id"],
@@ -88,10 +88,10 @@ public class SnipeItApiClient
         }
     }
 
-    public async Task<int> GetStatusCount(string status)
+    public async Task<int> GetCountInCirculation(string tag)
     {
-        int status_id = await GetStatusId(status);
-        string endpoint = $"hardware?limit=1&status_id={status_id}";
+        int status_id = await GetStatusId("In Circulation");
+        string endpoint = $"hardware?limit=100000&status_id={status_id}&search={tag}";
 
         // Send GET request
         HttpResponseMessage response = await _httpClient.GetAsync(base_url + endpoint);
@@ -103,6 +103,57 @@ public class SnipeItApiClient
             string responseContent = await response.Content.ReadAsStringAsync();
             string json = @responseContent;
 
+            JObject jsonObject = JsonConvert.DeserializeObject<JObject>(json);
+            JArray rows = jsonObject["rows"] as JArray;
+
+
+            List<Asset> assets = rows.Select(row =>
+                new Asset
+                {
+                    asset_tag = (string)row["asset_tag"]
+                }).ToList();
+
+            // Filter assets based on the specified asset tag. The search in the api endpoint searches the whole asset, which includes other fields.
+            // Using search there will help reduce the amount of filtering that needs to be done here.
+            List<Asset> filteredAssets = assets   // Check if the fetched asset tag starts with {tag} is the same length as {tag}+3. ex: WIN___
+                .Where(asset => asset.asset_tag.StartsWith(tag) && asset.asset_tag.Length == tag.Length + 3 )
+                .ToList();
+
+            int total = filteredAssets.Count;
+
+
+
+            return total;
+        }
+        else
+        {
+            // Handle unsuccessful response
+            throw new HttpRequestException($"Failed to search activity reports: {response.StatusCode}");
+        }
+
+
+        return -1;
+    }
+
+    public async Task<int> GetStatusCount(string status)
+    {
+        int status_id = await GetStatusId(status);
+        string endpoint = $"hardware?limit=100000&status_id={status_id}";
+
+        // Send GET request
+        HttpResponseMessage response = await _httpClient.GetAsync(base_url + endpoint);
+
+        // Check if successful
+        if (response.IsSuccessStatusCode)
+        {
+            // Read response content
+            string responseContent = await response.Content.ReadAsStringAsync();
+            string json = @responseContent;
+
+            JObject jsonObject = JsonConvert.DeserializeObject<JObject>(json);
+            int total = (int)jsonObject["total"];
+
+            return total;
         }
         else
         {
@@ -112,6 +163,7 @@ public class SnipeItApiClient
 
         return -1;
     }
+
 
     public async Task<int> GetStatusId(string status)
     {
@@ -134,7 +186,13 @@ public class SnipeItApiClient
                 JObject jsonObject = JsonConvert.DeserializeObject<JObject>(json);
                 JArray rows = jsonObject["rows"] as JArray;
 
-               // Convert JArray rows into C# objects. Filter the objects if needed, then iterate through list and count. Return count.
+                List<Status> statuses = rows.Select(row =>
+                    new Status
+                    {
+                        id = (int)row["id"]
+                    }).ToList();
+                // There will only be 1 matching status, so grab the first index
+                return statuses[0].id;
 
             }
             else

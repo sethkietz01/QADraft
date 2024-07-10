@@ -4,6 +4,7 @@ using QADraft.Data;
 using QADraft.Models;
 using QADraft.Utilities;
 using QADraft.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace QADraft.Controllers
 {
@@ -33,7 +34,49 @@ namespace QADraft.Controllers
                 Console.WriteLine($"Total Checked Out: {totalCheckedout}");
 
                 int currentCheckedout = await _snipeItApiClient.GetStatusCount("Checked Out");
-                Console.WriteLine($"Current Checked Out id:{currentCheckedout}");
+                Console.WriteLine($"Current Checked Out: {currentCheckedout}");
+
+                int currentReChecked = await _snipeItApiClient.GetStatusCount("Re-Checked Out");
+                Console.WriteLine($"Current Re-Checked Out: {currentReChecked}");
+
+                int currentReminderEmail = await _snipeItApiClient.GetStatusCount("Reminder Email");
+                Console.WriteLine($"Current Reminder Email: {currentReminderEmail}");
+
+                int currentCourtesyCallCompleted = await _snipeItApiClient.GetStatusCount("Courtesy Call Completed");
+                Console.WriteLine($"Current Courtesy Call Completed: {currentCourtesyCallCompleted}");
+
+                int current1stLateFee = await _snipeItApiClient.GetStatusCount("1st Late Fee");
+                Console.WriteLine($"Current 1st Late Fee: {current1stLateFee}");
+
+                int current2ndLateFee = await _snipeItApiClient.GetStatusCount("2nd Late Fee");
+                Console.WriteLine($"Current 2nd Late Fee: {current2ndLateFee}");
+
+                int currentMaintenance = await _snipeItApiClient.GetStatusCount("Maintenance/Diagnose");
+                Console.WriteLine($"Current Maintenance/Diagnose: {currentMaintenance}");
+
+                Console.WriteLine("----------------------------------------");
+
+                int currentCirculation = await _snipeItApiClient.GetStatusCount("In Circulation");
+                Console.WriteLine($"Current Available for Checkout: {currentCirculation}");
+
+                int availableWin = await _snipeItApiClient.GetCountInCirculation("WIN");
+                Console.WriteLine($"Windows Laptops: {availableWin}");
+
+                int availableAir = await _snipeItApiClient.GetCountInCirculation("AIR");
+                Console.WriteLine($"Macbook Airs: {availableAir}");
+
+                int availableMac = await _snipeItApiClient.GetCountInCirculation("MAC");
+                Console.WriteLine($"Macbook Pros: {availableMac}");
+
+                int availablGcal = await _snipeItApiClient.GetCountInCirculation("GCAL");
+                Console.WriteLine($"Graphing Calculators: {availablGcal}");
+
+                int availablProj = await _snipeItApiClient.GetCountInCirculation("PROJ");
+                Console.WriteLine($"Projectors: {availablProj}");
+
+                int availablCam = await _snipeItApiClient.GetCountInCirculation("CAM");
+                Console.WriteLine($"Cameras: {availablCam}");
+
 
                 // Process output as needed
                 return RedirectToAction("Index");
