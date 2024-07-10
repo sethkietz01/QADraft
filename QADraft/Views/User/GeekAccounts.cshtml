@@ -38,15 +38,8 @@
                     <td>
                         <a class="buttons" asp-area="" asp-controller="User" asp-action="EditUser" asp-route-Id="@qa.Id">Edit</a>
                             
-                        @if (! qa.isFlagged)
-                        {
-                            @*<button class="buttons" onclick="flagAccount(@qa.Id)">Flag</button>*@
-                            <button id="flag-account-button" class="buttons" onclick="openConfirmationDialog(event, @qa.Id)">Flag</button>
-                        }
-                        else
-                        {
-                            <button class="buttons" onclick="unflagAccount(@qa.Id)">Unflag</button>
-                        }
+                        @*<button class="buttons" onclick="flagAccount(@qa.Id)">Flag</button>*@
+                        <button id="flag-account-button" class="buttons" onclick="openConfirmationDialog(event, @qa.Id)">Flag</button>
                     </td>
                 </tr>
             }

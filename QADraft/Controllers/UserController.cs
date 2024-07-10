@@ -309,7 +309,15 @@ namespace QADraft.Controllers
             if (user != null) 
             {
                 user.isFlagged = true;
-                user.FlagDescription = flagDescription;
+
+                if (String.IsNullOrEmpty(user.FlagDescription))
+                {
+                    user.FlagDescription = flagDescription;
+                }
+                else 
+                {
+                    user.FlagDescription = user.FlagDescription + "<br>" + flagDescription;
+                }
                 _context.SaveChanges();
             }
 
