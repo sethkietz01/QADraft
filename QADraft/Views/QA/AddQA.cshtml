@@ -237,25 +237,15 @@
 
         // Add event listener for form submission
         document.querySelector('form').addEventListener('submit', function(event) {
-            var committedBy = document.getElementById("committed-by");
-            var foundBy = document.getElementById("found-by");
-            var category = document.getElementById("categorySelect");
-            var nature = document.getElementById("natureSelect");
             var customerName = document.getElementById("customer-name");
             var unitId = document.getElementById("unit-id");
-            var description = document.getElementById("description");
-
-
 
             // Automatically populate the customer name and unit ID with N/A if they are left blank
-            if (committedBy.selectedIndex !== -1 && foundBy.selectedIndex !== -1 && category.selectedIndex !== -1 && nature.selectedIndex !== -1 && description.value.trim() !== "")
-            {
-                 if (! customerName.value)
+            if (! customerName.value)
                     customerName.value = "N/A";
 
                 if (! unitId.value)
                     unitId.value = "N/A";
-            }
         });
     </script>
 }
