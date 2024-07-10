@@ -97,9 +97,15 @@ body {
     white-space: nowrap;
 }
 
+.settings-dropdown.open {
+    display: block;
+}
+
+/*
 .dropdown input[type="checkbox"]:checked ~ .settings-dropdown {
     display: block;
 }
+*/
 
 .settings-dropdown a {
     display: block;
