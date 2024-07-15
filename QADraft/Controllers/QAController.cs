@@ -151,6 +151,8 @@ namespace QADraft.Controllers
         [HttpGet]
         public async Task<IActionResult> Filter(string dateFilter, DateTime? startDate, DateTime? endDate, int? committedBy, int? loggedBy, string category)
         {
+            Debug.WriteLine("\n\n\ndateFilter on filter = " + dateFilter + "\n\n\n");
+
             // Verify that the user is logged in, if not direct them to login page
             if (!SessionUtil.IsAuthenticated(HttpContext))
             {
@@ -240,7 +242,7 @@ namespace QADraft.Controllers
 
         // Display the QAs of the logged in user
         [HttpGet]
-        public async Task<IActionResult> YourQAs(string dateFilter, DateTime? startDate, DateTime? endDate, int? committedBy, int? loggedBy, string category)
+        public async Task<IActionResult> YourQAs(string dateFilter, DateTime? startDate, DateTime? endDate, int? committedBy, int? loggedBy, string category, int? severity)
         {
             // Verify that the user is logged in, if not direct them to login page
             if (!SessionUtil.IsAuthenticated(HttpContext))
@@ -276,7 +278,6 @@ namespace QADraft.Controllers
                 .Where(q => q.CommittedById == userId)
                 .AsQueryable();
 
-
             // Check if the datefilter box is checked
             if (!string.IsNullOrEmpty(dateFilter))
             {
@@ -305,6 +306,11 @@ namespace QADraft.Controllers
             {
                 // Add QAs that are of the same category
                 qas = qas.Where(q => q.CategoryOfError == category);
+            }
+
+            if (severity.HasValue)
+            {
+                qas = qas.Where(q => q.Severity == severity);
             }
 
             // Add the QAs to a list and await async

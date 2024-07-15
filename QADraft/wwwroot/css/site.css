@@ -727,4 +727,17 @@ dialog {
 
 .popup-labels {
     font-size: 22px;
+    margin-top: 20px;
+}
+
+.filter-your-qas-dialog {
+    width: 400px;
+}
+    .filter-your-qas-dialog select {
+        text-align: center;
+    }
+
+.filter-your-qas-dialog input {
+    text-align: center;
+    padding-left: 40px;
 }
