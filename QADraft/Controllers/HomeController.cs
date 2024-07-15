@@ -19,7 +19,7 @@ namespace QADraft.Controllers
             _context = context;
         }
 
-        //TEST
+        //TEST SNIPEIT INTEGRATION
         public IActionResult GetSnipeIt()
         {
             return ViewComponent("SnipeIt");
@@ -64,7 +64,7 @@ namespace QADraft.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            // Verify that the user is logged in
+            // Verify if the user is logged in already
             if (SessionUtil.IsAuthenticated(HttpContext))
             {
                 // Direct the user to the home page
@@ -95,21 +95,26 @@ namespace QADraft.Controllers
                 // The user-entered password is hashed and then compared to the hashed password saved in the database.
                 if (PasswordHasher.VerifyPassword(password, user.Password))
                 {
-                    // If the user has been verified, set/assign the session data
-                    HttpContext.Session.SetString("IsAuthenticated", "true");
-                    HttpContext.Session.SetString("Username", user.Username);
-                    HttpContext.Session.SetString("FirstName", user.FirstName);
-                    HttpContext.Session.SetString("LastName", user.LastName);
-                    HttpContext.Session.SetInt32("Id", user.Id);
-                    HttpContext.Session.SetString("Role", user.Role);
-                    HttpContext.Session.SetString("Theme", user.theme);
+                    // Next, verify that the account is marked as active
+                    if (user.isActive == true)
+                    {
+                        // If the user has been verified, set/assign the session data
+                        HttpContext.Session.SetString("IsAuthenticated", "true");
+                        HttpContext.Session.SetString("Username", user.Username);
+                        HttpContext.Session.SetString("FirstName", user.FirstName);
+                        HttpContext.Session.SetString("LastName", user.LastName);
+                        HttpContext.Session.SetInt32("Id", user.Id);
+                        HttpContext.Session.SetString("Role", user.Role);
+                        HttpContext.Session.SetString("Theme", user.theme);
 
-                    // Set the current DateTime as LastLogin for user in database
-                    user.LastLogin = DateTime.Now;
-                    _context.SaveChanges();
+                        // Set the current DateTime as LastLogin for user in database
+                        user.LastLogin = DateTime.Now;
+                        _context.SaveChanges();
 
-                    // Direct the user to the home page
-                    return RedirectToAction("Index");
+                        // Direct the user to the home page
+                        return RedirectToAction("Index");
+                    }
+
                 }
             }
             ModelState.AddModelError(string.Empty, "Invalid login attempt");
