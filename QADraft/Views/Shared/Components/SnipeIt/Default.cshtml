@@ -1,0 +1,51 @@
+﻿<div class="SnipeItDateRange">
+    
+</div>
+
+<div class="SnipeItContainer">
+    <div class="SnipeItData">
+        <div id="total-container">
+            <p>Total Things Checked Out: @ViewBag.totalCheckedOut</p>
+        </div>
+
+        <br>
+        <p>Checked Out: @ViewBag.currentCheckedout</p>
+        <p>Re-Checked Out: @ViewBag.currentReChecked</p>
+        <p>Reminder Email: @ViewBag.currentReminderEmail</p>
+        <p>Courtesy Call Completed: @ViewBag.currentCourtesyCallCompleted</p>
+        <p>1st Late Fee:@ViewBag.current1stLateFee</p>
+        <p>2nd Late Fee: @ViewBag.current2ndLateFee</p>
+        <p>Maintenance: @ViewBag.currentMaintenance</p>
+    </div>
+    <div class="SnipeItData">
+        <p>Equipment Left: @ViewBag.currentCirculation</p>
+        <br>
+        <p>Windows Laptops: @ViewBag.availableWin</p>
+        <p>Macbook Airs: @ViewBag.availableAir</p>
+        <p>Macbook Pros: @ViewBag.availableMac</p>
+        <p>Graphing Calculators: @ViewBag.availablGcal</p>
+        <p>Projectors: @ViewBag.availablProj</p>
+        <p>Cameras: @ViewBag.availablCam</p>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+            // Load Date Range
+            var _url = '@Url.Action("GetSnipeit", "Home")';
+            $.ajax({
+                type: "GET",
+                url: _url,
+                data: {  },
+                success: function (result) {
+                    $("#embed-reports-container").html(result);
+                },
+            });
+            
+        });
+
+    </script>
+}

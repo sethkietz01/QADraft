@@ -101,10 +101,13 @@
         </div> <!-- close calendar-buttons -->
     </div> <!-- close calendar-container -->
     
-
-    <div class="embed-reports-container">
-        <h3>Placeholder for Docusign and Snipe-IT report embed</h3>
+    <div class="embed-reports-container" id="embed-reports-container">
+            <div class="loader"></div> 
+        </div>  
     </div>
+
+
+    
 
 
     <!-- Modal for adding new event -->
@@ -157,6 +160,9 @@
 </dialog>
 
 
+
+
+
 @section Scripts {
     <!-- JQuery and Bootstrap JS from CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -207,6 +213,8 @@
         //     $('#eventTimeInput').attr('min', formattedDateTime);
         // }
 
+        
+
         $('AddEventForm').submit(function (event) {
             const selectedDateTime = new Date($('#eventTimeInput').val());
             const currentDateTime = new Date();
@@ -220,9 +228,22 @@
         $(document).ready(function () {
              // Toggle button click event
             $('#togglePastEvents').click(function () {
-            $('.past-event').toggle(); // Toggle visibility of past events
+                $('.past-event').toggle(); // Toggle visibility of past events
+            });
+        
+            // Load SnipeIt view component
+            var _url = '@Url.Action("GetSnipeit", "Home")';
+            $.ajax({
+                type: "GET",
+                url: _url,
+                data: {  },
+                success: function (result) {
+                    $("#embed-reports-container").html(result);
+                },
+            });
+            
         });
-        });
+
         function editInfo(eventId) {
             // Get the element that called function
             var textArea = document.getElementById("info_"+eventId);
