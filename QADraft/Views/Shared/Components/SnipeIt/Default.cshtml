@@ -33,19 +33,5 @@
 @section Scripts {
     <script>
 
-        $(document).ready(function () {
-            // Load Date Range
-            var _url = '@Url.Action("GetSnipeit", "Home")';
-            $.ajax({
-                type: "GET",
-                url: _url,
-                data: {  },
-                success: function (result) {
-                    $("#embed-reports-container").html(result);
-                },
-            });
-            
-        });
-
     </script>
 }

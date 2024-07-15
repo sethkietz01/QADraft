@@ -25,11 +25,6 @@ namespace QADraft.Controllers
             return ViewComponent("SnipeIt");
         }
 
-        public IActionResult GetSnipeItTotal()
-        {
-            return ViewComponent("SnipeItTotal");
-        }
-
         // Display the index / home page
         public IActionResult Index()
         {
