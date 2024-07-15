@@ -724,3 +724,7 @@ dialog {
 #flag-account-button {
     border: none;
 }
+
+.popup-labels {
+    font-size: 22px;
+}

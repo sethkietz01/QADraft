@@ -12,44 +12,9 @@
 
 <!-- Place the filter options within a div -->
 <div class="filter-section">
-    <!-- Create the form element and assign the controller and action -->
-    <form id="filterForm" method="get" asp-controller="QA" asp-action="YourQAs">
-        <!-- Create div to contain the date selection elements -->
-        <div class="form-group">
-            <!-- Checkbox that toggles the visibility of the date selection elements -->
-            <input type="checkbox" id="dateFilter" name="dateFilter" onchange="toggleDatePicker(this)">
-            <label for="dateFilter">Sort by Error Date</label>
-            <!-- Container for the date picking elements -->
-            <div id="datePickers" style="display: none;">
-                <label for="startDate">Start Date:</label>
-                <input type="text" id="startDate" name="startDate" class="datepicker form-control hidden-date" onchange="changeStartDate()">
-                <label for="endDate">End Date:</label>
-                <input type="text" id="endDate" name="endDate" class="datepicker form-control hidden-date" onchange="changeEndDate()">
-            </div>
-        </div>
-
-        <!-- Create div to contain the Category elements -->
-        <div class="form-group">
-            <!-- Label for Category -->
-            <label for="category">Category:</label>
-            <!-- Create the dropdown selection for Category-->
-            <select id="category" name="category" class="form-control">
-                <option value="">Select Category</option>
-                <!-- Populate the dropdown with categories list passed through the ViewBag -->
-                @foreach (var category in ViewBag.Categories)
-                {
-                    @* For each category, add it as a selection option *@
-                    <option value="@category.Value">@category.Text</option>
-                }
-            </select>
-        </div>
-        <!-- Create div to contain submission buttons -->
-        <div class="button-group">
-            <button type="submit" class="buttons">Apply Filters</button>
-            <!-- Button click calls js function resetFilters() -->
-            <button type="button" class="buttons" onclick="resetFilters()">Reset Filters</button>
-        </div>
-    </form>
+    <button class="buttons" onclick="showFiltersModal()">Filter</button>
+    <button type="button" class="buttons" onclick="resetFilters()">Reset Filters</button>
+    
 </div>
 
 <!-- Place the QA table under the filter options-->
@@ -89,6 +54,55 @@
         }
     </tbody>
 </table>
+
+<dialog id="dialog">
+	<div class="confirmation-content">
+        <h2>Filters<h2>
+        <!-- Confirmation button container -->
+
+        <!-- Create the form element and assign the controller and action -->
+        <form id="filterForm" method="get" asp-controller="QA" asp-action="YourQAs">
+            <!-- Create div to contain the date selection elements -->
+            <div class="form-group">
+                <!-- Checkbox that toggles the visibility of the date selection elements -->
+                <!-- Container for the date picking elements -->
+                <div id="datePickers">
+                    <label class="popup-labels" for="startDate">Start Date:</label>
+                    <input class="form-control" type="date" id="startDate" name="startDate" onchange="changeStartDate()">
+                    <label class="popup-labels" for="endDate">End Date:</label>
+                    <input type="date" id="endDate" name="endDate" class="form-control" onchange="changeEndDate()">
+                </div>
+            </div>
+
+            <!-- Create div to contain the Category elements -->
+            <div class="form-group">
+                <!-- Label for Category -->
+                <label class="popup-labels" for="category">Category:</label>
+                <!-- Create the dropdown selection for Category-->
+                <select id="category" name="category" class="form-control">
+                    <option value="">Select Category</option>
+                    <!-- Populate the dropdown with categories list passed through the ViewBag -->
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        @* For each category, add it as a selection option *@
+                        <option value="@category.Value">@category.Text</option>
+                    }
+                </select>
+            </div>
+            <!-- Create div to contain submission buttons -->
+            <div class="button-group">
+                <button type="submit" class="buttons">Apply Filters</button>
+                <!-- Button click calls js function resetFilters() -->
+            </div>
+        </form>
+
+        <div class="confirmation-buttons">
+            <button id="confirm-delete-event-button" class="buttons" onclick="deleteEvent()">Apply</button> 
+            <button id="cancel-delete-event-button" class="buttons buttons-accent" onclick="window.dialog.close();">Cancel</button>
+        </div>
+    </div>
+	<button onclick="window.dialog.close();" class="x">❌</button>
+</dialog>
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -167,6 +181,27 @@
 
             endDate.classList.remove("hidden-date");
             endDate.classList.add("visible-date");
+        }
+
+        // Function called by the delete button to open confirmation modal
+        function showFiltersModal() {
+            // Get the correct form to be submitted
+            var parentForm = event.target.closest('form');
+            window.currentForm = parentForm;
+            // Show the modal
+            window.dialog.showModal();
+
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = ('0' + (now.getMonth() + 1)).slice(-2);
+            const day = ('0' + now.getDate()).slice(-2);
+
+            const formattedDateTime = `${year}-${month}-${day}`;
+            $('#startDate').val(formattedDateTime);
+
+            var endDate = document.getElementById('endDate');
+
+            endDate.value = "";
         }
     </script>
 }

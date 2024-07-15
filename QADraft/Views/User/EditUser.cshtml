@@ -56,13 +56,9 @@
         <input id="isActiveCheckbox" type="checkbox" asp-for="isActive" />
         <span asp-validation-for="isActive" class="text-danger"></span>
     </div>
-    <input type="hidden" asp-for="theme">
     <div class="form-group">
         <input type="submit" value="Edit User" class="btn btn-primary" hidden/>
     </div>
-
-    <!-- Form to passthrough user's theme -->
-    <input type="hidden" asp-for="theme" />
 </form>
 <div>
     <button onclick="window.dialog.showModal()" class="btn buttons form-buttons">Save Changes</button>

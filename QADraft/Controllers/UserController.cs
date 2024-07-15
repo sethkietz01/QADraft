@@ -189,9 +189,12 @@ namespace QADraft.Controllers
             // Assign the appropriate layout
             ViewBag.layout = SessionUtil.GetLayout(HttpContext);
 
+            Debug.WriteLine("Id: " + user.Id + "\nUsername: " + user.Username + "\nPassword: " + user.Password + "\nFirstName: " + user.FirstName + "\nLastName: " + user.LastName + "\nEmail: " + user.Email + "\nRole: " + user.Role + "\nisFlagged: " + user.isFlagged + "\nisActive: " + user.isActive + "\nCreatedAt: " + user.CreatedAt + "\nLastLogin: " + user.LastLogin + "\nStartDate: " + user.startDate + "\nendDate: " + user.endDate + "\ntheme: " + user.theme + "\nFlagDescription: " + user.FlagDescription);
+
             // Verify that the user Model state is valid
             if (ModelState.IsValid)
             {
+                Debug.WriteLine("User model is valid");
                 // Fetch the user who's ID matches the passed ID
                 var existingUser = _context.Users.SingleOrDefault(u => u.Id == int.Parse(id));
                 // Verify that the user exists and was found
@@ -212,6 +215,10 @@ namespace QADraft.Controllers
                     // Save all the changes made to the database.
                     _context.SaveChanges();
                 }
+            }
+            else
+            {
+                Debug.WriteLine("User model is not valid");
             }
             // IReturn the user to the GeekAccounts page (accounts list page) whether the model state was valid or not
             return RedirectToAction("GeekAccounts");
@@ -332,7 +339,7 @@ namespace QADraft.Controllers
             if (user != null)
             {
                 user.isFlagged = false;
-                user.FlagDescription = "";
+                user.FlagDescription = "NULL";
                 _context.SaveChanges();
             }
 
