@@ -234,11 +234,11 @@ header {
         }
 
 
-
+/* Delete this
 #delete-event-button {
     font-size: 0.9rem;
     padding: 4px 8px;
-}
+}*/
 
 .table-buttons {
     font-size: 0.9rem;
@@ -437,8 +437,9 @@ th {
         width: 20%;
     }
 
-    .event-calendar td:nth-child(3) {
-        width: 15%;
+    .event-calendar th:nth-child(3), .event-calendar td:nth-child(3) {
+        width: 20%;
+        text-align: center;
     }
 
     .event-calendar th {
@@ -740,4 +741,10 @@ dialog {
 .filter-your-qas-dialog input {
     text-align: center;
     padding-left: 40px;
+}
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
