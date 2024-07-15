@@ -287,6 +287,24 @@
             });
             natureSelect.value = "@Html.Raw(Model.NatureOfError)";
             severityInput.value = "@Html.Raw(Model.Severity)";
+
+            var saveChanges = document.getElementById('saveChanges');
+
+            saveChanges.addEventListener('click', function(event) {
+                console.log('saveChanges');
+
+                var customerName = document.getElementById("CustomerName");
+                var unitId = document.getElementById("UnitId");
+
+                // Automatically populate the customer name and unit ID with N/A if they are left blank
+                if (! customerName.value)
+                    customerName.value = "N/A";
+
+                if (! unitId.value)
+                    unitId.value = "N/A";
+            });
         });
+
+        
     </script>
 }

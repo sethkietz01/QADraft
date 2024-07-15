@@ -1,0 +1,86 @@
+﻿@model List<QADraft.Models.User>
+
+@{
+    ViewData["Title"] = "Flagged Accounts";
+    Layout = ViewBag.Layout;
+}
+
+<partial name="_GeeksMenu" />
+<h2>Flagged Accounts</h2>
+
+<!-- Table that displays all 'flagged' accounts -->
+<table id="table" class="table-qa">
+    <thead>
+        <tr>
+            <th onclick="sortTable(0)">User<span class="arrow"></th>
+            <th onclick="sortTable(6)">Description<span class="arrow"></th>
+        </tr>
+    </thead>
+    <tbody> 
+        @foreach (var user in Model.Where(u => u.isFlagged == true))
+        {
+            <tr>
+                <td>@user.FirstName @user.LastName</td>
+                <td>@Html.Raw(@user.FlagDescription)</td>
+                <td>
+                    <button class="buttons" onclick="openConfirmationDialog(event, @user.Id)">Unflag</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<dialog id="dialog">
+	<div class="confirmation-content">
+        <!-- Confirmation text -->
+        <p>Are you sure you want to unflag this account?</p>
+        <!-- Confirmation button container -->
+        <div class="confirmation-buttons">
+            <button id="confirm-delete-event-button" class="buttons" onclick="unflagAccount()">Confirm</button> 
+            <button id="cancel-delete-event-button" class="buttons buttons-accent" onclick="window.dialog.close();">Cancel</button>
+        </div>
+    </div>
+	<button onclick="window.dialog.close();" class="x">❌</button>
+</dialog>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Highlight the current page's link
+        var qaMenuLink = document.getElementById('geek-accounts-link'); 
+        qaMenuLink.classList.toggle('highlight-link');
+
+        // Change the color of the button that brings you to this page
+        var thisPageButton = document.getElementById('view-flagged-accounts-button');
+        thisPageButton.classList.toggle('button-for-current-page');
+    });
+
+    function unflagAccount(userId) {
+        var userId = document.getElementById('id-input').value;
+
+    fetch(`/User/UnflagAccount?id=${userId}`, {
+        method: 'POST'
+    }).then(response => {
+        if (response.ok) {
+            // Handle success if needed
+            location.reload(); // Refresh the page or update UI
+        } else {
+            // Handle error if needed
+        }
+    });
+    }
+
+    // Function called by the delete button to open confirmation modal
+    function openConfirmationDialog(event, id) {
+        event.preventDefault(); // Prevent default behavior
+        
+        var idInput = document.createElement('input');
+        idInput.setAttribute('id', 'id-input');
+        idInput.setAttribute('type', 'hidden');
+        idInput.setAttribute('value', id);
+
+        document.body.appendChild(idInput);
+        
+        // Show the modal
+        window.dialog.showModal();
+    }
+</script>

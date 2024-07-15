@@ -15,6 +15,7 @@ using QADraft.Utilities;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using NuGet.Packaging;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.IdentityModel.Tokens;
 
 namespace QADraft.Controllers
 {
@@ -636,7 +637,19 @@ namespace QADraft.Controllers
         {
             if (model.Severity == 10)
             {
-                // Set the attribute isFlagged to true
+                // Get the error date and remove the time from it
+                string errorDate = model.ErrorDate.ToString().Split(" ")[0];
+
+                if (String.IsNullOrEmpty(user.FlagDescription))
+                {
+                    string flagDescription = "Automatic flag for " + model.NatureOfError + " on " + errorDate;
+                    user.FlagDescription = flagDescription;
+                }
+                else
+                {
+                    user.FlagDescription = user.FlagDescription +  "<br> Automatic flag for " + model.NatureOfError + " on " + errorDate;
+                }
+
                 user.isFlagged = true;
                 // Save the change to the database
                 _context.SaveChanges();

@@ -27,6 +27,7 @@
 
 .navbar {
     background-color: #861F41;
+    border-bottom: 3px solid rgb(230, 168, 93);
 }
 
 body {

@@ -149,6 +149,25 @@
             startDate.classList.remove("hidden-date");
             startDate.classList.add("visible-date");
         }
+
+        function changeEndDate() {
+            console.log("changeEndDate");
+
+            var startDate = document.getElementById("startDate");
+            var endDate = document.getElementById("endDate");
+
+            var startDateFormat = new Date(startDate.value);
+            var endDateFormat = new Date(endDate.value);
+
+
+            if (endDateFormat < startDateFormat)
+            {
+                endDate.value = startDate.value;
+            }
+
+            endDate.classList.remove("hidden-date");
+            endDate.classList.add("visible-date");
+        }
     </script>
 }
 <!--
