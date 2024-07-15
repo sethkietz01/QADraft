@@ -6,6 +6,8 @@
 
 <head>
     <title id="page-title">QA</title>
+    <!-- Load naturemapping from site.js-->
+    <script src="site.js"></script>
 </head>
 <h2 id="title">QA</h2>
 
@@ -186,55 +188,6 @@
                 }
             }
         }
-        
-
-
-        var natureMapping = [
-            { nature: "Didn't check out asset at all (Not in SnipeIT)", categories: ["Snipe-It"], severity: "9", involves: "" },
-            { nature: "Didn't update Snipe-It at all (Rechecks/Check ins)", categories: ["Snipe-It"], severity: "9", involves: "" },
-            { nature: "Incorrect due date", categories: ["Snipe-It", "DocuSign"], severity: "6", involves: "" },
-            { nature: "Didn't upload EULA", categories: ["Snipe-It"], severity: "6", involves: "" },
-            { nature: "Didn't update status", categories: ["Snipe-It"], severity: "5", involves: "" },
-            { nature: "Didn't comment in Snipe-It", categories: ["Snipe-It"], severity: "5", involves: "" },
-            { nature: "Clicked edit asset instead of check-in/check-out", categories: ["DocuSign"], severity: "5", involves: "" },
-            { nature: "Gave equipment and didn't start a checkout form", categories: ["DocuSign"], severity: "10", involves: "" },
-            { nature: "Didn't complete EULA", categories: ["DocuSign"], severity: "10", involves: "" },
-            { nature: "Didn't complete paperwork", categories: ["DocuSign"], severity: "7", involves: "" },
-            { nature: "Didn't comment for swap", categories: ["DocuSign"], severity: "6", involves: "" },
-            { nature: "Wrong unit ID", categories: ["DocuSign"], severity: "6", involves: "" },
-            { nature: "Didn't send walk-in form", categories: ["DocuSign"], severity: "4", involves: "" },
-            { nature: "On wrong step", categories: ["DocuSign"], severity: "3", involves: "" },
-            { nature: "Checked out to someone on no checkout list", categories: ["Processes"], severity: "10", involves: "" },
-            { nature: "Charged incorrect fees", categories: ["Processes"], severity: "10", involves: "" },
-            { nature: "Did not check Docusign when setting Late Fees", categories: ["Processes"], severity: "10", involves: "" },
-            { nature: "Checked in/out with missing items", categories: ["Processes"], severity: "8", involves: "" },
-            { nature: "Didn't check ID", categories: ["Processes"], severity: "8", involves: "" },
-            { nature: "Left student personal information open", categories: ["Processes"], severity: "8", involves: "" },
-            { nature: "Didn't check for damages", categories: ["Processes"], severity: "8", involves: "" },
-            { nature: "Checked out same laptop after a recheck", categories: ["Processes"], severity: "7", involves: "" },
-            { nature: "Improper extension", categories: ["Processes"], severity: "7", involves: "" },
-            { nature: "Didn't do reminder emails/courtesy calls", categories: ["Processes"], severity: "7", involves: "" },
-            { nature: "Didn't clear SD card", categories: ["Processes"], severity: "5", involves: "" },
-            { nature: "Didn't give password at checkout", categories: ["Processes"], severity: "5", involves: "" },
-            { nature: "Didn't create footprint", categories: ["Processes"], severity: "4", involves: "" },
-            { nature: "Didn't clean equipment", categories: ["Processes"], severity: "2", involves: "" },
-            { nature: "Improper initials on tasks", categories: ["Processes"], severity: "2", involves: "" },
-            { nature: "Tidiness/Cleanliness issue", categories: ["Processes"], severity: "2", involves: "" },
-            { nature: "Didn't send late Fees", categories: ["Processes"], severity: "10", involves: "" },
-            { nature: "Rechecked Equipment That Can't Be Rechecked", categories: ["Processes"], severity: "10", involves: "" },
-            { nature: "Gross Misconduct", categories: ["Desk Conduct"], severity: "10", involves: "" },
-            { nature: "No call/No show", categories: ["Desk Conduct"], severity: "10", involves: "" },
-            { nature: "Unprofessional behavior", categories: ["Desk Conduct"], severity: "9", involves: "" },
-            { nature: "Didn't Sign out", categories: ["Desk Conduct"], severity: "7", involves: "" },
-            { nature: "Tardy", categories: ["Desk Conduct"], severity: "5", involves: "" },
-            { nature: "Off-Task", categories: ["Desk Conduct"], severity: "4", involves: "" },
-            { nature: "Forgot geek shirt", categories: ["Other"], severity: "5", involves: "" },
-            { nature: "Time card", categories: ["Other"], severity: "5", involves: "" },
-            { nature: "Forgot name tag", categories: ["Other"], severity: "3", involves: "" },
-            { nature: "Improper communication", categories: ["Other"], severity: "1", involves: "" },
-            { nature: "Loitering", categories: ["Other"], severity: "1", involves: "" },
-            { nature: "Removed student from NCL shouldn't have", categories: ["Other"], severity: "10", involves: "Student" }
-        ];
 
         var categories = Array.from(new Set(natureMapping.flatMap(m => m.categories)));
         

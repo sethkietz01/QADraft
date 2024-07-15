@@ -477,44 +477,45 @@ namespace QADraft.Controllers
 
             // Fetch the QA that matches the ID of the QA selected from table
             var qa = _context.GeekQAs.Find(id);
+
+
             // Verify that the QA was found and exists
-            if (qa != null)
+            if (qa == null)
             {
-                // Fetch all of the users' names and store as a list
-                var users = _context.Users.Select(u => new SelectListItem
+                return NotFound();
+            }
+
+            // Fetch all of the users' names and store as a list
+            var users = _context.Users.Select(u => new SelectListItem
+            {
+                Value = u.Id.ToString(),
+                Text = $"{u.FirstName} {u.LastName}"
+            }).ToList();
+
+            // Get every coordinator id and name and place into a list
+            var coordinators = _context.Users.Where(u => u.Role == "Coordinator" || u.Role == "Admin" || u.Role == "Super Admin")
+                .Select(u => new SelectListItem
                 {
                     Value = u.Id.ToString(),
                     Text = $"{u.FirstName} {u.LastName}"
-                }).ToList();
+                })
+                .ToList();
 
-                // Get every coordinator id and name and place into a list
-                var coordinators = _context.Users.Where(u => u.Role == "Coordinator" || u.Role == "Admin" || u.Role == "Super Admin")
-                    .Select(u => new SelectListItem
-                    {
-                        Value = u.Id.ToString(),
-                        Text = $"{u.FirstName} {u.LastName}"
-                    })
-                    .ToList();
 
-                // Verify that users were found
-                if (users != null && coordinators != null)
-                {
-                    // Assign the list of users to qa.Users and 
-                    qa.Users = users;
-                    // Assign the list of coordinators(and above) to qa.Coordinators
-                    qa.Coordinators = coordinators;
-                    // Pass the source into the ViewBag
-                    ViewBag.source = source;
-                    // Pass the user's role and name into the ViewBag to compare
-                    // against the QA they are trying to edit
-                    ViewBag.UserName = SessionUtil.GetFullName(HttpContext);
-                    ViewBag.UserRole = SessionUtil.GetRole(HttpContext);
-                    // Return the view with the fetched QA and the ViewBag
-                    return View(qa);
-                }
-            }
-            // If the qa or users were not found (null), return the default view.
-            return View();
+            // Assign the list of users to qa.Users and 
+            qa.Users = users;
+            // Assign the list of coordinators(and above) to qa.Coordinators
+            qa.Coordinators = coordinators;
+
+            // Pass the source into the ViewBag
+            ViewBag.source = source;    
+            // Pass the user's role and name into the ViewBag to compare
+            // against the QA they are trying to edit
+            ViewBag.UserName = SessionUtil.GetFullName(HttpContext);
+            ViewBag.UserRole = SessionUtil.GetRole(HttpContext);
+
+            // Return the view with the fetched QA and the ViewBag
+            return View(qa);
         }
 
         // Process the EditQA POST request
