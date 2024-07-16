@@ -73,27 +73,19 @@
 
                         <tr class="@if (isPastEvent) { <text>past-event</text> }" data-event-id="@eventItem.Id">
                             <td>
-                                <form method="post" asp-controller="Event" asp-action="EditEventTime">
-                                    <input type="submit" id="submit_time_@eventItem.Id" name="id" value="@eventItem.Id" hidden/>
-                                    <div contenteditable="true" class="editable" onclick="editTime(@eventItem.Id)" id="time_@eventItem.Id">
-                                        <text >@time <br/> @date</text>
-                                    </div>
-                                </form>
+                                <input type="submit" id="submit_time_@eventItem.Id" name="id" value="@eventItem.Id" hidden/>
+                                    <text >@time <br/> @date</text>
                             </td>
                             <td>
-                                <form method="post" asp-controller="Event" asp-action="EditEventInfo">
-                                    <input type="submit" id="submit_info_@eventItem.Id" name="id" value="@eventItem.Id" hidden/>
-                                    <input type="text" id="text_info_@eventItem.Id" name="text" hidden />
-                                    <div contenteditable="true" class="editable" onclick="editInfo(@eventItem.Id)" id="info_@eventItem.Id">
-                                        <text>@eventItem.EventInformation</text>
-                                    </div>
-                                </form>
+                                <input type="submit" id="submit_info_@eventItem.Id" name="id" value="@eventItem.Id" hidden/>
+                                <input type="text" id="text_info_@eventItem.Id" name="text" hidden />
+                                    <text>@eventItem.EventInformation</text>
                             </td>
                             <td>
                                 @if (userRole != "Geek") @*Check that the user is not a Geek. Geek should not be able to edit calendar*@
                                 {
                                 <div class="form-container">
-                                    <button class="buttons table-buttons" onclick="showEditEventModal()">Edit</button>
+                                    <button class="buttons table-buttons" onclick="showEditEventModal('@eventItem.Id', '@eventItem.EventTime.ToString("s")', '@eventItem.EventInformation')">Edit</button>
                                     <form method="post" asp-controller="Event" asp-action="DeleteEvent">
                                         <div class="form-group">
                                             <input type="submit" id="submit_delete" name="eventId" value="@eventItem.Id" hidden/>
@@ -161,7 +153,7 @@
     </div>
 </body>
 
-<!-- Modal Popupf for Delete Event confirmation -->
+<!-- Modal Popup for Delete Event confirmation -->
 <dialog id="dialog">
 	<div class="confirmation-content">
         <!-- Confirmation text -->
@@ -178,7 +170,31 @@
 </dialog>
 
 
-
+<!-- Modal Popup for Edit Event -->
+<dialog id="dialog-edit-event">
+	<div class="confirmation-content">
+        <!-- Confirmation text -->
+        <h2>Edit Event<h2>
+        <form id="edit-event-form" asp-controller="Event" asp-action="EditEvent" method="post">
+            <div class="form-group">
+                <label class="control-label popup-labels">Event Time</label>
+                <input name="EventTime" class="form-control" type="datetime-local" id="edit-event-time-input" />
+            </div>
+            <div class="form-group">
+                <label class="control-label popup-labels">Event Information</label>
+                <input name="EventInformation" class="form-control" placeholder="Enter Event Info" id="edit-event-info-input"/>
+            </div>
+        </form>
+        <!-- Confirmation button container -->
+        <div class="confirmation-buttons">
+            <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
+            the deleteButton input. No will close the confirmation dialog -->
+            <button id="confirm-delete-event-button" class="buttons" onclick="editEvent()">Confirm Edits</button> 
+            <button id="cancel-delete-event-button" class="buttons buttons-accent" onclick="closeEditEventModal()">Cancel</button>
+        </div>
+    </div>
+	<button onclick="document.getElementById('dialog-edit-event').close();" class="x">❌</button>
+</dialog>
 
 
 @section Scripts {
@@ -451,13 +467,45 @@
             return false;
         }
 
-        function showEditEventModal() {
-            // Get the correct form to be submitted
-            var parentForm = event.target.closest('form');
-            window.currentForm = parentForm;
-            // Show the modal
+        function showEditEventModal(eventId, eventTime, eventInfo) {
+            console.log("yay");
+            console.log(eventTime);
 
-            window.dialog.showModal();
+            var editEventForm = document.getElementById('edit-event-form');
+            var editTimeInput = document.getElementById('edit-event-time-input');
+            var editInfoInput = document.getElementById('edit-event-info-input');
+
+            var idInput = document.createElement('input');
+            idInput.setAttribute('type', 'hidden');
+            idInput.setAttribute('name', 'Id');
+            idInput.setAttribute('value', eventId);
+
+            editEventForm.appendChild(idInput);
+
+            editTimeInput.value = eventTime;
+            editInfoInput.value = eventInfo;
+
+            console.log("editTimeInput.value = " + editTimeInput.value);
+
+            const dialogEditEvent = document.getElementById('dialog-edit-event');
+            dialogEditEvent.showModal();
+        }
+
+        function editEvent() {
+            var editEventForm = document.getElementById('edit-event-form');
+
+            editEventForm.submit();
+        }
+
+        function closeEditEventModal() {
+            var editTimeInput = document.getElementById('edit-event-time-input');
+            var editInfoInput = document.getElementById('edit-event-info-input');
+            const dialogEditEvent = document.getElementById('dialog-edit-event');
+
+            editTimeInput.value = ''
+            editInfoInput.value = '';
+
+            dialogEditEvent.close();
         }
 
     </script>

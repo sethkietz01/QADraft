@@ -54,6 +54,34 @@ namespace QADraft.Controllers
             return View("Index", viewModel);
         }
 
+        [HttpPost]
+        public IActionResult EditEvent(Events model)
+        {
+            Console.WriteLine("\nId " + model.Id + "\nEventTime " + model.EventTime + "\nEventInformation " + model.EventInformation);
+
+            if (ModelState.IsValid)
+            {
+                Console.WriteLine("EditEvent valid model");
+
+                var events = _context.Events.SingleOrDefault(e => e.Id == model.Id);
+                if (events != null)
+                {
+                    events.EventTime = model.EventTime;
+                    events.EventInformation = model.EventInformation;
+                    _context.SaveChanges();
+                }
+            }
+            // test, delete the else
+            else
+            {
+                Console.WriteLine("EditEvent not valid model");
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
+        /*
+         * Depricated
+         * 
         // Test action for edit event info
         [HttpPost]
         public IActionResult EditEventInfo(int id, string text)
@@ -90,7 +118,7 @@ namespace QADraft.Controllers
             // Return to the same page whether a change was made or not
             return RedirectToAction("Index", "Home");
         }
-
+        
 
         // risky test, linked to JS method in Index.cshtml
         [HttpPost]
@@ -155,6 +183,7 @@ namespace QADraft.Controllers
                 return BadRequest(new { error = "An error occurred while updating the event." });
             }
         }
+        */
 
         [HttpPost]
         public IActionResult DeleteEvent(int eventId)
