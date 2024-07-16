@@ -804,3 +804,8 @@ dialog {
         .SnipeItContainer > .DatePicker > button {
             margin-top: 10px;
         }
+
+#flag-icon {
+    height: 40px;
+    max-height: 40px;
+}

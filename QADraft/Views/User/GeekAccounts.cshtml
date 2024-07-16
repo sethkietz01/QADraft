@@ -19,7 +19,7 @@
             <th onclick="sortTable(3)">Email<span class="arrow"></th>
             <th onclick="sortTable(4)">Role<span class="arrow"></th>
             <th onclick="sortTable(5)">Created <span class="arrow"></th>
-            <th onclick="sortTable(6)">Employed<span class="arrow"></th>
+            <th onclick="sortTable(6)">Flagged<span class="arrow"></th>
             <th class="noSort">Action</th>
         </tr>
     </thead>
@@ -35,7 +35,15 @@
                     <td>@qa.Email</td>
                     <td>@qa.Role</td>
                     <td>@qa.CreatedAt.ToString("yyyy-MM-dd")</td>
-                    <td>@qa.isActive</td>
+                    <td>@if (qa.isFlagged) 
+                        {
+                            <img id="flag-icon" src="~/images/flag.png" alt="flagged" />
+                        }
+                        else
+                        {
+
+                        }
+                    </td>
                     <td>
                         @if (userRole != "Coordinator") { @*Check that the user is not a coordinator. Coordinators should not be able to edit a user*@
                             <a class="buttons" asp-area="" asp-controller="User" asp-action="EditUser" asp-route-Id="@qa.Id">Edit</a>
