@@ -20,9 +20,16 @@ namespace QADraft.Controllers
         }
 
         //TEST SNIPEIT INTEGRATION
-        public IActionResult GetSnipeIt()
+        public IActionResult GetSnipeIt(string startDate, string endDate)
         {
-            return ViewComponent("SnipeIt");
+            DateTime parsedStartDate = DateTime.Parse(startDate);
+            DateTime parsedEndDate = DateTime.Parse(endDate);
+
+            Console.WriteLine("controllerstartdate:" + parsedStartDate.ToString("s"));
+            Console.WriteLine("controllerenddate:" + parsedEndDate.ToString("s"));
+
+            return ViewComponent("SnipeIt", new { startDate = parsedStartDate, endDate = parsedEndDate });
+
         }
 
         // Display the index / home page
@@ -42,6 +49,9 @@ namespace QADraft.Controllers
 
             // Assign the appropriate layout
             ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
+            // Pass the user's role to index
+            ViewBag.role = SessionUtil.GetRole(HttpContext);
 
             // Initialize CombinedEventsViewModel
             var calendarModel = new CombinedEventsViewModel

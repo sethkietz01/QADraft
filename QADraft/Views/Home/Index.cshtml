@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Home Page";
     Layout = ViewBag.Layout;
+    string userRole = ViewBag.role;
 }
 
 <style>
@@ -51,7 +52,16 @@
                     <tr>
                         <th>Event Time</th>
                         <th>Event Information</th>
-                        <th>Actions</th> <!-- New column for delete button -->
+                        @if (userRole == "Geek") @*Check that the user is not a Geek. The Geek view will not present actions so the header should not be made*@
+                        { 
+                            @* If the user is a Geek, create a blank column so that the header bar displays properly *@
+                            <th></th>
+                        }
+                        else 
+                        {
+                            @* If the user is not a Geek, display the calendar with the actions header *@
+                            <th>Actions</th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -80,10 +90,13 @@
                                 </form>
                             </td>
                             <td>
+                                @if (userRole != "Geek") @*Check that the user is not a Geek. Geek should not be able to edit calendar*@
+                                {
                                 <form method="post" asp-controller="Event" asp-action="DeleteEvent">
                                     <input type="submit" id="submit_delete" name="eventId" value="@eventItem.Id" hidden/>
                                     <button id="delete-event-button" type="button"class="buttons" onclick="openConfirmationDialog(event)">Delete</button>
                                 </form>
+                                }
                             </td>
                         </tr>
                     }
@@ -92,9 +105,12 @@
         </div>
         <div class="calendar-buttons">
             <!-- Button to trigger modal -->
-            <button type="button" onclick = "setCurrentDateTime()" class="buttons form-buttons" data-bs-toggle="modal" data-bs-target="#addEventModal">
+            @if (userRole != "Geek") @*Check that the user is not a Geek. Geeks should not be able to edit calendar*@
+            {
+            <button type="button" id="newEventButton" onclick = "setCurrentDateTime()" class="buttons form-buttons" data-bs-toggle="modal" data-bs-target="#addEventModal">
                 Add New Event
             </button>
+            }
             <button type="button" id="togglePastEvents" class="buttons form-buttons">
                 Show/Hide Past Events
             </button>
@@ -105,9 +121,6 @@
             <div class="loader"></div> 
         </div>  
     </div>
-
-
-    
 
 
     <!-- Modal for adding new event -->
@@ -198,20 +211,7 @@
         //     $('#addEventModal').on('shown.bs.modal', setCurrentDateTime);
         // });
 
-        // function setCurrentDateTime() {
-        //     const now = new Date();
-        //     const year = now.getFullYear();
-        //     const month = ('0' + (now.getMonth() + 1)).slice(-2);
-        //     const day = ('0' + now.getDate()).slice(-2);
-        //     const hours = ('0' + now.getHours()).slice(-2);
-        //     const minutes = ('0' + now.getMinutes()).slice(-2);
-
-        //     const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-        //     $('#eventTimeInput').val(formattedDateTime);
-
-        //     // Set the minimum date and time to current date and time
-        //     $('#eventTimeInput').attr('min', formattedDateTime);
-        // }
+        
 
         
 
@@ -230,13 +230,17 @@
             $('#togglePastEvents').click(function () {
                 $('.past-event').toggle(); // Toggle visibility of past events
             });
-        
+
+            var currentYear = new Date().getFullYear();
+            var yearStartDate = new Date(currentYear, 4, 14).toISOString();    //may 14th
+            var yearEndDate = new Date(currentYear, 11, 31).toISOString();    //dec 31st
+
             // Load SnipeIt view component
             var _url = '@Url.Action("GetSnipeit", "Home")';
             $.ajax({
                 type: "GET",
                 url: _url,
-                data: {  },
+                data: { startDate: yearStartDate, endDate: yearEndDate},
                 success: function (result) {
                     $("#embed-reports-container").html(result);
                 },
@@ -265,49 +269,6 @@
 
         }
 
-        // function formateDateTime(DateTime) {
-        //     // Seperate the time from the string
-        //     var time = DateTime.slice(0, DateTime.indexOf('\n'));
-        //     // Check if the time is PM
-        //     var period = time.slice(time.length - 2, time.length);
-        //     var hourString = time.slice(0, time.indexOf(':'));
-        //     var hour = parseInt(hourString);
-        //     if (period == "PM") {
-        //         // Check if the time is after 12 (<= 12)
-        //         if (hour < 12) {
-        //             hour += 12;
-        //         }
-        //     }
-        //     else {
-        //         console.log("AM");
-        //         // Check if the time is midnight
-        //         if (hour == 12) {
-        //             // Convert to 00:XX
-        //             hour = "00";
-        //         }
-        //         // Add a leading 0 to times before 10
-        //         if (hour < 10) {
-        //             hour = "0" + hour;.
-        //         }
-        //     }
-        //     // Format the string
-        //     var formattedTime = "T" + hour + time.slice(time.indexOf(':'), time.length-3);
-        //     console.log(formattedTime);
-
-        //     // Seperate the date from the string
-        //     var date = DateTime.slice(DateTime.indexOf('\n') + 1, DateTime.length);
-        //     // Seperate the day, month, and year
-        //     var day = date.slice(0, 2);
-        //     var month = date.slice(3, 5);
-        //     var year = date.slice(6, 10);
-
-        //     var formattedDate = year + "-" + month + "-" + day;
-        //     console.log(formattedDate);
-
-        //     var formattedDateTime = formattedDate + formattedTime;
-        //     console.log(formattedDateTime)
-        //     return formattedDateTime;
-        // }
 
         function editTime(eventId) {
             //get the element that called function

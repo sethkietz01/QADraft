@@ -1,37 +1,111 @@
-﻿<div class="SnipeItDateRange">
-    
-</div>
+﻿@{
+    string startDate = ViewBag.startDate.ToString("s");
+    string endDate = ViewBag.endDate.ToString("s");
+}
 
 <div class="SnipeItContainer">
-    <div class="SnipeItData">
-        <div id="total-container">
-            <p>Total Things Checked Out: @ViewBag.totalCheckedOut</p>
-        </div>
+    <div class="DatePicker">
+        <text>Start Date: </text>
+        <input type="date" id="startDate" class="form-control" value="@ViewBag.startDate?.ToString("yyyy-MM-dd")"/>
 
-        <br>
-        <p>Checked Out: @ViewBag.currentCheckedout</p>
-        <p>Re-Checked Out: @ViewBag.currentReChecked</p>
-        <p>Reminder Email: @ViewBag.currentReminderEmail</p>
-        <p>Courtesy Call Completed: @ViewBag.currentCourtesyCallCompleted</p>
-        <p>1st Late Fee:@ViewBag.current1stLateFee</p>
-        <p>2nd Late Fee: @ViewBag.current2ndLateFee</p>
-        <p>Maintenance: @ViewBag.currentMaintenance</p>
+        <text>End Date: </text>
+        <input type="date" id="endDate" class="form-control" value="@ViewBag.endDate?.ToString("yyyy-MM-dd")"/>
+
+        <button class="buttons" onclick="SubmitSnipeItDates()">Submit</button>
     </div>
-    <div class="SnipeItData">
-        <p>Equipment Left: @ViewBag.currentCirculation</p>
-        <br>
-        <p>Windows Laptops: @ViewBag.availableWin</p>
-        <p>Macbook Airs: @ViewBag.availableAir</p>
-        <p>Macbook Pros: @ViewBag.availableMac</p>
-        <p>Graphing Calculators: @ViewBag.availablGcal</p>
-        <p>Projectors: @ViewBag.availablProj</p>
-        <p>Cameras: @ViewBag.availablCam</p>
+    <div style="grid-row: 2;">
+        <table>
+            <tr>
+            </tr>
+        </table>
+        <text>Total Things Checked Out: @ViewBag.totalCheckedOut</text>
+    </div>
+    <div style="grid-row: 3;">
+        <table>
+            <tr><td>Checked Out:</td><td>@ViewBag.currentCheckedout</td></tr>
+            <tr><td>Re-Checked Out:</td><td>@ViewBag.currentReChecked</td></tr>
+            <tr><td>Reminder Email:</td><td>@ViewBag.currentReminderEmail</td></tr>
+            <tr><td>Courtesy Call Completed:</td><td>@ViewBag.currentCourtesyCallCompleted</td></tr>
+            <tr><td>1st Late Fee:</td><td>@ViewBag.current1stLateFee</td></tr>
+            <tr><td>2nd Late Fee:</td><td>@ViewBag.current2ndLateFee</td></tr>
+            <tr><td>Maintenance:</td><td>@ViewBag.currentMaintenance</td></tr>
+        </table>
+    </div>
+
+    <div style="grid-row: 2;">
+        <text>Equipment Left @ViewBag.currentCirculation</text>
+    </div>
+    <div style="grid-row: 3;">
+        <table>
+            <tr><td>Windows Laptops:</td><td>@ViewBag.availableWin</td></tr>
+            <tr><td>Macbook Airs:</td><td>@ViewBag.availableAir</td></tr>
+            <tr><td>Macbook Pros:</td><td>@ViewBag.availableMac</td></tr>
+            <tr><td>Graphing Calculators:</td><td>@ViewBag.availablGcal</td></tr>
+            <tr><td>Projectors:</td><td>@ViewBag.availablProj</td></tr>
+            <tr><td>Cameras:</td><td>@ViewBag.availablCam</td></tr>
+        </table>
     </div>
 </div>
 
+<style>
+    .SnipeItContainer {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Two columns with equal width */
+        grid-template-rows: auto auto;
+        gap: 20px; /* Gap between columns */
+    }
 
-@section Scripts {
-    <script>
+        .SnipeItContainer > * {
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #87909A;
+            border-radius: 0.5rem;
+        }
 
-    </script>
-}
+
+        .SnipeItContainer > .DatePicker {
+            grid-column: span 2;
+            grid-row: 1;
+            
+            display: grid;
+            grid-template-columns: repeat(2fr, auto);
+        }
+
+        .SnipeItContainer > .DatePicker > button {
+            margin-top: 10px;
+
+        }
+
+
+
+</style>
+
+<script>
+    function SubmitSnipeItDates() {
+        console.log("submit");
+
+        // Load SnipeIt view component
+        var _url = '@Url.Action("GetSnipeit", "Home")';
+
+        var startDate = document.getElementById("startDate").value;
+        var endDate = document.getElementById("endDate").value;
+
+        console.log(startDate + " : " + endDate);
+
+        // Convert dates to compatible with c# DateTime
+
+        $.ajax({
+            type: "GET",
+            url: _url,
+            data: { startDate: startDate, endDate: endDate},
+            success: function (result) {
+                console.log("success");
+                var container = document.getElementById("embed-reports-container");
+                container.innerHTML = result;
+                
+            },
+        });
+        
+
+    }
+</script>

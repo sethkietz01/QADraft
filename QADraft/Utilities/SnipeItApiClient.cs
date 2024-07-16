@@ -130,9 +130,6 @@ public class SnipeItApiClient
             // Handle unsuccessful response
             throw new HttpRequestException($"Failed to search activity reports: {response.StatusCode}");
         }
-
-
-        return -1;
     }
 
     public async Task<int> GetStatusCount(string status)
@@ -161,7 +158,6 @@ public class SnipeItApiClient
             throw new HttpRequestException($"Failed to search activity reports: {response.StatusCode}");
         }
 
-        return -1;
     }
 
 

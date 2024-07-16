@@ -44,6 +44,9 @@ namespace QADraft.Controllers
             // Assign the appropriate layout
             ViewBag.layout = SessionUtil.GetLayout(HttpContext);
 
+            // Pass the user role to viewbag
+            ViewBag.role = SessionUtil.GetRole(HttpContext);
+
             // Fetch a list of all the users in the database
             var qas = _context.Users
                 .ToList();

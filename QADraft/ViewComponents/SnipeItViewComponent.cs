@@ -12,10 +12,15 @@ namespace QADraft.ViewComponents
             _snipeItApiClient = new SnipeItApiClient();
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(DateTime startDate, DateTime endDate)
         {
+            Console.WriteLine("StartDate:" + startDate.ToString("s") );
+            Console.WriteLine("EndDate:" + endDate.ToString("s") );
+
             try
             {
+
+                ViewBag.totalCheckedOut = await _snipeItApiClient.ActivityReportBetween("checkout", startDate, endDate);
                 ViewBag.currentCheckedout = await _snipeItApiClient.GetStatusCount("Checked Out");
                 ViewBag.currentReChecked = await _snipeItApiClient.GetStatusCount("Re-Checked Out");
                 ViewBag.currentReminderEmail = await _snipeItApiClient.GetStatusCount("Reminder Email");
@@ -30,6 +35,10 @@ namespace QADraft.ViewComponents
                 ViewBag.availablGcal = await _snipeItApiClient.GetCountInCirculation("GCAL");
                 ViewBag.availablProj = await _snipeItApiClient.GetCountInCirculation("PROJ");
                 ViewBag.availablCam = await _snipeItApiClient.GetCountInCirculation("CAM");
+
+                ViewBag.startDate = startDate;
+                ViewBag.endDate = endDate;
+
                 return View();
             }
             catch (Exception ex)

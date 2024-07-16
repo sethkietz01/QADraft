@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Geek Accounts";
     Layout = ViewBag.Layout;
+    string userRole = ViewBag.role;
 }
 
 <partial name="_GeeksMenu" />
@@ -36,8 +37,9 @@
                     <td>@qa.CreatedAt.ToString("yyyy-MM-dd")</td>
                     <td>@qa.isActive</td>
                     <td>
-                        <a class="buttons" asp-area="" asp-controller="User" asp-action="EditUser" asp-route-Id="@qa.Id">Edit</a>
-                            
+                        @if (userRole != "Coordinator") { @*Check that the user is not a coordinator. Coordinators should not be able to edit a user*@
+                            <a class="buttons" asp-area="" asp-controller="User" asp-action="EditUser" asp-route-Id="@qa.Id">Edit</a>
+                        }
                         @*<button class="buttons" onclick="flagAccount(@qa.Id)">Flag</button>*@
                         <button id="flag-account-button" class="buttons" onclick="openConfirmationDialog(event, @qa.Id)">Flag</button>
                     </td>
