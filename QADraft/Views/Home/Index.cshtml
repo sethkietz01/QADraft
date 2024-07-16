@@ -252,19 +252,25 @@
                 $('.past-event').toggle(); // Toggle visibility of past events
             });
 
+            // Get the current year
             var currentYear = new Date().getFullYear();
-            var yearStartDate = new Date(currentYear, 4, 14).toISOString();    //may 14th
-            var yearEndDate = new Date(currentYear, 7, 19).toISOString();    //august 19th
+            var yearStartDate = new Date(currentYear, 0, 1).toISOString();    //Jan 1st
+            var yearEndDate = new Date(currentYear, 11, 31).toISOString();    //Dec 31st
+
 
             // Load SnipeIt view component
             var _url = '@Url.Action("GetSnipeit", "Home")';
             $.ajax({
                 type: "GET",
                 url: _url,
-                data: { startDate: yearStartDate, endDate: yearEndDate},
+                data: { startDate: yearStartDate, endDate: yearEndDate, dataArray: [] }, // Pass the start/end date and an empty array for the data
                 success: function (result) {
+                    // Save the fetched html to the div holding the embed
                     $("#embed-reports-container").html(result);
                 },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching Snipe-IT data (Index):", error);
+                }
             });
             
         });

@@ -20,12 +20,14 @@ namespace QADraft.Controllers
         }
 
         //TEST SNIPEIT INTEGRATION
-        public IActionResult GetSnipeIt(string startDate, string endDate)
+        public IActionResult GetSnipeIt(string startDate, string endDate, int[] dataArray)
         {
+            // Convert javascript ISO strings into DateTime objects
             DateTime parsedStartDate = DateTime.Parse(startDate);
             DateTime parsedEndDate = DateTime.Parse(endDate);
 
-            return ViewComponent("SnipeIt", new { startDate = parsedStartDate, endDate = parsedEndDate });
+            // Call the view component
+            return ViewComponent("SnipeIt", new { startDate = parsedStartDate, endDate = parsedEndDate, data = dataArray });
 
         }
 
