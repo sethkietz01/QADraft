@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Identity.Client;
 using Microsoft.CodeAnalysis.Elfie.Model.Tree;
+using System.ComponentModel;
+using System.Collections.Specialized;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 public class SnipeItApiClient
 {
@@ -160,7 +163,6 @@ public class SnipeItApiClient
         }
 
     }
-
 
     public async Task<int> GetStatusId(string status)
     {

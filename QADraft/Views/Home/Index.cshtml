@@ -28,6 +28,8 @@
         <a class="link" title="Google Drive" href="https://www.google.com/intl/en-US/drive/" target="_blank"><img src="~/images/driveLogo.png" alt="Google Drive"></a>
         <a class="link" title="Outlook" href="https://it.eku.edu/mso365" target="_blank"><img src="~/images/outlookLogo.png" alt="Outlook"></a>
         <a class="link" title="Snipe-IT" href="https://itservice6.eku.edu/login" target="_blank"><img src="~/images/snipeitLogo.png" alt="Snipe-IT"></a>
+        <a class="link" title="Blackboard" href="https://learn.eku.edu/" target="_blank"><img src="~/images/Blackboard.jpeg" alt="Blackboard"></a>
+        <a class="link" title="Canvas" href="https://eku.instructure.com/login" target="_blank"><img src="~/images/Canvas.png" alt="Canvas"></a>
         <a class="link" id="help-link" title="Help" href="https://docs.google.com/document/d/1mkzdgdh4_moWugLptXcuLwo0DV9lP9MwQMLhCXnE5SQ/edit?usp=sharing" target="_blank"><img src="~/images/helpIcon.png" alt="Help"></a>
     </div>
     <script>
@@ -40,6 +42,8 @@
             window.open("https://www.google.com/intl/en-US/drive/");
             window.open("https://it.eku.edu/mso365");
             window.open("https://itservice6.eku.edu/login");
+            window.open("https://learn.eku.edu/");
+            window.open("https://eku.instructure.com/login");
         }
     </script>
 
@@ -109,7 +113,7 @@
             </button>
             }
             <button type="button" id="togglePastEvents" class="buttons form-buttons">
-                Show/Hide Past Events
+                <b>Show</b>/Hide Past Events
             </button>
         </div> <!-- close calendar-buttons -->
     </div> <!-- close calendar-container -->
@@ -247,9 +251,24 @@
         });
 
         $(document).ready(function () {
-             // Toggle button click event
+            // Toggle the visibility of past events to false on page load
+            $('.past-event').toggle();
+            var pastEventsVisible = false
+
+             // Create event listener for toggle button
             $('#togglePastEvents').click(function () {
                 $('.past-event').toggle(); // Toggle visibility of past events
+                // Get the current state
+                pastEventsVisible = !pastEventsVisible;
+                // Based on the visibility, change the toggle buttont text
+                if (pastEventsVisible) {
+
+                    $('#togglePastEvents').html("Show/<span style='font-weight: bold;'>Hide</span> Past Events");
+                }
+                else {
+                    $('#togglePastEvents').html("<span style='font-weight: bold;'>Show</span>/Hide Past Events");
+                }
+
             });
 
             // Get the current year

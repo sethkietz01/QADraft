@@ -23,7 +23,7 @@ namespace QADraft.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICompositeViewEngine _viewEngine;
-
+        
         public QAController(ApplicationDbContext context,ICompositeViewEngine viewEngine)
         {
             _context = context;

@@ -174,8 +174,9 @@
             // Get the correct form to be submitted
             var parentForm = event.target.closest('form');
             window.currentForm = parentForm;
+            // Default the end date to todays date
+            var endDate = document.getElementById("endDate").valueAsDate = new Date();
             // Show the modal
-
             window.dialog.showModal();
         }
 
