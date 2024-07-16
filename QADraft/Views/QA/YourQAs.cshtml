@@ -48,14 +48,13 @@
                     <td class="severity-cell" data-severity="@qa.Severity"><span class="severity-span">@qa.Severity</span></td>
                     <td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
                     <td>@qa.FoundOn.ToString("yyyy-MM-dd")</td>
-                    
                 </tr>
             }
         }
     </tbody>
 </table>
 
-<dialog id="dialog">
+<dialog id="dialog" class="filter-your-qas-dialog">
 	<div class="confirmation-content">
         <h2>Filters<h2>
         <!-- Confirmation button container -->
@@ -65,22 +64,22 @@
             <!-- Create div to contain the date selection elements -->
             <div class="form-group">
                 <!-- Checkbox that toggles the visibility of the date selection elements -->
+                <input type="hidden" id="dateFilter" name="dateFilter">
                 <!-- Container for the date picking elements -->
                 <div id="datePickers">
-                    <label class="popup-labels" for="startDate">Start Date:</label>
+                    <label class="popup-labels" for="startDate">Start Date</label>
                     <input class="form-control" type="date" id="startDate" name="startDate" onchange="changeStartDate()">
-                    <label class="popup-labels" for="endDate">End Date:</label>
-                    <input type="date" id="endDate" name="endDate" class="form-control" onchange="changeEndDate()">
+                    <label class="popup-labels" for="endDate">End Date</label>
+                    <input class="form-control" type="date" id="endDate" name="endDate" onchange="changeEndDate()">
                 </div>
             </div>
-
             <!-- Create div to contain the Category elements -->
             <div class="form-group">
                 <!-- Label for Category -->
-                <label class="popup-labels" for="category">Category:</label>
+                <label class="popup-labels" for="category">Category</label>
                 <!-- Create the dropdown selection for Category-->
                 <select id="category" name="category" class="form-control">
-                    <option value="">Select Category</option>
+                    <option value="">Any Category</option>
                     <!-- Populate the dropdown with categories list passed through the ViewBag -->
                     @foreach (var category in ViewBag.Categories)
                     {
@@ -88,18 +87,21 @@
                         <option value="@category.Value">@category.Text</option>
                     }
                 </select>
+                <label class="popup-labels" for="severity">Severity</label>
+                <select id="severity" name="severity" class="form-control">
+                    <option value="">Any</option>
+                    @for (int i = 1; i <= 10; i++)
+                    {
+                        <option value="@i">@i</option>
+                    }
+                </select>
             </div>
             <!-- Create div to contain submission buttons -->
-            <div class="button-group">
-                <button type="submit" class="buttons">Apply Filters</button>
-                <!-- Button click calls js function resetFilters() -->
+            <div class="confirmation-buttons">
+                <button id="confirm-delete-event-button" class="buttons" type="submit">Apply</button> 
+                <button id="cancel-delete-event-button" class="buttons buttons-accent" onclick="closeDialog();">Cancel</button>
             </div>
         </form>
-
-        <div class="confirmation-buttons">
-            <button id="confirm-delete-event-button" class="buttons" onclick="deleteEvent()">Apply</button> 
-            <button id="cancel-delete-event-button" class="buttons buttons-accent" onclick="window.dialog.close();">Cancel</button>
-        </div>
     </div>
 	<button onclick="window.dialog.close();" class="x">❌</button>
 </dialog>
@@ -128,47 +130,32 @@
         }
 
         function resetFilters() {
-            document.getElementById("filterForm").reset();
+            // Create a new form element
+            const form = document.createElement('form');
 
-            // Explicitly reset individual form fields
-            document.getElementById("committedBy").selectedIndex = 0;
-            document.getElementById("loggedBy").selectedIndex = 0;
-            document.getElementById("category").selectedIndex = 0;
+            // Set the action attribute to "Filter"
+            form.setAttribute('asp-action', 'YourQAs');
 
-            // Uncheck and hide date pickers
-            document.getElementById("dateFilter").checked = false;
-            toggleDatePicker({ checked: false });
+            // Optionally, set other attributes if needed, e.g., method="GET" or method="POST"
+            form.setAttribute('method', 'GET');
 
-            // Reset date picker values
-            $('#startDate').datepicker('setDate', null);
-            $('#endDate').datepicker('setDate', null);
+            // Append the form to the document body (or any other desired location)
+            document.body.appendChild(form);
+
+            // Immediately submit the form
+            form.submit();
         }
-
-        $(document).ready(function () {
-            console.log("Document Loaded"); // Debug output
-            // Initialize date pickers
-            $('#startDate').datepicker({
-                dateFormat: 'yy-mm-dd'
-            });
-            $('#endDate').datepicker({
-                dateFormat: 'yy-mm-dd'
-            });
-        });
-
+ 
         function changeStartDate() {
-            console.log("changeStartDate");
+            var dateFilter = document.getElementById("dateFilter");
 
-            var startDate = document.getElementById("startDate");
-
-            startDate.classList.remove("hidden-date");
-            startDate.classList.add("visible-date");
+            dateFilter.value = "on";
         }
 
         function changeEndDate() {
-            console.log("changeEndDate");
-
             var startDate = document.getElementById("startDate");
             var endDate = document.getElementById("endDate");
+            var dateFilter = document.getElementById("dateFilter");
 
             var startDateFormat = new Date(startDate.value);
             var endDateFormat = new Date(endDate.value);
@@ -179,29 +166,22 @@
                 endDate.value = startDate.value;
             }
 
-            endDate.classList.remove("hidden-date");
-            endDate.classList.add("visible-date");
+            dateFilter.value = "on";
+            console.log(dateFilter);
         }
 
-        // Function called by the delete button to open confirmation modal
         function showFiltersModal() {
             // Get the correct form to be submitted
             var parentForm = event.target.closest('form');
             window.currentForm = parentForm;
             // Show the modal
+
             window.dialog.showModal();
+        }
 
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = ('0' + (now.getMonth() + 1)).slice(-2);
-            const day = ('0' + now.getDate()).slice(-2);
-
-            const formattedDateTime = `${year}-${month}-${day}`;
-            $('#startDate').val(formattedDateTime);
-
-            var endDate = document.getElementById('endDate');
-
-            endDate.value = "";
+        function closeDialog() {
+            event.preventDefault(); // Prevent default action
+            window.dialog.close();
         }
     </script>
 }

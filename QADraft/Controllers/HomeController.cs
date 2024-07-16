@@ -25,9 +25,6 @@ namespace QADraft.Controllers
             DateTime parsedStartDate = DateTime.Parse(startDate);
             DateTime parsedEndDate = DateTime.Parse(endDate);
 
-            Console.WriteLine("controllerstartdate:" + parsedStartDate.ToString("s"));
-            Console.WriteLine("controllerenddate:" + parsedEndDate.ToString("s"));
-
             return ViewComponent("SnipeIt", new { startDate = parsedStartDate, endDate = parsedEndDate });
 
         }

@@ -47,39 +47,6 @@
     </div>
 </div>
 
-<style>
-    .SnipeItContainer {
-        display: grid;
-        grid-template-columns: 1fr 1fr; /* Two columns with equal width */
-        grid-template-rows: auto auto;
-        gap: 20px; /* Gap between columns */
-    }
-
-        .SnipeItContainer > * {
-            padding: 10px;
-            border: 1px solid #ccc;
-            background-color: #87909A;
-            border-radius: 0.5rem;
-        }
-
-
-        .SnipeItContainer > .DatePicker {
-            grid-column: span 2;
-            grid-row: 1;
-            
-            display: grid;
-            grid-template-columns: repeat(2fr, auto);
-        }
-
-        .SnipeItContainer > .DatePicker > button {
-            margin-top: 10px;
-
-        }
-
-
-
-</style>
-
 <script>
     function SubmitSnipeItDates() {
         console.log("submit");

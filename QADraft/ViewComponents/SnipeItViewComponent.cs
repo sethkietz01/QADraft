@@ -14,9 +14,6 @@ namespace QADraft.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync(DateTime startDate, DateTime endDate)
         {
-            Console.WriteLine("StartDate:" + startDate.ToString("s") );
-            Console.WriteLine("EndDate:" + endDate.ToString("s") );
-
             try
             {
 

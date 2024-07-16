@@ -234,11 +234,11 @@ header {
         }
 
 
-
+/* Delete this
 #delete-event-button {
     font-size: 0.9rem;
     padding: 4px 8px;
-}
+}*/
 
 .table-buttons {
     font-size: 0.9rem;
@@ -437,8 +437,9 @@ th {
         width: 20%;
     }
 
-    .event-calendar td:nth-child(3) {
-        width: 15%;
+    .event-calendar th:nth-child(3), .event-calendar td:nth-child(3) {
+        width: 20%;
+        text-align: center;
     }
 
     .event-calendar th {
@@ -465,8 +466,8 @@ th {
     color: #f5f5f5;
     justify-content: center;
     align-items: center;
-    background-color: purple;
 }
+
 
          
 /* From Login */
@@ -727,6 +728,25 @@ dialog {
 
 .popup-labels {
     font-size: 22px;
+    margin-top: 20px;
+}
+
+.filter-your-qas-dialog {
+    width: 400px;
+}
+    .filter-your-qas-dialog select {
+        text-align: center;
+    }
+
+.filter-your-qas-dialog input {
+    text-align: center;
+    padding-left: 40px;
+}
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
 
 /* Style for spinning loader */
@@ -750,4 +770,37 @@ dialog {
     100% {
         transform: rotate(360deg);
     }
-} 
+}
+
+.SnipeItContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns with equal width */
+    grid-template-rows: auto auto;
+    gap: 20px; /* Gap between columns */
+
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border-style: groove;
+    border-width: 3px;
+}
+
+    .SnipeItContainer > * {
+        padding: 10px;
+        border: 1px solid #ccc;
+        background-color: #87909A;
+        border-radius: 0.5rem;
+        box-shadow: inset 3px -3px 20px -10px #000000;
+    }
+
+
+    .SnipeItContainer > .DatePicker {
+        grid-column: span 2;
+        grid-row: 1;
+        display: grid;
+        grid-template-columns: repeat(2fr, auto);
+
+    }
+
+        .SnipeItContainer > .DatePicker > button {
+            margin-top: 10px;
+        }
