@@ -433,11 +433,11 @@ th {
         padding: 10px 10px;
     }
 
-    .event-calendar td:nth-child(1) {
+    .table-event-time {
         width: 20%;
     }
 
-    .event-calendar th:nth-child(3), .event-calendar td:nth-child(3) {
+    .event-calendar th:nth-child(3), .table-event-actions {
         width: 20%;
         text-align: center;
     }
@@ -808,4 +808,15 @@ dialog {
 #flag-icon {
     height: 40px;
     max-height: 40px;
+}
+
+.color-input-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.color-input {
+    height: 50px;
+    width: 60px;
 }

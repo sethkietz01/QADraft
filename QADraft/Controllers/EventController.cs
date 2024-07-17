@@ -25,6 +25,8 @@ namespace QADraft.Controllers
         [HttpPost]
         public IActionResult AddEvent(Events newEvent)
         {
+            Console.WriteLine("Id = " + newEvent.Id + "\nColor = " + newEvent.Color);
+            
             // Verify that the event model stat is valid
             if (ModelState.IsValid)
             {
@@ -57,27 +59,47 @@ namespace QADraft.Controllers
         [HttpPost]
         public IActionResult EditEvent(Events model)
         {
-            Console.WriteLine("\nId " + model.Id + "\nEventTime " + model.EventTime + "\nEventInformation " + model.EventInformation);
+            Console.WriteLine("\nId " + model.Id + "\nEventTime " + model.EventTime + "\nEventInformation " + model.EventInformation + "\nColor " + model.Color);
 
             if (ModelState.IsValid)
             {
                 Console.WriteLine("EditEvent valid model");
 
-                var events = _context.Events.SingleOrDefault(e => e.Id == model.Id);
-                if (events != null)
+                var existingEvent = _context.Events.SingleOrDefault(e => e.Id == model.Id);
+
+                if (existingEvent != null)
                 {
-                    events.EventTime = model.EventTime;
-                    events.EventInformation = model.EventInformation;
+                    // Update only the event with the matching Id
+                    existingEvent.EventTime = model.EventTime;
+                    existingEvent.EventInformation = model.EventInformation;
+
+                    // Convert the hex code to lowercase
+                    string normalizedColor = model.Color?.ToLowerInvariant();
+
+                    if (normalizedColor == "#f5f5f5" || normalizedColor == "#4a4a4a")
+                    {
+                        existingEvent.Color = null;
+                    }
+                    else
+                    {
+                        existingEvent.Color = model.Color;
+                    }
+
                     _context.SaveChanges();
                 }
+                else
+                {
+                    Console.WriteLine($"Event with Id {model.Id} not found.");
+                }
             }
-            // test, delete the else
             else
             {
                 Console.WriteLine("EditEvent not valid model");
             }
+
             return RedirectToAction("Index", "Home");
         }
+
 
         /*
          * Depricated

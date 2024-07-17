@@ -15,6 +15,8 @@ namespace QADraft.Models
 
         [Required]
         public string EventInformation { get; set; }
+        
+        public string? Color { get; set; }
 
     }
 }

@@ -6,12 +6,6 @@
     string userRole = ViewBag.role;
 }
 
-<style>
-    .editable {
-        width: 80%;
-    }
-</style>
-
 <div class="text-center">
     <h1 class="display-4">Welcome, @Context.Session.GetString("FirstName")!</h1>
 </div>
@@ -45,6 +39,15 @@
             window.open("https://learn.eku.edu/");
             window.open("https://eku.instructure.com/login");
         }
+
+        function applyEventColor(id, eventColor) {
+            var targetEvent = "event-record-" + id;
+            var tableRecord = document.getElementById(targetEvent);
+
+            console.log(eventColor);
+
+            tableRecord.style.backgroundColor = eventColor;
+        }
     </script>
 
 <body class="dashboard">
@@ -53,7 +56,7 @@
         <div class="calendar">
             <table class="event-calendar">
                 <thead>
-                    <tr>
+                    <tr id="table-header-record">
                         <th>Event Time</th>
                         <th>Event Information</th>
                         @if (userRole == "Geek") @*Check that the user is not a Geek. The Geek view will not present actions so the header should not be made*@
@@ -75,28 +78,36 @@
                         var date = eventItem.EventTime.ToString("MM/dd/yyyy");
                         var time = eventItem.EventTime.ToString("h:mm tt");
 
-                        <tr class="@if (isPastEvent) { <text>past-event</text> }" data-event-id="@eventItem.Id">
-                            <td>
+                        <tr id="event-record-@eventItem.Id" class="@if (isPastEvent) { <text>past-event</text> }" data-event-id="@eventItem.Id">
+                            @if (!string.IsNullOrEmpty(eventItem.Color))
+                            {
+                                <script>
+                                    console.log("apply");
+                                    applyEventColor('@eventItem.Id', '@eventItem.Color');
+                                </script>
+                            }
+                            <td class="table-event-time">
                                 <input type="submit" id="submit_time_@eventItem.Id" name="id" value="@eventItem.Id" hidden/>
-                                    <text >@time <br/> @date</text>
+                                <text>@time <br/> @date</text>
                             </td>
                             <td>
                                 <input type="submit" id="submit_info_@eventItem.Id" name="id" value="@eventItem.Id" hidden/>
                                 <input type="text" id="text_info_@eventItem.Id" name="text" hidden />
-                                    <text>@eventItem.EventInformation</text>
+                                <text>@eventItem.EventInformation</text>
                             </td>
-                            <td>
-                                @if (userRole != "Geek") @*Check that the user is not a Geek. Geek should not be able to edit calendar*@
+                            <td class="table-event-actions">
+                                @if (userRole != "Geek")
                                 {
-                                <div class="form-container">
-                                    <button class="buttons table-buttons" onclick="showEditEventModal('@eventItem.Id', '@eventItem.EventTime.ToString("s")', '@eventItem.EventInformation')">Edit</button>
-                                    <form method="post" asp-controller="Event" asp-action="DeleteEvent">
-                                        <div class="form-group">
-                                            <input type="submit" id="submit_delete" name="eventId" value="@eventItem.Id" hidden/>
-                                            <button id="delete-event-button" type="button" class="buttons table-buttons" onclick="openConfirmationDialog(event)">Delete</button>   
-                                        </div>
-                                    </form>
-                                </div>
+                                    var eventTime = eventItem.EventTime.ToString("s");
+                                    <div class="form-container">
+                                        <button class="buttons table-buttons" onclick="showEditEventModal('@eventItem.Id', '@eventTime', '@eventItem.EventInformation', '@eventItem.Color')">Edit</button>
+                                        <form method="post" asp-controller="Event" asp-action="DeleteEvent">
+                                            <div class="form-group">
+                                                <input type="submit" id="submit_delete" name="eventId" value="@eventItem.Id" hidden/>
+                                                <button id="delete-event-button" type="button" class="buttons table-buttons" onclick="openConfirmationDialog(event)">Delete</button>   
+                                            </div>
+                                        </form>
+                                    </div>
                                 }
                             </td>
                         </tr>
@@ -142,8 +153,21 @@
                             </div>
                             <div class="form-group">
                                 <label asp-for="NewEvent.EventInformation" class="control-label">Event Information</label>
-                                <input asp-for="NewEvent.EventInformation" class="form-control" placeholder="Enter Event Info" />
+                                <input asp-for="NewEvent.EventInformation" class="form-control" placeholder="Enter Event Info" id="add-event-info-input" />
                                 <span asp-validation-for="NewEvent.EventInformation" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="NewEvent.Color" class="control-label">Color</label>
+                                <div class="color-input-container">
+                                    <input id="add-color-input" asp-for="NewEvent.Color" class="form-control color-input" type="color" hidden/>
+                                    <input type="button" class="buttons" onclick="setColorInput('AddEvent', '#FF0000')" style="background-color: #FF0000;" />
+                                    <input name="Color" type="button" class="buttons" onclick="setColorInput('AddEvent', '#FFA500')" style="background-color: #FFA500;" />
+                                    <input name="Color" type="button" class="buttons" onclick="setColorInput('AddEvent', '#FFFF00')" style="background-color: #FFFF00;" />
+                                    <input name="Color" type="button" class="buttons" onclick="setColorInput('AddEvent', '#008000')" style="background-color: #008000;" />
+                                    <input name="Color" type="button" class="buttons" onclick="setColorInput('AddEvent', '#0000FF')" style="background-color: #0000FF;" />
+                                    <input name="Color" type="button" class="buttons" onclick="setColorInput('AddEvent', '#4B0082')" style="background-color: #4B0082;" />
+                                    <input name="Color" type="button" class="buttons" onclick="setColorInput('AddEvent', '#EE82EE')" style="background-color: #EE82EE;" />
+                                </div>
                             </div>
                     </div>
                     <div class="modal-footer">
@@ -188,6 +212,22 @@
                 <label class="control-label popup-labels">Event Information</label>
                 <input name="EventInformation" class="form-control" placeholder="Enter Event Info" id="edit-event-info-input"/>
             </div>
+            <div class="form-group">
+                <label class="control-label popup-labels">Color</label>
+                <div class="color-input-container">
+                    <input id="edit-color-input" name="Color" class="form-control color-input" type="color" hidden/>
+                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#FF0000')" style="background-color: #FF0000;" />
+                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#FFA500')" style="background-color: #FFA500;" />
+                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#FFFF00')" style="background-color: #FFFF00;" />
+                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#008000')" style="background-color: #008000;" />
+                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#0000FF')" style="background-color: #0000FF;" />
+                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#4B0082')" style="background-color: #4B0082;" />
+                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#EE82EE')" style="background-color: #EE82EE;" />
+                </div>
+                <div>
+                    <button class="buttons table-buttons" onclick="removeEventColor()">Remove Color</button>
+                <div>
+            </div>
         </form>
         <!-- Confirmation button container -->
         <div class="confirmation-buttons">
@@ -217,26 +257,41 @@
 
     <!-- Script to set the default date and time in the event time input -->
     <script>
-        // $(document).ready(function () {
-        //     function setCurrentDateTime() {
-        //         const now = new Date();
-        //         const year = now.getFullYear();
-        //         const month = ('0' + (now.getMonth() + 1)).slice(-2);
-        //         const day = ('0' + now.getDate()).slice(-2);
-        //         const hours = ('0' + now.getHours()).slice(-2);
-        //         const minutes = ('0' + now.getMinutes()).slice(-2);
+        $(document).ready(function () {
+            function setCurrentDateTime() {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = ('0' + (now.getMonth() + 1)).slice(-2);
+                const day = ('0' + now.getDate()).slice(-2);
+                const hours = ('0' + now.getHours()).slice(-2);
+                const minutes = ('0' + now.getMinutes()).slice(-2);
 
-        //         const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-        //         $('#eventTimeInput').val(formattedDateTime);
-        //     }
+                const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+                $('#eventTimeInput').val(formattedDateTime);
+            }
 
-        //     setCurrentDateTime();
+            setCurrentDateTime();
 
-        //     // Set the current date and time when the modal is opened
+            // Set the current date and time when the modal is opened
+            $('#addEventModal').on('shown.bs.modal', setCurrentDateTime);
+        });
+
+
+        // function setCurrentDateTime() {
+        //     const now = new Date();
+        //     const year = now.getFullYear();
+        //     const month = ('0' + (now.getMonth() + 1)).slice(-2);
+        //     const day = ('0' + now.getDate()).slice(-2);
+        //     const hours = ('0' + now.getHours()).slice(-2);
+        //     const minutes = ('0' + now.getMinutes()).slice(-2);
+
+        //     const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+        //     $('#eventTimeInput').val(formattedDateTime);
+        // }
+
+        //     Set the current date and time when the modal is opened
         //     $('#addEventModal').on('shown.bs.modal', setCurrentDateTime);
         // });
-
-        
 
         
 
@@ -294,184 +349,6 @@
             
         });
 
-        // function editInfo(eventId) {
-        //     // Get the element that called function
-        //     var textArea = document.getElementById("info_"+eventId);
-        //     // Add event listener for Enter key
-        //     textArea.addEventListener('keypress', function(event) {
-        //         if (event.key === "Enter") {
-        //             // Prevent enter key from inserting line break
-        //             event.preventDefault();
-        //             // Get the new text
-        //             var newText = textArea.querySelector('text').textContent;
-        //             // Save the new text to input to be sent during POSt
-        //             var textInput = document.getElementById("text_info_"+eventId);
-        //             textInput.value = newText;
-        //             // Submit the form
-        //             var submitButton = document.getElementById("submit_info_"+eventId);
-        //             submitButton.click();
-        //         }
-        //     });
-
-        // }
-
-
-        // function editTime(eventId) {
-        //     //get the element that called function
-        //     var textArea = document.getElementById("time_"+eventId);
-            
-        //     // Get the current Date/Time
-        //     var currentValue = textArea.innerText.trim();
-        //     // Format to match datetime-local expected input
-        //     //var newTime = formateDateTime(currentValue);
-
-        //     var newDateInput = document.createElement('input');
-        //     newDateInput.type = 'datetime-local';
-        //     newDateInput.name = "time";
-
-        //     textArea.style.display = 'none';
-        //     textArea.parentElement.appendChild(newDateInput);
-        //     newDateInput.focus();
-
-        //     // Add event listener for Enter key
-        //     newDateInput.addEventListener('keypress', function(event) {
-        //         if (event.key === "Enter") {
-        //             // Prevent enter key from inserting line break
-        //             event.preventDefault();
-        //             console.log(newDateInput.value);
-
-        //             // Submit the form
-        //             // document.getElementById("submit_time_"+eventId).click();
-
-        //         }
-        //     });
-
-        //     document.addEventListener("mousedown", (event) => {
-        //         // Check if the click was outside the newDateInput and textArea
-        //         if (!newDateInput.contains(event.target) && event.target !== textArea) {
-        //             textArea.style.display = 'block';
-        //             newDateInput.remove();
-        //         }
-        //         // Chcek if the date-time input is still the active element
-        //         else if (newDateInput == document.activeElement) {
-        //             // Do nothing
-        //         }
-        //         // Check if there is an existing date input
-        //         else {
-        //             textArea.style.display = 'none';
-        //             textArea.parentElement.appendChild(newDateInput);
-        //         }
-
-        //     });
-
-        // }
-
-
-        // function editEventDate(td) {
-        //     var currentValue = td.innerText.trim();
-
-        //     var newDateInput = document.createElement('input');
-        //     newDateInput.type = 'datetime-local';
-        //     newDateInput.value = currentValue;
-
-        //     td.innerText = '';
-        //     td.appendChild(newDateInput);
-
-        //     newDateInput.focus();
-
-        //     newDateInput.addEventListener('change', function() {
-        //         var newValue = newDateInput.value.trim();
-        
-        //         // Get eventId from the parent tr or pass it to this function explicitly
-        //         var eventId = td.closest('tr').getAttribute('data-event-id');
-
-        //         // const month = String(newValue.getMonth() + 1).padStart(2, '0'); 
-        //         // const day = String(newValue.getDate()).padStart(2, '0');
-        //         // const year = newValue.getFullYear();
-
-        //         // formattedDate = `${month}/${day}/${year}`;
-
-        //         td.innerText = newValue;
-
-        //         var formData = new FormData();
-        //         formData.append('eventId', eventId);
-        //         formData.append('updatedEventTime', newValue);
-
-        //         fetch('/Event/UpdateEventTime', {
-        //             method: 'POST',
-        //             body: formData
-        //         })
-        //         .then(response => {
-        //             if (!response.ok) {
-        //                 throw new Error('Network response was not ok');
-        //             }
-        //             console.log('Event updated successfully');
-        //             window.location.reload();
-        //         })
-        //         .catch(error => {
-        //             console.error('Error:', error);
-        //         });
-        //     });
-        // }
-
-        // function editEventInformation(td) 
-        // {
-        //     // Save the current content of the td
-        //     var currentValue = td.innerText.trim();
-
-        //     // Get the event ID from the parent tr
-        //     var eventId = td.closest('tr').getAttribute('data-event-id');
-
-        //     // Create an input field
-        //     var input = document.createElement('input');
-        //     input.type = 'text';
-        //     input.value = currentValue;
-
-        //     // Replace the td content with the input
-        //     td.innerText = '';
-        //     td.appendChild(input);
-
-        //     // Focus on the input field
-        //     input.focus();
-
-        //     // Handle input blur to save changes
-        //     input.addEventListener('blur', function() {
-        //         // Get updated value
-        //         var newValue = input.value.trim();
-
-
-        //         if (newValue.trim() === "")
-        //         {
-        //             td.removeChild(input);
-        //             td.innerText = currentValue;
-        //             return;
-        //         }
-
-        //         // Display updated value in the table
-        //         td.innerText = newValue;
-
-        //         // Send a POST request to update the event
-        //         var formData = new FormData();
-        //         formData.append('eventId', eventId);
-        //         formData.append('updatedEventInformation', newValue);
-
-        //         fetch('/Event/UpdateEventInformation', {
-        //             method: 'POST',
-        //             body: formData
-        //         })
-        //         .then(response => {
-        //             if (!response.ok) {
-        //                 throw new Error('Network response was not ok');
-        //             }
-        //             console.log('Event updated successfully');
-        //         })
-        //         .catch(error => {
-        //             console.error('Error:', error);
-        //         });
-        //     });
-        // }
-
-
         // Function called by the delete button to open confirmation modal
         function openConfirmationDialog(event) {
             event.preventDefault(); // Prevent default behavior
@@ -492,13 +369,14 @@
             return false;
         }
 
-        function showEditEventModal(eventId, eventTime, eventInfo) {
-            console.log("yay");
-            console.log(eventTime);
+        function showEditEventModal(eventId, eventTime, eventInfo, eventColor) {
+
+            console.log("showEditEventModal");
 
             var editEventForm = document.getElementById('edit-event-form');
             var editTimeInput = document.getElementById('edit-event-time-input');
             var editInfoInput = document.getElementById('edit-event-info-input');
+            var editColorInput = document.getElementById('edit-color-input');
 
             var idInput = document.createElement('input');
             idInput.setAttribute('type', 'hidden');
@@ -509,8 +387,7 @@
 
             editTimeInput.value = eventTime;
             editInfoInput.value = eventInfo;
-
-            console.log("editTimeInput.value = " + editTimeInput.value);
+            editColorInput.value = eventColor;
 
             const dialogEditEvent = document.getElementById('dialog-edit-event');
             dialogEditEvent.showModal();
@@ -525,13 +402,47 @@
         function closeEditEventModal() {
             var editTimeInput = document.getElementById('edit-event-time-input');
             var editInfoInput = document.getElementById('edit-event-info-input');
+            var editColorInput = document.getElementById('edit-color-input');
             const dialogEditEvent = document.getElementById('dialog-edit-event');
+
+            console.log(editColorInput.value);
 
             editTimeInput.value = ''
             editInfoInput.value = '';
+            editColorInput.value = '#00000';
 
             dialogEditEvent.close();
         }
 
+        function removeEventColor() {
+            var editColorInput = document.getElementById('edit-color-input');
+            var userTheme = '@Context.Session.GetString("Theme")';
+
+            if (userTheme === "dark") {
+                editColorInput.value = "#4A4A4A";
+            }
+            else {
+                editColorInput.value = "#F5F5F5";
+            }
+        }
+
+        function setColorInput(whichForm, newColor) {
+            if (whichForm == "AddEvent")
+            {
+                var colorInput = document.getElementById('add-color-input');
+                var informationInput = document.getElementById('add-event-info-input');
+            }
+            else
+            {
+                var colorInput = document.getElementById('edit-color-input');
+                var informationInput = document.getElementById('edit-event-info-input');
+            }
+            
+
+            informationInput.style.backgroundColor = newColor;
+            colorInput.value = newColor;
+
+            console.log(colorInput.value);
+        }
     </script>
 }
