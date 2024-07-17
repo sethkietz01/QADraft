@@ -43,6 +43,13 @@
         function applyEventColor(id, eventColor) {
             var targetEvent = "event-record-" + id;
             var tableRecord = document.getElementById(targetEvent);
+            var userTheme = '@Context.Session.GetString("Theme")';
+
+            if (userTheme === "dark") {
+                tableRecord.style.textShadow = '0 0 3px #000, 0 0 5px #000';
+            }
+            else {
+            }   
 
             console.log(eventColor);
 
@@ -216,12 +223,12 @@
                 <label class="control-label popup-labels">Color</label>
                 <div class="color-input-container">
                     <input id="edit-color-input" name="Color" class="form-control color-input" type="color" hidden/>
-                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#FF0000')" style="background-color: #FF0000;" />
-                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#FFA500')" style="background-color: #FFA500;" />
+                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#FF3535')" style="background-color: #FF3535;" />
+                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#FFAE1A')" style="background-color: #FFAE1A;" />
                     <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#FFFF00')" style="background-color: #FFFF00;" />
-                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#008000')" style="background-color: #008000;" />
-                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#0000FF')" style="background-color: #0000FF;" />
-                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#4B0082')" style="background-color: #4B0082;" />
+                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#1FD656')" style="background-color: #1FD656;" />
+                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#2b72ff')" style="background-color: #2b72ff;" />
+                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#9457EB')" style="background-color: #9457EB;" />
                     <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#EE82EE')" style="background-color: #EE82EE;" />
                 </div>
                 <div>
@@ -437,7 +444,6 @@
                 var colorInput = document.getElementById('edit-color-input');
                 var informationInput = document.getElementById('edit-event-info-input');
             }
-            
 
             informationInput.style.backgroundColor = newColor;
             colorInput.value = newColor;
