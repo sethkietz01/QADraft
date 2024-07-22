@@ -4,6 +4,9 @@
     string endDate = ViewBag.endDate.ToString("s");
 }
 
+<div id="snipe-it-header">
+    <h4>Snipe-IT Dashboard</h4>
+</div>
 <div class="SnipeItContainer">
     <div class="DatePicker">
         <text>Start Date: </text>
@@ -12,16 +15,16 @@
         <text>End Date: </text>
         <input type="date" id="endDate" class="form-control" value="@ViewBag.endDate?.ToString("yyyy-MM-dd")"/>
 
-        <button class="buttons" onclick="SubmitSnipeItDates()">Submit</button>
+        <button id="snipe-it-submit-button" class="buttons" onclick="SubmitSnipeItDates()">Submit</button>
     </div>
-    <div style="grid-row: 2;">
+    <div class="snipeit-stat-outputs" style="grid-row: 2;">
         <table>
             <tr>
             </tr>
         </table>
-        <text>Total Things Checked Out: @ViewBag.totalCheckedOut</text>
+        <text>Total Equipment Checked Out: @ViewBag.totalCheckedOut</text>
     </div>
-    <div style="grid-row: 3;">
+    <div class="snipeit-stat-outputs" style="grid-row: 3;">
         <table>
             <tr><td>Checked Out:</td><td>@ViewBag.currentCheckedout</td></tr>
             <tr><td>Re-Checked Out:</td><td>@ViewBag.currentReChecked</td></tr>
@@ -33,10 +36,10 @@
         </table>
     </div>
 
-    <div style="grid-row: 2;">
-        <text>Equipment Left @ViewBag.currentCirculation</text>
+    <div class="snipeit-stat-outputs" style="grid-row: 2;">
+        <text>Equipment In Circulation: @ViewBag.currentCirculation</text>
     </div>
-    <div style="grid-row: 3;">
+    <div class="snipeit-stat-outputs" style="grid-row: 3;">
         <table>
             <tr><td>Windows Laptops:</td><td>@ViewBag.availableWin</td></tr>
             <tr><td>Macbook Airs:</td><td>@ViewBag.availableAir</td></tr>

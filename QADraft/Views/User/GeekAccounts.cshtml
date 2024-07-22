@@ -18,8 +18,7 @@
             <th onclick="sortTable(2)">Last Name<span class="arrow"></th>
             <th onclick="sortTable(3)">Email<span class="arrow"></th>
             <th onclick="sortTable(4)">Role<span class="arrow"></th>
-            <th onclick="sortTable(5)">Created <span class="arrow"></th>
-            <th onclick="sortTable(6)">Flagged<span class="arrow"></th>
+            <th id="flagged-table-header" onclick="sortTable(6)">Flagged<span class="arrow"></th>
             <th class="noSort">Action</th>
         </tr>
     </thead>
@@ -34,8 +33,7 @@
                     <td>@qa.LastName</td>
                     <td>@qa.Email</td>
                     <td>@qa.Role</td>
-                    <td>@qa.CreatedAt.ToString("yyyy-MM-dd")</td>
-                    <td>@if (qa.isFlagged) 
+                    <td id="flagged-table-data">@if (qa.isFlagged) 
                         {
                             <img id="flag-icon" src="~/images/flag.png" alt="flagged" />
                         }
@@ -50,6 +48,9 @@
                         }
                         @*<button class="buttons" onclick="flagAccount(@qa.Id)">Flag</button>*@
                         <button id="flag-account-button" class="buttons" onclick="openConfirmationDialog(event, @qa.Id)">Flag</button>
+                        <button id="description-button" class="buttons" onclick="showAccountsDetailsModal('@qa.CreatedAt', '@qa.startDate', '@qa.LastLogin')">
+                            <img id="description-icon" src="~/images/descriptionIconWhite.png" alt="Details" />
+                        </button>
                     </td>
                 </tr>
             }
@@ -57,7 +58,32 @@
     </tbody>
 </table>
 
-<dialog id="dialog">
+<!-- Modal Popup for details -->
+<dialog id="dialog-account-details" class="dialog-popups">
+	<div class="confirmation-content">
+        <div class="form-group">
+            <label class="popup-labels">Created At</label>
+            <p id='created-at-output'></p>
+        </div>
+        <div class="form-group">
+            <label class="popup-labels">Start Date</label>
+            <p id='start-date-output'></p>
+        </div>
+        <div class="form-group">
+            <label class="popup-labels">Last Login</label>
+            <p id='last-login-output'></p>
+        </div>
+        <!-- Confirmation button container -->
+        <div class="confirmation-buttons">
+            <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
+            the deleteButton input. No will close the confirmation dialog -->
+            <button class="buttons" onclick="closeAccountDetailsModal();">Close</button>
+        </div>
+    </div>
+	<button onclick="closeDetailsModal();" class="x">❌</button>
+</dialog>
+
+<dialog id="dialog" class="dialog-popups">
 	<div class="confirmation-content">
         <!-- Confirmation text -->
         <p>Enter the reason you are flagging this account</p>
@@ -129,4 +155,23 @@
         // Show the modal
         window.dialog.showModal();
     }
+
+    function showAccountsDetailsModal(createdAt, startDate, lastLogin) {
+        const dialogDetails = document.getElementById('dialog-account-details');
+
+            var createdAtOutput = document.getElementById('created-at-output');
+            var startDateOutput = document.getElementById('start-date-output');
+            var lastLoginOutput = document.getElementById('last-login-output');
+
+            createdAtOutput.textContent = createdAt;
+            startDateOutput.textContent = startDate;
+            lastLoginOutput.textContent = lastLogin;
+
+            dialogDetails.showModal();
+    }
+
+    function closeAccountDetailsModal() {
+            const dialogDetails = document.getElementById('dialog-account-details');
+            dialogDetails.close();
+        }
 </script>

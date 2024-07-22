@@ -460,13 +460,14 @@ th {
 
 .embed-reports-container {
     display: flex;
+    flex-direction: column;
     height: 600px;
     width: 48%;
     margin-left: 50%;
     color: #f5f5f5;
-    justify-content: center;
     align-items: center;
 }
+
 
 
          
@@ -609,7 +610,7 @@ select option {
 
 
 /* From YourQAs */
-#descriptionButton {
+#description-button {
     padding: 5px 8px;
 }
 
@@ -772,38 +773,41 @@ dialog {
     }
 }
 
-.SnipeItContainer {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Two columns with equal width */
-    grid-template-rows: auto auto;
-    gap: 20px; /* Gap between columns */
-
-    border-radius: 0.5rem;
-    padding: 1rem;
-    border-style: groove;
-    border-width: 3px;
-}
-
-    .SnipeItContainer > * {
-        padding: 10px;
-        border: 1px solid #ccc;
-        background-color: #87909A;
-        border-radius: 0.5rem;
-        box-shadow: inset 3px -3px 20px -10px #000000;
-    }
-
-
-    .SnipeItContainer > .DatePicker {
-        grid-column: span 2;
-        grid-row: 1;
+    .SnipeItContainer {
         display: grid;
-        grid-template-columns: repeat(2fr, auto);
+        grid-template-columns: 1fr 1fr; /* Two columns with equal width */
+        grid-template-rows: auto auto;  
+        gap: 20px; /* Gap between columns */
 
+        border-radius: 0.5rem;
+        padding: 1rem;
+        border-style: groove;
+        border-width: 3px;
     }
 
-        .SnipeItContainer > .DatePicker > button {
-            margin-top: 10px;
+        .SnipeItContainer > * {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 0.5rem;
+            box-shadow: inset 3px -3px 20px -10px #000000;
         }
+
+
+        .SnipeItContainer > .DatePicker {
+            grid-column: span 2;
+            grid-row: 1;
+            display: grid;
+            grid-template-columns: repeat(2fr, auto);
+
+        }
+
+        .snipeit-stat-outputs td:nth-child(1) {
+            width: 220px;
+        }
+
+            .SnipeItContainer > .DatePicker > button {
+                margin-top: 10px;
+            }
 
 #flag-icon {
     height: 40px;
@@ -814,9 +818,55 @@ dialog {
     display: flex;
     justify-content: center;
     gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .color-input {
     height: 50px;
     width: 60px;
+}
+
+#dialog-details {
+    min-width: 250px;
+}
+
+.display-4 {
+    margin-bottom: 40px;
+
+}
+
+.buttons.rainbow-gradient {
+    background: linear-gradient(45deg, 
+    #ff0000, /* Red */
+    #ff8c00, /* Orange */
+    #ffd700, /* Yellow */
+    #00ff00, /* Green */
+    #00bfff, /* Blue */
+    #8a2be2, /* Purple */
+    #ee82ee /* Violet */
+    );
+    
+    color: white;
+    cursor: pointer;
+    width: 28px;
+    height: 42px;
+}
+
+.event-color-span {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    width: 31.6px;
+    height: 31.6px;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+#edit-colors-div {
+    display: none;
+}
+
+#flagged-table-header, #flagged-table-data {
+    text-align: center;
 }

@@ -41,19 +41,24 @@
         }
 
         function applyEventColor(id, eventColor) {
+            /*      Style the whole row 
             var targetEvent = "event-record-" + id;
             var tableRecord = document.getElementById(targetEvent);
-            var userTheme = '@Context.Session.GetString("Theme")';
-
-            if (userTheme === "dark") {
-                tableRecord.style.textShadow = '0 0 3px #000, 0 0 5px #000';
-            }
-            else {
-            }   
-
-            console.log(eventColor);
-
             tableRecord.style.backgroundColor = eventColor;
+            */
+
+            /* Style just the color cell
+            var targetColorCell = "table-event-color-" + id;
+            var colorCell = document.getElementById(targetColorCell);
+            colorCell.style.backgroundColor = eventColor;
+            */
+            /*      Color just the border
+            tableRecord.style.borderBottom = '3px solid black';
+            tableRecord.style.borderColor = rgbEventColor;
+            */
+
+           var colorSpan = document.getElementById('event-color-span-' + id);
+           colorSpan.style.backgroundColor = eventColor;
         }
     </script>
 
@@ -76,6 +81,7 @@
                             @* If the user is not a Geek, display the calendar with the actions header *@
                             <th>Actions</th>
                         }
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -86,13 +92,7 @@
                         var time = eventItem.EventTime.ToString("h:mm tt");
 
                         <tr id="event-record-@eventItem.Id" class="@if (isPastEvent) { <text>past-event</text> }" data-event-id="@eventItem.Id">
-                            @if (!string.IsNullOrEmpty(eventItem.Color))
-                            {
-                                <script>
-                                    console.log("apply");
-                                    applyEventColor('@eventItem.Id', '@eventItem.Color');
-                                </script>
-                            }
+                            
                             <td class="table-event-time">
                                 <input type="submit" id="submit_time_@eventItem.Id" name="id" value="@eventItem.Id" hidden/>
                                 <text>@time <br/> @date</text>
@@ -117,6 +117,19 @@
                                     </div>
                                 }
                             </td>
+                            <td id="table-event-color-@eventItem.Id" class="table-event-color" style="width: 75px;">
+                                <span id="event-color-span-@eventItem.Id" class="event-color-span">
+
+                                </span>
+                            </td>
+
+                            @if (!string.IsNullOrEmpty(eventItem.Color))
+                            {
+                                <script>
+                                    console.log("apply");
+                                    applyEventColor('@eventItem.Id', '@eventItem.Color');
+                                </script>
+                            }
                         </tr>
                     }
                 </tbody>
@@ -135,12 +148,10 @@
             </button>
         </div> <!-- close calendar-buttons -->
     </div> <!-- close calendar-container -->
-    
+
     <div class="embed-reports-container" id="embed-reports-container">
             <div class="loader"></div> 
-        </div>  
     </div>
-
 
     <!-- Modal for adding new event -->
     <div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
@@ -153,29 +164,35 @@
                 <form id="AddEventForm" asp-controller="Event" asp-action="AddEvent" method="post">
                     <div class="modal-body">
                         <!-- Form that posts to the EventController's AddEvent action -->
-                            <div class="form-group">
-                                <label asp-for="NewEvent.EventTime" class="control-label">Event Time</label>
-                                <input asp-for="NewEvent.EventTime" class="form-control" type="datetime-local" id="eventTimeInput" />
-                                <span asp-validation-for="NewEvent.EventTime" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="NewEvent.EventTime" class="control-label">Event Time</label>
+                            <input asp-for="NewEvent.EventTime" class="form-control" type="datetime-local" id="eventTimeInput" />
+                            <span asp-validation-for="NewEvent.EventTime" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="NewEvent.EventInformation" class="control-label">Event Information</label>
+                            <input asp-for="NewEvent.EventInformation" class="form-control" placeholder="Enter Event Info" id="add-event-info-input" />
+                            <span asp-validation-for="NewEvent.EventInformation" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="NewEvent.Color" id="add-event-color-label" class="control-label">Color</label>
+                            <div class="color-input-container">
+                                <input asp-for="NewEvent.Color" id="add-event-color-input" hidden />
+                                <input id="add-color-input" type="color" onchange="setColorInput('AddEvent', this.value)" hidden/>
+                                <input type="button" class="buttons" onclick="setColorInput('AddEvent', '#FF0000')" style="background-color: #FF0000;" />
+                                <input type="button" class="buttons" onclick="setColorInput('AddEvent', '#FFA500')" style="background-color: #FFA500;" />
+                                <input type="button" class="buttons" onclick="setColorInput('AddEvent', '#FFFF00')" style="background-color: #FFFF00;" />
+                                <input type="button" class="buttons" onclick="setColorInput('AddEvent', '#03b703')" style="background-color: #03b703;" />
+                                <input type="button" class="buttons" onclick="setColorInput('AddEvent', '#2c2cff')" style="background-color: #2c2cff;" />
+                                <input type="button" class="buttons" onclick="setColorInput('AddEvent', '#6600b0')" style="background-color: #6600b0;" />
+                                <input type="button" class="buttons" onclick="setColorInput('AddEvent', '#EE82EE')" style="background-color: #EE82EE;" />
                             </div>
-                            <div class="form-group">
-                                <label asp-for="NewEvent.EventInformation" class="control-label">Event Information</label>
-                                <input asp-for="NewEvent.EventInformation" class="form-control" placeholder="Enter Event Info" id="add-event-info-input" />
-                                <span asp-validation-for="NewEvent.EventInformation" class="text-danger"></span>
+                            <div class="color-input-container">
+                                <input type="button" class="buttons" onclick="setColorInput('AddEvent', '#FFFFFF')" style="background-color: #FFFFFF;" />
+                                <input type="button" class="buttons" onclick="setColorInput('AddEvent', '#000000')" style="background-color: #000000;" />
+                                <input type="button" class="buttons rainbow-gradient" onclick="document.getElementById('add-color-input').click();" />
                             </div>
-                            <div class="form-group">
-                                <label asp-for="NewEvent.Color" class="control-label">Color</label>
-                                <div class="color-input-container">
-                                    <input id="add-color-input" asp-for="NewEvent.Color" class="form-control color-input" type="color" hidden/>
-                                    <input type="button" class="buttons" onclick="setColorInput('AddEvent', '#FF0000')" style="background-color: #FF0000;" />
-                                    <input name="Color" type="button" class="buttons" onclick="setColorInput('AddEvent', '#FFA500')" style="background-color: #FFA500;" />
-                                    <input name="Color" type="button" class="buttons" onclick="setColorInput('AddEvent', '#FFFF00')" style="background-color: #FFFF00;" />
-                                    <input name="Color" type="button" class="buttons" onclick="setColorInput('AddEvent', '#008000')" style="background-color: #008000;" />
-                                    <input name="Color" type="button" class="buttons" onclick="setColorInput('AddEvent', '#0000FF')" style="background-color: #0000FF;" />
-                                    <input name="Color" type="button" class="buttons" onclick="setColorInput('AddEvent', '#4B0082')" style="background-color: #4B0082;" />
-                                    <input name="Color" type="button" class="buttons" onclick="setColorInput('AddEvent', '#EE82EE')" style="background-color: #EE82EE;" />
-                                </div>
-                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" onclick="" class="buttons">Add Event</button>
@@ -189,7 +206,7 @@
 </body>
 
 <!-- Modal Popup for Delete Event confirmation -->
-<dialog id="dialog">
+<dialog id="dialog" class="dialog-popups">
 	<div class="confirmation-content">
         <!-- Confirmation text -->
         <p>Are you sure you want to delete this Event?</p>
@@ -206,7 +223,7 @@
 
 
 <!-- Modal Popup for Edit Event -->
-<dialog id="dialog-edit-event">
+<dialog id="dialog-edit-event" class="dialog-popups">
 	<div class="confirmation-content">
         <!-- Confirmation text -->
         <h2>Edit Event<h2>
@@ -219,29 +236,36 @@
                 <label class="control-label popup-labels">Event Information</label>
                 <input name="EventInformation" class="form-control" placeholder="Enter Event Info" id="edit-event-info-input"/>
             </div>
-            <div class="form-group">
-                <label class="control-label popup-labels">Color</label>
+            <div>
+                <button id="edit-colors-button" class="buttons table-buttons" onclick="toggleColors()">Edit Colors</button>
+                <button class="buttons table-buttons" onclick="removeEventColor()">Remove Color</button>
+            <div>
+            <div id="edit-colors-div" class="form-group">
+                <label id="event-color-label" class="control-label popup-labels">Color</label>
                 <div class="color-input-container">
-                    <input id="edit-color-input" name="Color" class="form-control color-input" type="color" hidden/>
-                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#FF3535')" style="background-color: #FF3535;" />
-                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#FFAE1A')" style="background-color: #FFAE1A;" />
-                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#FFFF00')" style="background-color: #FFFF00;" />
-                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#1FD656')" style="background-color: #1FD656;" />
-                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#2b72ff')" style="background-color: #2b72ff;" />
-                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#9457EB')" style="background-color: #9457EB;" />
-                    <input name="Color" type="button" class="buttons" onclick="setColorInput('EditEvent', '#EE82EE')" style="background-color: #EE82EE;" />
+                    <input id="edit-event-color-input" name="Color" hidden />
+                    <input id="edit-color-input" type="color" onchange="setColorInput('EditEvent', this.value)" hidden/>
+                    <input type="button" class="buttons" onclick="setColorInput('EditEvent', '#FF0000')" style="background-color: #FF0000;" />
+                    <input type="button" class="buttons" onclick="setColorInput('EditEvent', '#FFA500')" style="background-color: #FFA500;" />
+                    <input type="button" class="buttons" onclick="setColorInput('EditEvent', '#FFFF00')" style="background-color: #FFFF00;" />
+                    <input type="button" class="buttons" onclick="setColorInput('EditEvent', '#03b703')" style="background-color: #03b703;" />
+                    <input type="button" class="buttons" onclick="setColorInput('EditEvent', '#2c2cff')" style="background-color: #2c2cff;" />
+                    <input type="button" class="buttons" onclick="setColorInput('EditEvent', '#6600b0')" style="background-color: #6600b0;" />
+                    <input type="button" class="buttons" onclick="setColorInput('EditEvent', '#EE82EE')" style="background-color: #EE82EE;" />
                 </div>
-                <div>
-                    <button class="buttons table-buttons" onclick="removeEventColor()">Remove Color</button>
-                <div>
+                <div class="color-input-container">
+                    <input type="button" class="buttons" onclick="setColorInput('EditEvent', '#FFFFFF')" style="background-color: #FFFFFF;" />
+                    <input type="button" class="buttons" onclick="setColorInput('EditEvent', '#000000')" style="background-color: #000000;" />
+                    <input type="button" class="buttons rainbow-gradient" onclick="document.getElementById('edit-color-input').click();" />
+                 </div>
             </div>
         </form>
         <!-- Confirmation button container -->
         <div class="confirmation-buttons">
             <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
             the deleteButton input. No will close the confirmation dialog -->
-            <button id="confirm-delete-event-button" class="buttons" onclick="editEvent()">Confirm Edits</button> 
-            <button id="cancel-delete-event-button" class="buttons buttons-accent" onclick="closeEditEventModal()">Cancel</button>
+            <button id="confirm-edit-event-button" type="button" class="buttons" onclick="editEvent()">Confirm Edits</button> 
+            <button id="cancel-edit-event-button" type="button" class="buttons buttons-accent" onclick="closeEditEventModal()">Cancel</button>
         </div>
     </div>
 	<button onclick="document.getElementById('dialog-edit-event').close();" class="x">❌</button>
@@ -394,6 +418,7 @@
 
             editTimeInput.value = eventTime;
             editInfoInput.value = eventInfo;
+            editInfoInput.style.backgroundColor = eventColor;
             editColorInput.value = eventColor;
 
             const dialogEditEvent = document.getElementById('dialog-edit-event');
@@ -410,45 +435,60 @@
             var editTimeInput = document.getElementById('edit-event-time-input');
             var editInfoInput = document.getElementById('edit-event-info-input');
             var editColorInput = document.getElementById('edit-color-input');
+            var editColorsDiv = document.getElementById('edit-colors-div');
             const dialogEditEvent = document.getElementById('dialog-edit-event');
-
-            console.log(editColorInput.value);
 
             editTimeInput.value = ''
             editInfoInput.value = '';
             editColorInput.value = '#00000';
+            editColorsDiv.style.display = 'none';
 
             dialogEditEvent.close();
         }
 
         function removeEventColor() {
+            event.preventDefault();
+
             var editColorInput = document.getElementById('edit-color-input');
+            var editInfoInput = document.getElementById('edit-event-info-input');
             var userTheme = '@Context.Session.GetString("Theme")';
 
             if (userTheme === "dark") {
                 editColorInput.value = "#4A4A4A";
+                editInfoInput.style.backgroundColor = "#4A4A4A";
             }
             else {
                 editColorInput.value = "#F5F5F5";
+                editInfoInput.style.backgroundColor = "#F5F5F5";
             }
         }
 
         function setColorInput(whichForm, newColor) {
             if (whichForm == "AddEvent")
             {
-                var colorInput = document.getElementById('add-color-input');
+                var colorInput = document.getElementById('add-event-color-input');
                 var informationInput = document.getElementById('add-event-info-input');
             }
             else
             {
-                var colorInput = document.getElementById('edit-color-input');
+                var colorInput = document.getElementById('edit-event-color-input');
                 var informationInput = document.getElementById('edit-event-info-input');
             }
 
             informationInput.style.backgroundColor = newColor;
             colorInput.value = newColor;
 
-            console.log(colorInput.value);
+            console.log("whichForm = " + whichForm);
+            console.log("newColor = " + newColor);
+            console.log("colorInput.value = " + colorInput.value);
+        }
+
+        function toggleColors() {
+            event.preventDefault();
+
+            var editColorsDiv = document.getElementById('edit-colors-div');
+
+            editColorsDiv.style.display = "block";
         }
     </script>
 }

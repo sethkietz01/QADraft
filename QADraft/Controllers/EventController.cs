@@ -25,8 +25,8 @@ namespace QADraft.Controllers
         [HttpPost]
         public IActionResult AddEvent(Events newEvent)
         {
-            Console.WriteLine("Id = " + newEvent.Id + "\nColor = " + newEvent.Color);
-            
+            Console.WriteLine("\n\n\nId = " + newEvent.Id + "\nEventTime " + newEvent.EventTime + "\nEventInformation " + newEvent.EventInformation + "\nColor = " + newEvent.Color + "\n\n\n");
+
             // Verify that the event model stat is valid
             if (ModelState.IsValid)
             {

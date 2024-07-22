@@ -18,5 +18,7 @@ namespace QADraft.Models
         
         public string? Color { get; set; }
 
+
+
     }
 }
