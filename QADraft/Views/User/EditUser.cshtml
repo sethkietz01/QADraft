@@ -43,11 +43,11 @@
     <div class="form-group">
         <label asp-for="Role" class="control-label">Role</label>
         <select asp-for="Role" class="form-control" id="natureSelect">
-            <option value="">Select Role</option>
+            <option class="placeholder" value="" disabled selected>Select Role</option>
             <option value="Geek">Geek</option>
             <option value="Coordinator">Coordinator</option>
             <option value="Admin">Admin</option>
-            <option value="PreviouslyEmployed">Previously Employed</option>
+            <option value="Inactive">Inactive</option>
         </select>
         <span asp-validation-for="Role" class="text-danger"></span>
     </div>
@@ -71,7 +71,7 @@
 </form>
 
 <!-- Modal Popup for confirm user edit -->
-<dialog id="dialog">
+<dialog id="dialog" class="dialog-popups">
 	<div class="confirmation-content">
         <!-- Confirmation text -->
         <p>Press Confirm to Edit this User's information.</p>

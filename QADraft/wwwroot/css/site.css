@@ -276,7 +276,7 @@ header {
         }
 
 .severity-cell {
-    max-width: 40px;
+    width: 3% !important;
 }
 
 .menu-button {
@@ -829,6 +829,7 @@ dialog {
 
 #dialog-details {
     min-width: 250px;
+    max-width: 1000px;
 }
 
 .display-4 {
@@ -869,4 +870,33 @@ dialog {
 
 #flagged-table-header, #flagged-table-data {
     text-align: center;
+}
+
+
+#all-qas-severity-table-header,
+#all-qas-severity-table-data,
+#all-qas-committed-on-table-header,
+#all-qas-committed-on-table-data,
+#all-qas-actions-table-header,
+#all-qas-actions-table-data {
+    text-align: center;
+}
+
+.dialog-group {
+    display: flex;
+}
+
+.details-modal-content {
+    width: 400px;
+    display: grid;
+    grid-template-columns: 200px 200px;
+    grid-template-rows: auto auto auto;
+}
+
+    .details-modal-content div {
+        text-align: center;
+    }
+
+.grid-span-two-columns {
+    grid-column: span 2;
 }

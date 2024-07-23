@@ -212,7 +212,9 @@
 
         function closeDialog() {
             event.preventDefault(); // Prevent default action
-            window.dialog.close();
+
+            const filterDialog = document.getElementById('filter-your-qas-dialog');
+            filterDialog.close();
         }
 
         function showDetailsModal(customerName, unitId, description) {

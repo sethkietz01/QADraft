@@ -84,10 +84,14 @@ body {
 }
 
 #snipe-it-submit-button {
-    background-color: #666;
+    background-color: #6d6565;
 }
 
 #snipe-it-header {
     color: #000;
+}
+
+.dialog-popups {
+    box-shadow: 0 0 5px rgba(230, 168, 93, 1);
 }
 
