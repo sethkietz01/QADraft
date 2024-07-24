@@ -1,0 +1,176 @@
+﻿<!-- This partial view will place the pie chart into main page wherever you place the partial -->
+<!-- If the chart is not showing, ensure that the Dictionaries are passed by the  -->
+@{
+    //load viewbag dictionaries
+    var categoryDict = ViewBag.categoryDict as Dictionary<string, int>;
+    var natureDict = ViewBag.natureDict as Dictionary<string, int>;
+}
+<h1 id="chartDesc">Name here</h1>
+
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v6.js"></script>
+
+<div id="container" />
+
+<script>
+// set the dimensions and margins of the graph
+const width = 1150,
+    height = 550,
+    margin = 60;
+
+// The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
+const radius = Math.min(width, height) / 2 - margin;
+
+// Add the tooltip
+const tooltip = d3.select("#donut-chart-tooltip");
+
+// append the svg object to the div called 'container'
+const svg = d3.select("#container")
+  .append("svg")
+    .attr("width", width)
+    .attr("height", height)
+  .append("g")
+    .attr("transform", `translate(${width/2},${height/2})`);
+
+
+function call(type) {
+    let data = {}; // To store the current data
+    let title = document.getElementById('chartDesc');
+
+    if (type === 'category') {
+        data = @Html.Raw(Json.Serialize(ViewBag.categoryDict));
+        title.innerText  = "Category";
+    }
+    if (type === 'nature') {
+        data = @Html.Raw(Json.Serialize(ViewBag.natureDict));
+        title.innerText  = "Nature";
+    }
+    console.log(Object.keys(data));
+    update(data);
+}
+
+// Set the color scale
+const color = d3.scaleOrdinal()
+    .range(d3.schemeCategory10);
+
+function update(data) {
+    // Update the color domain based on the current data
+    color.domain(Object.keys(data));
+
+    // Compute the position of each group on the pie:
+    const pie = d3.pie()
+      .sort(null) // Do not sort group by size
+      .value(d => d[1]);
+    const data_ready = pie(Object.entries(data));
+
+    // The arc generator
+    const arc = d3.arc()
+      .innerRadius(radius * 0.5)         // This is the size of the donut hole
+      .outerRadius(radius * 0.8);
+
+    // Select all slices
+    const slices = svg.selectAll('.slice')
+      .data(data_ready);
+
+    // Update existing slices
+    slices
+      .transition() // Add transition
+      .duration(1000) // Duration of transition
+      .attrTween("d", function(d) { // Interpolate between old and new paths
+          const interpolate = d3.interpolate(this._current, d);
+          this._current = interpolate(0);
+          return function(t) {
+              return arc(interpolate(t));
+          };
+      })
+      .attr('fill', d => color(d.data[0]))
+      .on("mouseover", function(event, d) {
+          tooltip.transition()
+            .duration(200)
+            .style("opacity", .9);
+          tooltip.html(`${d.data[0]}: ${d.data[1]}`)
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 28) + "px");
+      })
+      .on("mouseout", function() {
+          tooltip.transition()
+            .duration(500)
+            .style("opacity", 0);
+      });
+
+    // Enter new slices
+    slices.enter()
+      .append('path')
+      .attr('class', 'slice')
+      .attr('d', arc)
+      .attr('fill', d => color(d.data[0]))
+      .attr("stroke", "white")
+      .style("stroke-width", "2px")
+      .style("opacity", 0.7)
+      .on("mouseover", function(event, d) {
+          tooltip.transition()
+            .duration(200)
+            .style("opacity", .9);
+          tooltip.html(`${d.data[0]}: ${d.data[1]}`)
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 28) + "px");
+      })
+      .on("mouseout", function() {
+          tooltip.transition()
+            .duration(500)
+            .style("opacity", 0);
+      })
+      .transition() // Add transition
+      .duration(1000) // Duration of transition
+      .attrTween("d", function(d) { // Interpolate between old and new paths
+          const interpolate = d3.interpolate(this._current, d);
+          this._current = interpolate(0);
+          return function(t) {
+              return arc(interpolate(t));
+          };
+      });
+
+    // Remove old slices
+    slices.exit()
+      .remove();
+
+
+    // test
+    var totalData = d3.sum(data_ready, d => d.data[1]);
+    var percentage = 0;
+    var dataArray = data_ready.map(d => d.data[1]);
+
+
+    console.log("data_ready = " + data_ready);
+    console.log("data_ready.length = " + data_ready.length);
+    
+    console.log("totalData = " + totalData);
+    console.log("data = " + data);
+    console.log("data[1] = " + data[1])
+
+    // Add labels numbering the slices
+    svg.selectAll(".labelNumber")
+      .data(data_ready)
+      .enter()
+      .append("text")
+      .attr("class", "labelNumber")
+      .attr("transform", d => `translate(${arc.centroid(d)})`)
+      .attr("dy", "0.35em")
+      .attr("text-anchor", "middle")
+      .text((d, i) => {
+        // Calculate the percentage and round to one decimal place
+        const percentage = (dataArray[i] / totalData) * 100;
+        return percentage.toFixed(1) + '%'; // Rounds to one decimal place
+      });
+
+    // Remove old label numbers
+    svg.selectAll(".labelNumber")
+      .data(data_ready)
+      .exit()
+      .remove();
+}
+
+call('nature');
+
+</script>

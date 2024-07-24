@@ -184,7 +184,15 @@
             var backgroundColor = '#000';
 
             var userTheme = '@Context.Session.GetString("Theme")';
+
+            var trElement = cell.parentNode;
+            var computedStyle = window.getComputedStyle(trElement);
+            backgroundColor = computedStyle.backgroundColor;
+
+            console.log("\n\n\nbackgroundColor = " + backgroundColor + "\n\n\n");
+
         
+            /*
             if (index % 2 === 0) 
             {
                 if (userTheme === "dark")
@@ -207,6 +215,9 @@
                     backgroundColor = '#eaeaea';
                 }
             }
+            /*
+
+
 
             // Color the whole cell
             //cell.style.backgroundColor = severityColor;

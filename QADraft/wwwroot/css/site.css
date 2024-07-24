@@ -276,7 +276,7 @@ header {
         }
 
 .severity-cell {
-    width: 3% !important;
+    width: 100%;
 }
 
 .menu-button {
@@ -887,9 +887,9 @@ dialog {
 }
 
 .details-modal-content {
-    width: 400px;
+    width: 600px;
     display: grid;
-    grid-template-columns: 200px 200px;
+    grid-template-columns: 200px 200px 200px;
     grid-template-rows: auto auto auto;
 }
 
@@ -897,6 +897,31 @@ dialog {
         text-align: center;
     }
 
-.grid-span-two-columns {
-    grid-column: span 2;
+.grid-span-three-columns {
+    grid-column: span 3;
+}
+
+#donut-chart-tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 4px;
+    font: 12px sans-serif;
+    background: lightsteelblue;
+    border: 1px solid steelblue;
+    border-radius: 8px;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.severity-cell-container {
+    padding-right: 10px !important;
+}
+
+.grid-test {
+    display: grid;
+    grid-template-columns: 300px 300px;
+}
+
+#griddy-test {
+    grid-column: span 3;
 }

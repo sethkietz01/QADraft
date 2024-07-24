@@ -95,3 +95,11 @@ body {
     box-shadow: 0 0 5px rgba(230, 168, 93, 1);
 }
 
+.bordered-grid {
+    border-left: 1px solid;
+    border-right: 1px solid;
+}
+
+.grid-border-bottom {
+    border-bottom: 1px solid;
+}
