@@ -213,3 +213,17 @@ select option {
 .grid-border-bottom {
     border-bottom: 1px solid #4A4A4A;
 }
+
+#donut-chart-tooltip {
+    background-color: #2C2C2C;
+    color: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+}
+
+#scatter-plot-tooltip {
+    background-color: #2C2C2C;
+    color: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+}

@@ -76,9 +76,6 @@ const colorsArray = ["#ff0000", // 1: Red
       "#0025ff", // 19: Violet
       "#2e00ff", // 20: Violet-Magenta
       "#6400ff", // 21: Magenta-Violet
-      //"#9e00ff", // 22: Magenta
-      //"#dc00ff", // 23: Magenta-Red
-      //"#ff00c1"  // 24: Light Red (Pink)
     ]
 
 // Set the color scale
@@ -104,37 +101,46 @@ function update(data) {
     const slices = svg.selectAll('.slice')
       .data(data_ready);
 
+    var strokeColor = '';
+
+    if ('@Context.Session.GetString("Theme")' === "dark") {
+        strokeColor = 'white';
+    }
+    else {
+        strokeColor = 'black';
+    }
+
     // Enter new slices
     slices.enter()
       .append('path')
       .attr('class', 'slice')
       .attr('d', arc)
       .attr("fill", (d, i) => color(i)) // Use color scale to fill based on index
-   .attr("stroke", "black")
-   .style("stroke-width", "2px")
-      .style("opacity", 0.7)
-      .on("mouseover", function(event, d) {
-          tooltip.transition()
+      .attr("stroke", strokeColor)
+      .style("stroke-width", "2px")
+        .style("opacity", 0.7)
+        .on("mouseover", function(event, d) {
+            tooltip.transition()
             .duration(200)
             .style("opacity", .9);
-          tooltip.html(`${d.data[0]}: ${d.data[1]}`)
+            tooltip.html(`${d.data[0]}: ${d.data[1]}`)
             .style("left", (event.pageX + 10) + "px")
             .style("top", (event.pageY - 28) + "px");
-      })
-      .on("mouseout", function() {
-          tooltip.transition()
+        })
+        .on("mouseout", function() {
+            tooltip.transition()
             .duration(500)
             .style("opacity", 0);
-      })
-      .transition() // Add transition
-      .duration(1000) // Duration of transition
-      .attrTween("d", function(d) { // Interpolate between old and new paths
-          const interpolate = d3.interpolate(this._current, d);
-          this._current = interpolate(0);
-          return function(t) {
-              return arc(interpolate(t));
-          };
-      });
+        })
+        .transition() // Add transition
+        .duration(1000) // Duration of transition
+        .attrTween("d", function(d) { // Interpolate between old and new paths
+            const interpolate = d3.interpolate(this._current, d);
+            this._current = interpolate(0);
+            return function(t) {
+                return arc(interpolate(t));
+            };
+        });
 
     // Remove old slices
     slices.exit()
@@ -155,6 +161,7 @@ function update(data) {
       .attr("transform", d => `translate(${arc.centroid(d)})`)
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
+      .attr("fill", strokeColor)
       .text((d, i) => {
         // Calculate the percentage and round to one decimal place
         const percentage = (dataArray[i] / totalData) * 100;
@@ -211,11 +218,6 @@ function populateLegend(data) {
     else {
         halfOfData = Math.ceil((Object.keys(data).length / 2));
     }
-
-    /*
-    var firstHalfOfData = Object.keys(data).slice(0, halfOfData);
-    var secondHalfOfData = Object.keys(data).slice(halfOfData);
-    */
 
     console.log("halfOfData = " + halfOfData);
 

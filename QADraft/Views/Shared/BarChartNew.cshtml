@@ -18,53 +18,6 @@
     <div id="container"></div>
 
     <script>
-        // var natureMapping = [
-        //     { nature: "Didn't check out asset at all (Not in SnipeIT)", categories: ["Snipe-It"], severity: "9", involves: "" },
-        //     { nature: "Didn't update Snipe-It at all (Rechecks/Check ins)", categories: ["Snipe-It"], severity: "9", involves: "" },
-        //     { nature: "Incorrect due date", categories: ["Snipe-It", "DocuSign"], severity: "6", involves: "" },
-        //     { nature: "Didn't upload EULA", categories: ["Snipe-It"], severity: "6", involves: "" },
-        //     { nature: "Didn't update status", categories: ["Snipe-It"], severity: "5", involves: "" },
-        //     { nature: "Didn't comment in Snipe-It", categories: ["Snipe-It"], severity: "5", involves: "" },
-        //     { nature: "Clicked edit asset instead of check-in/check-out", categories: ["DocuSign"], severity: "5", involves: "" },
-        //     { nature: "Gave equipment and didn't start a checkout form", categories: ["DocuSign"], severity: "10", involves: "" },
-        //     { nature: "Didn't complete EULA", categories: ["DocuSign"], severity: "10", involves: "" },
-        //     { nature: "Didn't complete paperwork", categories: ["DocuSign"], severity: "7", involves: "" },
-        //     { nature: "Didn't comment for swap", categories: ["DocuSign"], severity: "6", involves: "" },
-        //     { nature: "Wrong unit ID", categories: ["DocuSign"], severity: "6", involves: "" },
-        //     { nature: "Didn't send walk-in form", categories: ["DocuSign"], severity: "4", involves: "" },
-        //     { nature: "On wrong step", categories: ["DocuSign"], severity: "3", involves: "" },
-        //     { nature: "Checked out to someone on no checkout list", categories: ["Processes"], severity: "10", involves: "" },
-        //     { nature: "Charged incorrect fees", categories: ["Processes"], severity: "10", involves: "" },
-        //     { nature: "Did not check Docusign when setting Late Fees", categories: ["Processes"], severity: "10", involves: "" },
-        //     { nature: "Checked in/out with missing items", categories: ["Processes"], severity: "8", involves: "" },
-        //     { nature: "Didn't check ID", categories: ["Processes"], severity: "8", involves: "" },
-        //     { nature: "Left student personal information open", categories: ["Processes"], severity: "8", involves: "" },
-        //     { nature: "Didn't check for damages", categories: ["Processes"], severity: "8", involves: "" },
-        //     { nature: "Checked out same laptop after a recheck", categories: ["Processes"], severity: "7", involves: "" },
-        //     { nature: "Improper extension", categories: ["Processes"], severity: "7", involves: "" },
-        //     { nature: "Didn't do reminder emails/courtesy calls", categories: ["Processes"], severity: "7", involves: "" },
-        //     { nature: "Didn't clear SD card", categories: ["Processes"], severity: "5", involves: "" },
-        //     { nature: "Didn't give password at checkout", categories: ["Processes"], severity: "5", involves: "" },
-        //     { nature: "Didn't create footprint", categories: ["Processes"], severity: "4", involves: "" },
-        //     { nature: "Didn't clean equipment", categories: ["Processes"], severity: "2", involves: "" },
-        //     { nature: "Improper initials on tasks", categories: ["Processes"], severity: "2", involves: "" },
-        //     { nature: "Tidiness/Cleanliness issue", categories: ["Processes"], severity: "2", involves: "" },
-        //     { nature: "Didn't send late Fees", categories: ["Processes"], severity: "10", involves: "" },
-        //     { nature: "Rechecked Equipment That Can't Be Rechecked", categories: ["Processes"], severity: "10", involves: "" },
-        //     { nature: "Gross Misconduct", categories: ["Desk Conduct"], severity: "10", involves: "" },
-        //     { nature: "No call/No show", categories: ["Desk Conduct"], severity: "10", involves: "" },
-        //     { nature: "Unprofessional behavior", categories: ["Desk Conduct"], severity: "9", involves: "" },
-        //     { nature: "Didn't Sign out", categories: ["Desk Conduct"], severity: "7", involves: "" },
-        //     { nature: "Tardy", categories: ["Desk Conduct"], severity: "5", involves: "" },
-        //     { nature: "Off-Task", categories: ["Desk Conduct"], severity: "4", involves: "" },
-        //     { nature: "Forgot geek shirt", categories: ["Other"], severity: "5", involves: "" },
-        //     { nature: "Time card", categories: ["Other"], severity: "5", involves: "" },
-        //     { nature: "Forgot name tag", categories: ["Other"], severity: "3", involves: "" },
-        //     { nature: "Improper communication", categories: ["Other"], severity: "1", involves: "" },
-        //     { nature: "Loitering", categories: ["Other"], severity: "1", involves: "" },
-        //     { nature: "Removed student from NCL shouldn't have", categories: ["Other"], severity: "10", involves: "Student" }
-        // ];
-
         // set the dimensions and barMargins of the graph
         const barMargin = { top: 20, right: 30, bottom: 70, left: 60 },
             barWidth = 450 - barMargin.left - barMargin.right,
@@ -82,6 +35,8 @@
         function callBar(type) {
             let data = {}; // To store the current data
             let title = "Graph by Category";
+
+            
 
             if (type === 'category') {
                 data = @Html.Raw(Json.Serialize(categoryDict));
@@ -126,6 +81,16 @@
             const keys = Object.keys(data);
             const values = Object.values(data);
 
+            const colorsArray = [
+                "rgb(100, 0, 255)", // 7: Violet
+                "rgb(0, 37, 255)", // 6: Blue
+                "rgb(0, 255, 220)", // 5: Cyan
+                "rgb(0, 255, 37)", // 4: Green
+                "rgb(241, 255, 0)", // 3: Yellow
+                "rgb(255, 143, 0)", // 2: Orange
+                "rgb(255, 0, 0)" // 1: Red
+            ]
+
             // Bubble sort the data descending
             for (var i = 0; i < values.length; i++) {
                 for (var j = 0; j < values.length - i - 1; j++) {
@@ -157,8 +122,7 @@
 
             // Define a color scale with a predefined color scheme
             const colorScale = d3.scaleOrdinal()
-                .domain(keys) // Assuming keys are unique descriptions/natures
-                .range(d3.schemeCategory10); // You can use any color scheme, like schemeCategory10
+                .range(colorsArray);
 
             // Calculate tick values dynamically
             const maxY = d3.max(values);
@@ -168,15 +132,16 @@
             const bars = barSvg.selectAll(".bar")
                 .data(keys);
 
-            // Exit old bars
-            bars.exit()
-                .transition()
-                .duration(500)
-                .attr("height", 0) // Scale height to zero
-                .attr("y", barHeight) // Move bars to the bottom of the chart
-                .style("opacity", 0) // Fade out bars
-                .remove();
+            var labelColor = '';
 
+            if ('@Context.Session.GetString("Theme")' === "dark") {
+                labelColor = 'white';
+            }
+            else {
+                labelColor = 'black';
+            }
+
+            // Add bars
             bars.enter().append("rect")
                 .attr("class", "bar")
                 .attr("x", d => x(d))
@@ -234,6 +199,7 @@
                 .attr("transform", "rotate(-90)")
                 .attr("y", -barMargin.left + 20)
                 .attr("x", -barMargin.top - barHeight / 2)
+                .attr("fill", labelColor)
                 .text("Number of QAs") // Replace with your y-axis title
                 .style("font-size", "16px"); // Adjust font size of y-axis title
         }

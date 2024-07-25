@@ -140,6 +140,15 @@
                 .x(d => x(d.date))
                 .y(d => y(d.value));
 
+            var labelColor = '';
+
+            if ('@Context.Session.GetString("Theme")' === "dark") {
+                labelColor = 'white';
+            }
+            else {
+                labelColor = 'black';
+            }
+
             // Draw line
             scatterPlotSvg.append("path")
                 .datum(data)
@@ -198,6 +207,7 @@
                 .attr("text-anchor", "middle")
                 .attr("x", scatterPlotWidth / 2)
                 .attr("y", scatterPlotHeight + scatterPlotMargin.bottom - 10)
+                .attr("fill", labelColor)
                 .text("Week")
                 .style("font-size", "16px");
 
@@ -207,6 +217,7 @@
                 .attr("transform", "rotate(-90)")
                 .attr("x", -scatterPlotHeight / 2)
                 .attr("y", -scatterPlotMargin.left + 20)
+                .attr("fill", labelColor)
                 .text("Number of Errors")
                 .style("font-size", "16px");
         }
