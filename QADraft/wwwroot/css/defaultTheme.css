@@ -103,3 +103,13 @@ body {
 .grid-border-bottom {
     border-bottom: 1px solid;
 }
+
+#donut-chart-tooltip {
+    border-color: #E6A65D;
+    box-shadow: 0 0 5px rgba(230, 168, 93, 1);
+}
+
+#scatter-plot-tooltip {
+    border-color: #E6A65D;
+    box-shadow: 0 0 5px rgba(230, 168, 93, 1);
+}

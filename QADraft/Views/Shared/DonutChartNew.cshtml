@@ -5,7 +5,13 @@
     var categoryDict = ViewBag.categoryDict as Dictionary<string, int>;
     var natureDict = ViewBag.natureDict as Dictionary<string, int>;
 }
-<h1 id="chartDesc">Name here</h1>
+    <table id="donut-chart-legend-table">
+        <tbody id="donut-chart-legend-table-body">
+            <tr>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
 
 
 <!-- Load d3.js -->
@@ -15,9 +21,9 @@
 
 <script>
 // set the dimensions and margins of the graph
-const width = 1150,
-    height = 550,
-    margin = 60;
+const width = 500,
+    height = 500,
+    margin = 60
 
 // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
 const radius = Math.min(width, height) / 2 - margin;
@@ -26,33 +32,58 @@ const radius = Math.min(width, height) / 2 - margin;
 const tooltip = d3.select("#donut-chart-tooltip");
 
 // append the svg object to the div called 'container'
-const svg = d3.select("#container")
+const svg = d3.select("#donut-chart-div")
   .append("svg")
     .attr("width", width)
     .attr("height", height)
   .append("g")
-    .attr("transform", `translate(${width/2},${height/2})`);
+    .attr("transform", `translate(${width/2},155)`);
 
 
-function call(type) {
+function callDonut(type) {
     let data = {}; // To store the current data
-    let title = document.getElementById('chartDesc');
+    
 
     if (type === 'category') {
         data = @Html.Raw(Json.Serialize(ViewBag.categoryDict));
-        title.innerText  = "Category";
     }
     if (type === 'nature') {
         data = @Html.Raw(Json.Serialize(ViewBag.natureDict));
-        title.innerText  = "Nature";
+        populateLegend(data);
     }
     console.log(Object.keys(data));
     update(data);
 }
 
+const colorsArray = ["#ff0000", // 1: Red
+      "#ff2400", // 2: Red-Orange
+      "#ff4800", // 3: Orange-Red
+      "#ff6b00", // 4: Orange
+      "#ff8f00", // 5: Orange-Yellow
+      "#ffb200", // 6: Yellow-Orange
+      "#ffd600", // 7: Yellow
+      "#f1ff00", // 8: Yellow-Green
+      "#b8ff00", // 9: Green-Yellow
+      "#7eff00", // 10: Green
+      "#3eff00", // 11: Green-Cyan
+      "#00ff25", // 12: Cyan-Green
+      "#00ff64", // 13: Cyan
+      "#00ff9e", // 14: Cyan-Blue
+      "#00ffdc", // 15: Blue-Cyan
+      "#00ddff", // 16: Blue
+      "#00a1ff", // 17: Blue-Violet
+      "#0064ff", // 18: Violet-Blue
+      "#0025ff", // 19: Violet
+      "#2e00ff", // 20: Violet-Magenta
+      "#6400ff", // 21: Magenta-Violet
+      //"#9e00ff", // 22: Magenta
+      //"#dc00ff", // 23: Magenta-Red
+      //"#ff00c1"  // 24: Light Red (Pink)
+    ]
+
 // Set the color scale
 const color = d3.scaleOrdinal()
-    .range(d3.schemeCategory10);
+  .range(colorsArray);
 
 function update(data) {
     // Update the color domain based on the current data
@@ -73,40 +104,14 @@ function update(data) {
     const slices = svg.selectAll('.slice')
       .data(data_ready);
 
-    // Update existing slices
-    slices
-      .transition() // Add transition
-      .duration(1000) // Duration of transition
-      .attrTween("d", function(d) { // Interpolate between old and new paths
-          const interpolate = d3.interpolate(this._current, d);
-          this._current = interpolate(0);
-          return function(t) {
-              return arc(interpolate(t));
-          };
-      })
-      .attr('fill', d => color(d.data[0]))
-      .on("mouseover", function(event, d) {
-          tooltip.transition()
-            .duration(200)
-            .style("opacity", .9);
-          tooltip.html(`${d.data[0]}: ${d.data[1]}`)
-            .style("left", (event.pageX + 10) + "px")
-            .style("top", (event.pageY - 28) + "px");
-      })
-      .on("mouseout", function() {
-          tooltip.transition()
-            .duration(500)
-            .style("opacity", 0);
-      });
-
     // Enter new slices
     slices.enter()
       .append('path')
       .attr('class', 'slice')
       .attr('d', arc)
-      .attr('fill', d => color(d.data[0]))
-      .attr("stroke", "white")
-      .style("stroke-width", "2px")
+      .attr("fill", (d, i) => color(i)) // Use color scale to fill based on index
+   .attr("stroke", "black")
+   .style("stroke-width", "2px")
       .style("opacity", 0.7)
       .on("mouseover", function(event, d) {
           tooltip.transition()
@@ -136,18 +141,10 @@ function update(data) {
       .remove();
 
 
-    // test
+    // Variables to calculate the percentage of each QA
     var totalData = d3.sum(data_ready, d => d.data[1]);
     var percentage = 0;
     var dataArray = data_ready.map(d => d.data[1]);
-
-
-    console.log("data_ready = " + data_ready);
-    console.log("data_ready.length = " + data_ready.length);
-    
-    console.log("totalData = " + totalData);
-    console.log("data = " + data);
-    console.log("data[1] = " + data[1])
 
     // Add labels numbering the slices
     svg.selectAll(".labelNumber")
@@ -161,7 +158,14 @@ function update(data) {
       .text((d, i) => {
         // Calculate the percentage and round to one decimal place
         const percentage = (dataArray[i] / totalData) * 100;
-        return percentage.toFixed(1) + '%'; // Rounds to one decimal place
+
+        if (percentage > 5)
+        {
+            return percentage.toFixed(1) + '%'; // Rounds to one decimal place
+        }
+
+        return "";
+
       });
 
     // Remove old label numbers
@@ -171,6 +175,101 @@ function update(data) {
       .remove();
 }
 
-call('nature');
+function populateLegend(data) {
+    console.log("populateLegend data.length = " + Object.keys(data).length);
+
+    var legendTable = document.getElementById('donut-chart-legend-table-body');
+    legendTable.innerHTML = ''; 
+
+    /*
+    Object.keys(data).forEach((key, index) => {
+        var row = document.createElement('tr');
+
+        var colorCell = document.createElement('td');
+        colorCell.style.width = "25px";
+        colorCell.style.backgroundColor = colorsArray[index];
+        colorCell.style.border = '1px solid';
+        row.appendChild(colorCell);
+
+        var keyCell = document.createElement('td');
+        keyCell.textContent = key;
+        keyCell.style.paddingLeft = '20px';
+
+        row.style.borderBottom = '1px solid';
+        row.appendChild(keyCell);
+
+        legendTable.appendChild(row);
+    });
+    */
+
+
+    var halfOfData = 0;
+
+    if (Object.keys(data).length % 2 == 0) {
+        halfOfData = Object.keys(data).length / 2;
+    }
+    else {
+        halfOfData = Math.ceil((Object.keys(data).length / 2));
+    }
+
+    /*
+    var firstHalfOfData = Object.keys(data).slice(0, halfOfData);
+    var secondHalfOfData = Object.keys(data).slice(halfOfData);
+    */
+
+    console.log("halfOfData = " + halfOfData);
+
+    for (let i = 0; i < halfOfData; i++) {
+        var row = document.createElement('tr');
+
+        row.style.fontSize = '15px';
+
+        var firstColorCell = document.createElement('td');
+        firstColorCell.style.width = "25px";
+        firstColorCell.style.backgroundColor = colorsArray[i];  
+        firstColorCell.style.border = '1px solid';
+
+        var firstKeyCell = document.createElement('td');
+        firstKeyCell.textContent = Object.keys(data)[i];
+        firstKeyCell.style.paddingLeft = '20px';
+        firstKeyCell.style.paddingRight = '20px';
+
+        row.appendChild(firstColorCell);
+            row.appendChild(firstKeyCell);
+
+
+        if (i + halfOfData >= Object.keys(data).length) {
+            var placeholderCell = document.createElement('td');
+            row.appendChild(placeholderCell);
+
+            
+            legendTable.appendChild(row);
+
+            break;
+        }
+
+        var secondColorCell = document.createElement('td');
+        secondColorCell.style.width = "25px";
+        secondColorCell.style.backgroundColor = colorsArray[i + halfOfData];
+        secondColorCell.style.border = '1px solid';
+
+        var secondKeyCell = document.createElement('td');
+        secondKeyCell.textContent = Object.keys(data)[i + halfOfData];
+        secondKeyCell.style.paddingLeft = '20px';
+
+        row.style.borderBottom = '1px solid';
+
+        row.appendChild(firstColorCell);
+        row.appendChild(firstKeyCell);
+        row.appendChild(secondColorCell);
+        row.appendChild(secondKeyCell);
+
+        
+
+        legendTable.appendChild(row);
+    }
+}
+
+callDonut('nature');
 
 </script>

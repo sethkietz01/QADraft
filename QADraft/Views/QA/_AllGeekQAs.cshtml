@@ -11,16 +11,29 @@
 <h2>All QAs</h2>
 
 <!-- Show and hide piechart -->
-<button onclick="toggleChart()" class="buttons table-buttons">Show/Hide Graphs</button>
-<div>
-    <!-- Partial view must placed within a div that is nested in another div. -->
-    <div id="chartDiv">
-        <div id="donut-chart-tooltip" class="tooltip"></div>
-        <!-- Load the partial view for the DonutChart-->
-        <partial name="DonutChartNew"/>
+<button onclick="toggleCharts()" class="buttons table-buttons">Show/Hide Graphs</button>
+<div id="charts-container" class="hidden-charts">
+    <div id="top-charts-container">
+        <h2>Graph by Nature</h2>
+        <div id="donut-chart-div">
+            <!-- Partial view must placed within a div that is nested in another div. -->
+            <div id="donut-chart-tooltip" class="tooltip"></div>
+            <div id="donut-chart-legend"></div>
+            <!-- Load the partial view for the DonutChart-->
+            <partial name="DonutChartNew"/>
+        </div>
+    </div>
+    <div id="bottom-charts-container">
+        <div id="bar-chart-div">
+            <partial name="BarChartNew"/>
+        </div>
+        <div id="scatter-plot-div">
+            <div id="scatter-plot-tooltip" class="tooltip"></div>
+            <partial name="ConnectedScatterPlot"/>
+        </div>
     </div>
 </div>
- 
+</div>
 <!-- Table used to output QAs -->
 <table class="table-qa" id="table">
     <!-- Table Header -->
@@ -90,7 +103,6 @@
                         {
                             // Get the text of the committedSelect element 
                             var committedBy = '@qa.CommittedBy?.FirstName' + ' ' + '@qa.CommittedBy?.LastName'
-                            console.log(committedBy)
                             // Check if the CommittedBy name is the same as the user's name
                             if (committedBy == userName) {
                                 // If it is, disable the Edit button
@@ -234,11 +246,15 @@
             // Flip the value of toggle so that the next time it is called the visiblity of the elements will flip.
             toggle = !toggle;
         }
+
+        function toggleCharts() {
+            var chartsContainer = document.getElementById('charts-container');
+
+            chartsContainer.classList.toggle('hidden-charts');
+        }
         
         function showDetailsModal(qaId, foundBy, customerName, unitId, foundOn, description, createdOn, submittedBy, committedBy, committedOn, severity, category, nature) {
             event.preventDefault();
-
-            console.log('showDetailsModal');
 
             const dialogDetails = document.getElementById('dialog-details');
 
@@ -295,9 +311,6 @@
 
             tableRow.style.boxShadow = '0 0 5px 1px rgba(230, 168, 93, 1)';
 
-
-            console.log('dialogDetails');
-
             dialogDetails.showModal();
         }
 
@@ -310,7 +323,6 @@
             tableRow.style.boxShadow = '0 0 0';
 
             applySeverityColors();
-            console.log("applySeverityColors()");
 
             var detailsModal = document.getElementById('dialog-details');
             detailsModal.close();
