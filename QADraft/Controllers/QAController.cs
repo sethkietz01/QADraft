@@ -450,7 +450,8 @@ namespace QADraft.Controllers
                 return RedirectToAction("EditQA", new { id = qaId, source = source });
             }
             // Check if the passed action is to Delete
-            else if (action == "Delete QA")
+            else 
+            if (action == "Delete QA")
             {
                 // Direct to the DeleteQA action and pass the ID of the QA and the source page
                 return RedirectToAction("DeleteQA", new { id = qaId, source = source });
