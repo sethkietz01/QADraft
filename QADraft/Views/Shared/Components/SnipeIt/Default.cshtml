@@ -1,8 +1,12 @@
-﻿@{
+﻿﻿@{
+    // Convert the dates from viewbag into format usable but date inputs
     string startDate = ViewBag.startDate.ToString("s");
     string endDate = ViewBag.endDate.ToString("s");
 }
 
+<div id="snipe-it-header">
+    <h4>Snipe-IT Dashboard</h4>
+</div>
 <div class="SnipeItContainer">
     <div class="DatePicker">
         <text>Start Date: </text>
@@ -11,16 +15,16 @@
         <text>End Date: </text>
         <input type="date" id="endDate" class="form-control" value="@ViewBag.endDate?.ToString("yyyy-MM-dd")"/>
 
-        <button class="buttons" onclick="SubmitSnipeItDates()">Submit</button>
+        <button id="snipe-it-submit-button" class="buttons" onclick="SubmitSnipeItDates()">Submit</button>
     </div>
-    <div style="grid-row: 2;">
+    <div class="snipeit-stat-outputs" style="grid-row: 2;">
         <table>
             <tr>
             </tr>
         </table>
-        <text>Total Things Checked Out: @ViewBag.totalCheckedOut</text>
+        <text>Total Equipment Checked Out: @ViewBag.totalCheckedOut</text>
     </div>
-    <div style="grid-row: 3;">
+    <div class="snipeit-stat-outputs" style="grid-row: 3;">
         <table>
             <tr><td>Checked Out:</td><td>@ViewBag.currentCheckedout</td></tr>
             <tr><td>Re-Checked Out:</td><td>@ViewBag.currentReChecked</td></tr>
@@ -32,10 +36,10 @@
         </table>
     </div>
 
-    <div style="grid-row: 2;">
-        <text>Equipment Left @ViewBag.currentCirculation</text>
+    <div class="snipeit-stat-outputs" style="grid-row: 2;">
+        <text>Equipment In Circulation: @ViewBag.currentCirculation</text>
     </div>
-    <div style="grid-row: 3;">
+    <div class="snipeit-stat-outputs" style="grid-row: 3;">
         <table>
             <tr><td>Windows Laptops:</td><td>@ViewBag.availableWin</td></tr>
             <tr><td>Macbook Airs:</td><td>@ViewBag.availableAir</td></tr>
@@ -54,19 +58,21 @@
         // Load SnipeIt view component
         var _url = '@Url.Action("GetSnipeit", "Home")';
 
+        // Get the start and end dates from the data inputs
         var startDate = document.getElementById("startDate").value;
         var endDate = document.getElementById("endDate").value;
 
-        console.log(startDate + " : " + endDate);
+        // Fill array with data from viewbag
+        var dataArray = [@ViewBag.currentCheckedout, @ViewBag.currentReChecked, @ViewBag.currentReminderEmail, @ViewBag.currentCourtesyCallCompleted, @ViewBag.current1stLateFee, @ViewBag.current2ndLateFee, @ViewBag.currentMaintenance, @ViewBag.currentCirculation, @ViewBag.availableWin, @ViewBag.availableAir, @ViewBag.availableMac, @ViewBag.availablGcal, @ViewBag.availablProj, @ViewBag.availablCam ];
 
-        // Convert dates to compatible with c# DateTime
-
+        // Use ajax to call the view component
         $.ajax({
             type: "GET",
             url: _url,
-            data: { startDate: startDate, endDate: endDate},
+            traditional: true,
+            data: { startDate: startDate, endDate: endDate, dataArray: dataArray},
             success: function (result) {
-                console.log("success");
+                // Replace the html of the embed container with html retured by ajax.
                 var container = document.getElementById("embed-reports-container");
                 container.innerHTML = result;
                 

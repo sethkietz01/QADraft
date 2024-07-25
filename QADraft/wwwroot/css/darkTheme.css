@@ -166,11 +166,6 @@ select option {
         background-color: #7c7c7c;
     }
 
-#dialog {
-    background-color: #2C2C2C;
-    color: #fff;
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
-}
 
 .disabled-input {
     pointer-events: none;
@@ -189,3 +184,23 @@ select option {
         box-shadow: 0 0 7px rgba(255, 255, 255, 0.7);
         transition: box-shadow 0.2s;
     }
+
+.SnipeItContainer {
+    border-color: #4A4A4A !important;
+}
+
+.DatePicker, .snipeit-stat-outputs {
+    background-color: #3b3b3b;
+    border: 1px solid #4A4A4A;
+}
+
+#snipe-it-header {
+    color: #fff;
+}
+
+
+.dialog-popups {
+    background-color: #2C2C2C;
+    color: #fff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+}

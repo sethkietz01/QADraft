@@ -25,6 +25,8 @@ namespace QADraft.Controllers
         [HttpPost]
         public IActionResult AddEvent(Events newEvent)
         {
+            Console.WriteLine("\n\n\nId = " + newEvent.Id + "\nEventTime " + newEvent.EventTime + "\nEventInformation " + newEvent.EventInformation + "\nColor = " + newEvent.Color + "\n\n\n");
+
             // Verify that the event model stat is valid
             if (ModelState.IsValid)
             {
@@ -54,6 +56,54 @@ namespace QADraft.Controllers
             return View("Index", viewModel);
         }
 
+        [HttpPost]
+        public IActionResult EditEvent(Events model)
+        {
+            Console.WriteLine("\nId " + model.Id + "\nEventTime " + model.EventTime + "\nEventInformation " + model.EventInformation + "\nColor " + model.Color);
+
+            if (ModelState.IsValid)
+            {
+                Console.WriteLine("EditEvent valid model");
+
+                var existingEvent = _context.Events.SingleOrDefault(e => e.Id == model.Id);
+
+                if (existingEvent != null)
+                {
+                    // Update only the event with the matching Id
+                    existingEvent.EventTime = model.EventTime;
+                    existingEvent.EventInformation = model.EventInformation;
+
+                    // Convert the hex code to lowercase
+                    string normalizedColor = model.Color?.ToLowerInvariant();
+
+                    if (normalizedColor == "#f5f5f5" || normalizedColor == "#4a4a4a")
+                    {
+                        existingEvent.Color = null;
+                    }
+                    else
+                    {
+                        existingEvent.Color = model.Color;
+                    }
+
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    Console.WriteLine($"Event with Id {model.Id} not found.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("EditEvent not valid model");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+
+        /*
+         * Depricated
+         * 
         // Test action for edit event info
         [HttpPost]
         public IActionResult EditEventInfo(int id, string text)
@@ -90,7 +140,7 @@ namespace QADraft.Controllers
             // Return to the same page whether a change was made or not
             return RedirectToAction("Index", "Home");
         }
-
+        
 
         // risky test, linked to JS method in Index.cshtml
         [HttpPost]
@@ -155,6 +205,7 @@ namespace QADraft.Controllers
                 return BadRequest(new { error = "An error occurred while updating the event." });
             }
         }
+        */
 
         [HttpPost]
         public IActionResult DeleteEvent(int eventId)

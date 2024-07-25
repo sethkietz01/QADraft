@@ -20,12 +20,14 @@ namespace QADraft.Controllers
         }
 
         //TEST SNIPEIT INTEGRATION
-        public IActionResult GetSnipeIt(string startDate, string endDate)
+        public IActionResult GetSnipeIt(string startDate, string endDate, int[] dataArray)
         {
+            // Convert javascript ISO strings into DateTime objects
             DateTime parsedStartDate = DateTime.Parse(startDate);
             DateTime parsedEndDate = DateTime.Parse(endDate);
 
-            return ViewComponent("SnipeIt", new { startDate = parsedStartDate, endDate = parsedEndDate });
+            // Call the view component
+            return ViewComponent("SnipeIt", new { startDate = parsedStartDate, endDate = parsedEndDate, data = dataArray });
 
         }
 
@@ -146,6 +148,29 @@ namespace QADraft.Controllers
 
             // Direct the user back to the initial Login page
             return RedirectToAction("Login");
+        }
+
+        // Display the guides page
+        [HttpGet]
+        public IActionResult Guides()
+        {
+            // Verify that the user is logged in
+            if (!SessionUtil.IsAuthenticated(HttpContext))
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Geek", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
+            // Return the guides view
+            return View();
         }
 
         // Display the extern-site outages page

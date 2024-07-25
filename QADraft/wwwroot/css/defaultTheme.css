@@ -78,3 +78,28 @@ body {
     user-select: none;
     background-color: rgba(135, 144, 154, 0.1);
 }
+
+.DatePicker, .snipeit-stat-outputs {
+    background-color: #861F41;
+}
+
+#snipe-it-submit-button {
+    background-color: #6d6565;
+}
+
+#snipe-it-header {
+    color: #000;
+}
+
+.dialog-popups {
+    box-shadow: 0 0 5px rgba(230, 168, 93, 1);
+}
+
+.bordered-grid {
+    border-left: 1px solid;
+    border-right: 1px solid;
+}
+
+.grid-border-bottom {
+    border-bottom: 1px solid;
+}

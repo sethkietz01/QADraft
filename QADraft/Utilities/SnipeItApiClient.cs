@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Identity.Client;
 using Microsoft.CodeAnalysis.Elfie.Model.Tree;
+using System.ComponentModel;
+using System.Collections.Specialized;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 public class SnipeItApiClient
 {
@@ -116,7 +119,7 @@ public class SnipeItApiClient
             // Filter assets based on the specified asset tag. The search in the api endpoint searches the whole asset, which includes other fields.
             // Using search there will help reduce the amount of filtering that needs to be done here.
             List<Asset> filteredAssets = assets   // Check if the fetched asset tag starts with {tag} is the same length as {tag}+3. ex: WIN___
-                .Where(asset => asset.asset_tag.StartsWith(tag) && asset.asset_tag.Length == tag.Length + 3 )
+                .Where(asset => asset.asset_tag.StartsWith(tag) && asset.asset_tag.Length == tag.Length + 3)
                 .ToList();
 
             int total = filteredAssets.Count;
@@ -134,6 +137,7 @@ public class SnipeItApiClient
 
     public async Task<int> GetStatusCount(string status)
     {
+        Console.WriteLine(status);
         int status_id = await GetStatusId(status);
         string endpoint = $"hardware?limit=100000&status_id={status_id}";
 
@@ -160,7 +164,6 @@ public class SnipeItApiClient
 
     }
 
-
     public async Task<int> GetStatusId(string status)
     {
         // Construct endpoint with query parameters
@@ -176,7 +179,7 @@ public class SnipeItApiClient
             {
                 // Read response content
                 string responseContent = await response.Content.ReadAsStringAsync();
-                string json = @responseContent; 
+                string json = @responseContent;
 
                 // Deserialize JSON
                 JObject jsonObject = JsonConvert.DeserializeObject<JObject>(json);

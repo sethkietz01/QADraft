@@ -30,6 +30,7 @@
             <th onclick="sortTable(2)">Severity<span class="arrow"></th>
             <th onclick="sortTable(3)">Commited On<span class="arrow"></th>
             <th onclick="sortTable(4)">Found On<span class="arrow"></th>
+            <th>Details</th>
         </tr>
     </thead>
     <!-- Create the table body -->
@@ -48,13 +49,18 @@
                     <td class="severity-cell" data-severity="@qa.Severity"><span class="severity-span">@qa.Severity</span></td>
                     <td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
                     <td>@qa.FoundOn.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        <button id="description-button" class="buttons" onclick="showDetailsModal('@qa.CustomerName', '@qa.UnitId', '@qa.Description');">
+                            <img id="description-icon" src="~/images/descriptionIconWhite.png" alt="Details" />
+                        </button>
+                    </td>
                 </tr>
             }
         }
     </tbody>
 </table>
 
-<dialog id="dialog" class="filter-your-qas-dialog">
+<dialog id="filter-your-qas-dialog" class="dialog-popups">
 	<div class="confirmation-content">
         <h2>Filters<h2>
         <!-- Confirmation button container -->
@@ -106,6 +112,31 @@
 	<button onclick="window.dialog.close();" class="x">❌</button>
 </dialog>
 
+<!-- Modal Popup for details -->
+<dialog id="dialog-details" class="dialog-popups">
+	<div class="confirmation-content">
+        <div class="form-group">
+            <label class="popup-labels">Customer</label>
+            <p id='customer-name-output'></p>
+        </div>
+        <div class="form-group">
+            <label class="popup-labels">Unit ID</label>
+            <p id='unit-id-output'></p>
+        </div>
+        <div class="form-group">
+            <label class="popup-labels">Description</label>
+            <p id='description-output'></p>
+        </div>
+        <!-- Confirmation button container -->
+        <div class="confirmation-buttons">
+            <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
+            the deleteButton input. No will close the confirmation dialog -->
+            <button id="cancel-delete-event-button" class="buttons" onclick="closeDetailsModal();">Close</button>
+        </div>
+    </div>
+	<button onclick="closeDetailsModal();" class="x">❌</button>
+</dialog>
+
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
@@ -120,8 +151,6 @@
                 var thisPageButton = document.getElementById('your-qas-button');
                 thisPageButton.classList.toggle('button-for-current-page');
         });
-
-         
 
         function toggleDatePicker(checkbox) {
             console.log("Toggle Date Picker: ", checkbox.checked); // Debug output
@@ -174,15 +203,40 @@
             // Get the correct form to be submitted
             var parentForm = event.target.closest('form');
             window.currentForm = parentForm;
+            // Default the end date to todays date
+            var endDate = document.getElementById("endDate").valueAsDate = new Date();
             // Show the modal
-
-            window.dialog.showModal();
+            const dialogFilters = document.getElementById('filter-your-qas-dialog');
+            dialogFilters.showModal();
         }
 
         function closeDialog() {
             event.preventDefault(); // Prevent default action
-            window.dialog.close();
+
+            const filterDialog = document.getElementById('filter-your-qas-dialog');
+            filterDialog.close();
         }
+
+        function showDetailsModal(customerName, unitId, description) {
+            const dialogDetails = document.getElementById('dialog-details');
+
+            var customerNameOutput = document.getElementById('customer-name-output');
+            var unitIdOutput = document.getElementById('unit-id-output');
+            var descriptionOutput = document.getElementById('description-output');
+
+            customerNameOutput.textContent = customerName;
+            unitIdOutput.textContent = unitId;
+            descriptionOutput.textContent = description;
+
+            dialogDetails.showModal();
+        }
+
+        function closeDetailsModal() {
+            const dialogDetails = document.getElementById('dialog-details');
+            dialogDetails.close();
+        }
+
+        
     </script>
 }
 <!--

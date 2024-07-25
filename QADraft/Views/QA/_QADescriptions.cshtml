@@ -10,8 +10,8 @@
 @Html.Partial(@menu)
 <h2>QA Descriptions</h2>
 
-<!-- Load naturemapping from site.js-->
-<script src="site.js"></script>
+<!-- Load naturemapping from NatureMap.js-->
+<script src="~/js/NatureMap.js"></script>
 
 <p>List of QA Descriptions will be displayed here.</p> <!-- Placeholder -->
 
@@ -54,7 +54,6 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
-        
 
         var categories = Array.from(new Set(natureMapping.flatMap(m => m.categories)));
         
@@ -62,6 +61,8 @@
             var categorySelect = document.getElementById("categorySelect");
             var natureSelect = document.getElementById("natureSelect");
             var severityInput = document.getElementById("severityInput");
+
+            console.log("1");
 
             // Highlight the current page's link
             var qaMenuLink = document.getElementById('qa-menu-link'); 
@@ -71,14 +72,16 @@
             var thisPageButton = document.getElementById('qa-descriptions-button');
             thisPageButton.classList.toggle('button-for-current-page');
 
+            console.log("2");
             // Populate categories dropdown
             categories.forEach(function(category) {
                 var option = document.createElement("option");
                 option.value = category;
                 option.textContent = category;
                 categorySelect.appendChild(option);
+                console.log("loop");
             });
-
+            console.log("3");
             // Update nature options when category changes
             categorySelect.addEventListener("change", function() {
                 var selectedCategory = categorySelect.value;
@@ -105,8 +108,6 @@
                 severityInput.value = selectedOption.dataset.severity || '';
                 descriptionInput.value = selectedOption.dataset.description || '';
             });
-
-
 
         });
     </script>

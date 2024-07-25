@@ -4,7 +4,6 @@
     <a id="your-qas-button" class="buttons" asp-area="" asp-controller="QA" asp-action="YourQAs">Your QAs</a>
     <a id="filter-qas-button" class="buttons" asp-area="" asp-controller="QA" asp-action="Filter">Filter</a>
     <a id="all-geek-qas-button" class="buttons" asp-area="" asp-controller="QA" asp-action="AllGeekQAs">All Geek QAs</a>
-    <a id="flagged-accounts-button" class="buttons" asp-area="" asp-controller="QA" asp-action="FlaggedAccounts">View All Flagged Accounts</a>
     <a id="qa-descriptions-button" class="buttons" asp-area="" asp-controller="QA" asp-action="QADescriptions">QA Descriptions</a>
 </div>
 
@@ -185,7 +184,15 @@
             var backgroundColor = '#000';
 
             var userTheme = '@Context.Session.GetString("Theme")';
+
+            var trElement = cell.parentNode;
+            var computedStyle = window.getComputedStyle(trElement);
+            backgroundColor = computedStyle.backgroundColor;
+
+            console.log("\n\n\nbackgroundColor = " + backgroundColor + "\n\n\n");
+
         
+            /*
             if (index % 2 === 0) 
             {
                 if (userTheme === "dark")
@@ -208,6 +215,9 @@
                     backgroundColor = '#eaeaea';
                 }
             }
+            /*
+
+
 
             // Color the whole cell
             //cell.style.backgroundColor = severityColor;

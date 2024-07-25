@@ -40,21 +40,22 @@
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 
+    
+    <div class="form-group">
+        <label asp-for="Role" class="control-label"></label>
+        <select asp-for="Role" class="form-control">
+            <option class="placeholder" value="" disabled selected>Select Role</option>
+            <option value="Geek">Geek</option>
+            <option value="Coordinator">Coordinator</option>
+            <option value="Admin">Admin</option>
+            <option value="Inactive">Inactive</option>
+        </select>
+        <span asp-validation-for="Role" class="text-danger"></span>
+    </div>
     <div class="form-group">
         <label asp-for="isActive" class="control-label">Currently Employed</label>
         <input type="checkbox" asp-for="isActive" />
         <span asp-validation-for="isActive" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Role" class="control-label"></label>
-        <select asp-for="Role" class="form-control">
-            <option value="">Select Role</option>
-            <option value="Geek">Geek</option>
-            <option value="Coordinator">Coordinator</option>
-            <option value="Admin">Admin</option>
-            <option value="PreviouslyEmployed">Previously Employed</option>
-        </select>
-        <span asp-validation-for="Role" class="text-danger"></span>
     </div>
     <input type="hidden" asp-for="theme">
     <div class="form-group">

@@ -117,7 +117,7 @@
                     <td>@qa.FoundBy?.FirstName @qa.FoundBy?.LastName</td>
                     <td>@qa.CategoryOfError</td>
                     <td>@qa.NatureOfError</td>
-                    <td class="severity-cell" style="background-color: #fff;" data-severity="@qa.Severity"><span class="severity-span">@qa.Severity</span></td>
+                    <td id="all-qas-severity-table-data" class="severity-cell-container" data-severity="@qa.Severity"><div class="severity-cell"><span class="severity-span">@qa.Severity</span></div></td>
                     <td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
                     <td>@qa.FoundOn.ToString("yyyy-MM-dd")</td>
                     <td>
