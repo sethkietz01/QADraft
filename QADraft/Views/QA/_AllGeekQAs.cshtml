@@ -11,20 +11,30 @@
 <h2>All QAs</h2>
 
 <!-- Show and hide piechart -->
-<button onclick="toggleCharts()" class="buttons table-buttons">Show/Hide Graphs</button>
-<div id="charts-container" class="hidden-charts">
+<button id="show-and-hide-graphs" onclick="toggleCharts()" class="buttons table-buttons" value="show">Show Graphs</button>
+<div id="charts-container" class="hidden-charts">   
     <div id="top-charts-container">
         <h2>Graph by Nature</h2>
         <div id="donut-chart-div">
             <!-- Partial view must placed within a div that is nested in another div. -->
             <div id="donut-chart-tooltip" class="tooltip"></div>
-            <div id="donut-chart-legend"></div>
+            <div id="donut-chart-legend">
+                <table id="donut-chart-legend-table">
+                    <tbody id="donut-chart-legend-table-body">
+                        <tr>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
             <!-- Load the partial view for the DonutChart-->
             <partial name="DonutChartNew"/>
         </div>
     </div>
     <div id="bottom-charts-container">
         <div id="bar-chart-div">
+            <div id="bar-chart-tooltip" class="tooltip"></div>
             <partial name="BarChartNew"/>
         </div>
         <div id="scatter-plot-div">
@@ -249,8 +259,18 @@
 
         function toggleCharts() {
             var chartsContainer = document.getElementById('charts-container');
+            var toggleGraphsButton = document.getElementById('show-and-hide-graphs');
 
             chartsContainer.classList.toggle('hidden-charts');
+            
+            if (toggleGraphsButton.value === 'show') {
+                toggleGraphsButton.value = 'hide';
+                toggleGraphsButton.textContent = 'Hide Graphs';
+            }
+            else {
+                toggleGraphsButton.value = 'show';
+                toggleGraphsButton.textContent = 'Show Graphs';
+            }
         }
         
         function showDetailsModal(qaId, foundBy, customerName, unitId, foundOn, description, createdOn, submittedBy, committedBy, committedOn, severity, category, nature) {

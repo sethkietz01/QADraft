@@ -21,6 +21,9 @@ body {
   margin-bottom: 60px;
 }
 
+* {
+    scrollbar-width: thin;
+}
 
 /* From Layout */
 .navbar {
@@ -913,6 +916,18 @@ dialog {
     opacity: 0;
 }
 
+#bar-chart-tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 4px;
+    font: 12px sans-serif;
+    background: #f5f5f5;
+    border: 1px solid #bf19ff;
+    border-radius: 8px;
+    pointer-events: none;
+    opacity: 0;
+}
+
 #scatter-plot-tooltip {
     position: absolute;
     text-align: center;
@@ -954,11 +969,58 @@ dialog {
 }
 
 #donut-chart-legend-table {
-    width: 750px;
     height: 300px;
+    max-height: 300px;
 }
 
 #bottom-charts-container {
     display: flex;
     justify-content: space-evenly;
 }
+
+#donut-chart-legend {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px groove;
+    scrollbar-width: thin;
+}
+
+    #donut-chart-legend table {
+        width: 100%; 
+        border-collapse: collapse; 
+    }
+
+iframe {
+    width: 850px;
+    height: 800px;
+    margin-bottom: 50px;
+}
+
+.hidden-guide {
+    display: none;
+}
+
+.guides-container {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    scrollbar-width: thin;
+}
+
+.guides-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: 0; 
+    margin-bottom: 20px;
+}
+
+.guide-buttons {
+    width: 850px;
+    border: 3px ridge;
+    margin-bottom: 10px;
+}
+
+.svg-icon {
+    max-width: 25px;
+}
+

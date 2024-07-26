@@ -221,9 +221,31 @@ select option {
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
 }
 
+#donut-chart-legend {
+    border-color: #4a4a4a;
+    scrollbar-color: #fff #4a4a4a;
+}
+
 #scatter-plot-tooltip {
     background-color: #2C2C2C;
     color: #fff;
     border-color: #fff;
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+}
+
+.guide-buttons {
+    color: #fff;
+    background-color: #4A4A4A;
+    border-color: #4A4A4A;
+}
+
+.guide-buttons:hover {
+    color: #fff;
+    background-color: #7c7c7c;
+    border-color: #fff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+}
+
+.svg-icon {
+    filter: invert(100%);
 }

@@ -74,7 +74,6 @@
                 title.innerText = "Nature";
             } else if (type === 'time') {
                 data = @Html.Raw(Json.Serialize(timeDict));
-                console.log("Time data:", data);
                 title.innerText = "Graph by Time";
             } else {
                 console.log('else');
@@ -99,14 +98,7 @@
                 return { date: parseInt(key.split(" ")[1]), value: data[key] };
             });
 
-            console.log("Formatted Data:", formattedData);
-
             var weeklyDates = calculateWeeklyDates("2024-6-4", formattedData.length)
-
-            console.log("\n\n\nweeklyDates = ");
-            for (let i = 0; i < weeklyDates.length; i++) {
-                console.log(weeklyDates[i]);
-            }
 
             let newData = formattedData.map((item, index) => ({
                 ...item,
@@ -114,8 +106,6 @@
                 endDate: weeklyDates[index].endDate
             }));
 
-            // Now 'newData' contains updated objects with 'startDate' and 'endDate' properties
-            console.log("Updated Data:", newData);
 
             graphScatterPlot(newData);
         }
@@ -173,9 +163,9 @@
                     scatterPlotTooltip.transition()
                         .duration(200)
                         .style("opacity", 0.9);
-                   scatterPlotTooltip.html(`Start Date: ${d.startDate}<br/>
-                                             End Date: ${d.endDate}<br/>
-                                             Errors: ${d.value}`)
+                    scatterPlotTooltip.html(`<strong>Start Date:</strong> ${d.startDate}<br/>
+                                            <strong>End Date:</strong> ${d.endDate}<br/>
+                                            <strong>Errors:</strong> ${d.value}`)
                         .style("left", (event.pageX + 10) + "px")
                         .style("top", (event.pageY - 28) + "px");
                 })

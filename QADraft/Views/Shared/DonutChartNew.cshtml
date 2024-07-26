@@ -5,13 +5,7 @@
     var categoryDict = ViewBag.categoryDict as Dictionary<string, int>;
     var natureDict = ViewBag.natureDict as Dictionary<string, int>;
 }
-    <table id="donut-chart-legend-table">
-        <tbody id="donut-chart-legend-table-body">
-            <tr>
-                <td></td>
-            </tr>
-        </tbody>
-    </table>
+    
 
 
 <!-- Load d3.js -->
@@ -40,6 +34,14 @@ const svg = d3.select("#donut-chart-div")
     .attr("transform", `translate(${width/2},155)`);
 
 
+    function generateRainbowColors(numOfColors) {
+        // Create a sequential color scale with interpolateSinebow
+        const colorScale = d3.scaleSequential(d3.interpolateSinebow)
+
+        // Generate the array of colors
+        return Array.from({ length: numOfColors }, (_, i) => colorScale(i / (numOfColors - 1)));
+    }
+
 function callDonut(type) {
     let data = {}; // To store the current data
     
@@ -49,42 +51,19 @@ function callDonut(type) {
     }
     if (type === 'nature') {
         data = @Html.Raw(Json.Serialize(ViewBag.natureDict));
-        populateLegend(data);
     }
     console.log(Object.keys(data));
     update(data);
 }
 
-const colorsArray = ["#ff0000", // 1: Red
-      "#ff2400", // 2: Red-Orange
-      "#ff4800", // 3: Orange-Red
-      "#ff6b00", // 4: Orange
-      "#ff8f00", // 5: Orange-Yellow
-      "#ffb200", // 6: Yellow-Orange
-      "#ffd600", // 7: Yellow
-      "#f1ff00", // 8: Yellow-Green
-      "#b8ff00", // 9: Green-Yellow
-      "#7eff00", // 10: Green
-      "#3eff00", // 11: Green-Cyan
-      "#00ff25", // 12: Cyan-Green
-      "#00ff64", // 13: Cyan
-      "#00ff9e", // 14: Cyan-Blue
-      "#00ffdc", // 15: Blue-Cyan
-      "#00ddff", // 16: Blue
-      "#00a1ff", // 17: Blue-Violet
-      "#0064ff", // 18: Violet-Blue
-      "#0025ff", // 19: Violet
-      "#2e00ff", // 20: Violet-Magenta
-      "#6400ff", // 21: Magenta-Violet
-    ]
-
-// Set the color scale
-const color = d3.scaleOrdinal()
-  .range(colorsArray);
-
 function update(data) {
-    // Update the color domain based on the current data
-    color.domain(Object.keys(data));
+
+    colorsArray = generateRainbowColors(Object.keys(data).length);
+
+    // Set the color scale
+    const color = d3.scaleOrdinal()
+        .range(colorsArray)
+        .domain(Object.keys(data));
 
     // Compute the position of each group on the pie:
     const pie = d3.pie()
@@ -102,28 +81,36 @@ function update(data) {
       .data(data_ready);
 
     var strokeColor = '';
+    var labelColor = '';
 
     if ('@Context.Session.GetString("Theme")' === "dark") {
-        strokeColor = 'white';
+        strokeColor = '#4a4a4a';
+        labelColor = '#fff';
     }
     else {
-        strokeColor = 'black';
+        strokeColor = '#000';
+        labelColor = '#000';
     }
+
+    var legendColors = [];
 
     // Enter new slices
     slices.enter()
       .append('path')
       .attr('class', 'slice')
       .attr('d', arc)
-      .attr("fill", (d, i) => color(i)) // Use color scale to fill based on index
+            .attr("fill", (d, i) => {
+                const colorValue = color(i); // Get color for this slice
+                legendColors.push(colorValue); // Save the color to legendColors
+                return colorValue; // Return the color for the fill attribute
+            })
       .attr("stroke", strokeColor)
       .style("stroke-width", "2px")
-        .style("opacity", 0.7)
         .on("mouseover", function(event, d) {
             tooltip.transition()
             .duration(200)
             .style("opacity", .9);
-            tooltip.html(`${d.data[0]}: ${d.data[1]}`)
+            tooltip.html(`<strong>${d.data[0]}:</strong> ${d.data[1]}`)
             .style("left", (event.pageX + 10) + "px")
             .style("top", (event.pageY - 28) + "px");
         })
@@ -142,10 +129,7 @@ function update(data) {
             };
         });
 
-    // Remove old slices
-    slices.exit()
-      .remove();
-
+    populateLegend(data, legendColors);
 
     // Variables to calculate the percentage of each QA
     var totalData = d3.sum(data_ready, d => d.data[1]);
@@ -161,7 +145,7 @@ function update(data) {
       .attr("transform", d => `translate(${arc.centroid(d)})`)
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
-      .attr("fill", strokeColor)
+      .attr("fill", labelColor)
       .text((d, i) => {
         // Calculate the percentage and round to one decimal place
         const percentage = (dataArray[i] / totalData) * 100;
@@ -182,33 +166,9 @@ function update(data) {
       .remove();
 }
 
-function populateLegend(data) {
-    console.log("populateLegend data.length = " + Object.keys(data).length);
-
+function populateLegend(data, legendColors) {
     var legendTable = document.getElementById('donut-chart-legend-table-body');
     legendTable.innerHTML = ''; 
-
-    /*
-    Object.keys(data).forEach((key, index) => {
-        var row = document.createElement('tr');
-
-        var colorCell = document.createElement('td');
-        colorCell.style.width = "25px";
-        colorCell.style.backgroundColor = colorsArray[index];
-        colorCell.style.border = '1px solid';
-        row.appendChild(colorCell);
-
-        var keyCell = document.createElement('td');
-        keyCell.textContent = key;
-        keyCell.style.paddingLeft = '20px';
-
-        row.style.borderBottom = '1px solid';
-        row.appendChild(keyCell);
-
-        legendTable.appendChild(row);
-    });
-    */
-
 
     var halfOfData = 0;
 
@@ -219,7 +179,15 @@ function populateLegend(data) {
         halfOfData = Math.ceil((Object.keys(data).length / 2));
     }
 
-    console.log("halfOfData = " + halfOfData);
+    var borderColor = '';
+
+    if ('@Context.Session.GetString("Theme")' === "dark") {
+        borderColor = "#4a4a4a";
+    }
+    else {
+        borderColor = "#000";
+    }
+
 
     for (let i = 0; i < halfOfData; i++) {
         var row = document.createElement('tr');
@@ -228,13 +196,17 @@ function populateLegend(data) {
 
         var firstColorCell = document.createElement('td');
         firstColorCell.style.width = "25px";
-        firstColorCell.style.backgroundColor = colorsArray[i];  
+        firstColorCell.style.backgroundColor = legendColors[i];  
         firstColorCell.style.border = '1px solid';
+        firstColorCell.style.borderColor = borderColor;
+
+
 
         var firstKeyCell = document.createElement('td');
         firstKeyCell.textContent = Object.keys(data)[i];
         firstKeyCell.style.paddingLeft = '20px';
         firstKeyCell.style.paddingRight = '20px';
+        firstKeyCell.style.borderColor = borderColor;
 
         row.appendChild(firstColorCell);
             row.appendChild(firstKeyCell);
@@ -252,14 +224,16 @@ function populateLegend(data) {
 
         var secondColorCell = document.createElement('td');
         secondColorCell.style.width = "25px";
-        secondColorCell.style.backgroundColor = colorsArray[i + halfOfData];
+        secondColorCell.style.backgroundColor = legendColors[i + halfOfData];
         secondColorCell.style.border = '1px solid';
+        secondColorCell.style.borderColor = borderColor;
 
         var secondKeyCell = document.createElement('td');
         secondKeyCell.textContent = Object.keys(data)[i + halfOfData];
         secondKeyCell.style.paddingLeft = '20px';
 
         row.style.borderBottom = '1px solid';
+        row.style.borderColor = borderColor;
 
         row.appendChild(firstColorCell);
         row.appendChild(firstKeyCell);

@@ -32,6 +32,20 @@
             .append("g")
             .attr("transform", `translate(${barMargin.left},${barMargin.top})`);
 
+
+        // add the tooltip
+        const barChartTooltip = d3.select("#bar-chart-tooltip");
+
+
+        function generateRainbowColors(numOfColors) {
+            // Create a sequential color scale with interpolateSinebow
+            const colorScale = d3.scaleSequential(d3.interpolateSinebow)
+
+            // Generate the array of colors
+            return Array.from({ length: numOfColors }, (_, i) => colorScale(i / (numOfColors - 1)));
+        }
+
+
         function callBar(type) {
             let data = {}; // To store the current data
             let title = "Graph by Category";
@@ -81,15 +95,12 @@
             const keys = Object.keys(data);
             const values = Object.values(data);
 
-            const colorsArray = [
-                "rgb(100, 0, 255)", // 7: Violet
-                "rgb(0, 37, 255)", // 6: Blue
-                "rgb(0, 255, 220)", // 5: Cyan
-                "rgb(0, 255, 37)", // 4: Green
-                "rgb(241, 255, 0)", // 3: Yellow
-                "rgb(255, 143, 0)", // 2: Orange
-                "rgb(255, 0, 0)" // 1: Red
-            ]
+
+            console.log(data);
+            console.log("Bar Chart Data: " + Object.keys(data));
+            console.log("Bar Chart Data: " + Object.values(data));
+
+            
 
             // Bubble sort the data descending
             for (var i = 0; i < values.length; i++) {
@@ -119,6 +130,9 @@
                 .domain([0, d3.max(values)])
                 .nice()
                 .range([barHeight, 0]);
+
+
+            const colorsArray = generateRainbowColors(Object.keys(data).length);
 
             // Define a color scale with a predefined color scheme
             const colorScale = d3.scaleOrdinal()
@@ -150,6 +164,19 @@
                 .attr("height", d => barHeight - y(data[d]))
                 .attr("height", 0) // Start with zero height
                 .attr("fill", d => colorScale(d)) // Assign color
+                .on("mouseover", function (event, d) {
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    tooltip.html(`<strong>${d}</strong>: ${data[d]}`)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function () {
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                })
                 .merge(bars)
                 .transition()
                 .duration(1000)
@@ -200,7 +227,7 @@
                 .attr("y", -barMargin.left + 20)
                 .attr("x", -barMargin.top - barHeight / 2)
                 .attr("fill", labelColor)
-                .text("Number of QAs") // Replace with your y-axis title
+                .text("Number of Errors") // Replace with your y-axis title
                 .style("font-size", "16px"); // Adjust font size of y-axis title
         }
 

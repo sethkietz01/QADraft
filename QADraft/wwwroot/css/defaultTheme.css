@@ -104,6 +104,10 @@ body {
     border-bottom: 1px solid;
 }
 
+* {
+    scrollbar-color: rgba(230, 168, 93, 0.5) lightgray;
+}
+
 #donut-chart-tooltip {
     border-color: #E6A65D;
     box-shadow: 0 0 5px rgba(230, 168, 93, 1);
@@ -113,3 +117,26 @@ body {
     border-color: #E6A65D;
     box-shadow: 0 0 5px rgba(230, 168, 93, 1);
 }
+
+.guide-buttons {
+    color: #fff;
+    background-color: #861F41;
+    border-color: #861F41;
+}
+
+    .guide-buttons:hover {
+        color: #fff;
+        background-color: #b31f4f;
+        border-color: #E6A65D;
+        box-shadow: 0 0 5px rgba(230, 168, 93, 0.7);
+    }
+
+iframe {
+    border: 1px solid #E6A65D;
+}
+
+
+.svg-icon {
+    filter: invert(100%);
+}
+
