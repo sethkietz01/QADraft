@@ -93,12 +93,10 @@
             by the specified column where x is the column index. The class "arrow" is 
             used by the function to edit the column header -->
             <th onclick="sortTable(0)">Committed By<span class="arrow"></th>
-            <th onclick="sortTable(1)">Found By<span class="arrow"></th>
             <th onclick="sortTable(2)">Category<span class="arrow"></th>
             <th onclick="sortTable(3)">Nature<span class="arrow"></th>
             <th onclick="sortTable(4)">Severity<span class="arrow"></th>
             <th onclick="sortTable(5)">Commited On<span class="arrow"></th>
-            <th onclick="sortTable(6)">Found On<span class="arrow"></th>
             <th class="noSort">Actions</th> <!-- Don't allow the user to sort by the action column -->
         </tr>
     </thead>
@@ -114,12 +112,10 @@
                 <tr>
                     @* Insert the data from the model *@
                     <td>@qa.CommittedBy?.FirstName @qa.CommittedBy?.LastName</td>
-                    <td>@qa.FoundBy?.FirstName @qa.FoundBy?.LastName</td>
                     <td>@qa.CategoryOfError</td>
                     <td>@qa.NatureOfError</td>
                     <td id="all-qas-severity-table-data" class="severity-cell-container" data-severity="@qa.Severity"><div class="severity-cell"><span class="severity-span">@qa.Severity</span></div></td>
-                    <td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
-                    <td>@qa.FoundOn.ToString("yyyy-MM-dd")</td>
+                    <td>@qa.ErrorDate.ToString("MM-dd-yyyy")</td>
                     <td>
                         @* Insert form elements into each row *@
                         @* Assign the form method as POST and the appropriate controller and IActionResult *@
@@ -137,6 +133,9 @@
                                 @* This button's onclick will open a confirmation dialog. In that dialog you can confirm the 
                                 delete action which will trigger the delete button input *@
                                 <button id="deleteButton_@qa.Id" onclick="openConfirmationDialog(event)" class="buttons table-buttons">Delete</button>
+                                <button id="description-button" class="buttons" onclick='showDetailsModal("@qa.Id", "@qa.FoundBy?.FirstName @qa.FoundBy?.LastName", "@qa.CustomerName", "@qa.UnitId", "@qa.FoundOn", "@qa.Description", "@qa.CreatedAt", "@qa.SubmittedBy", "@qa.CommittedBy?.FirstName @qa.CommittedBy?.LastName", "@qa.ErrorDate", "@qa.Severity", "@qa.CategoryOfError", "@qa.NatureOfError");'>
+                                    <img id="description-icon" src="~/images/descriptionIconWhite.png" alt="Details" />
+                                </button>
                             </div>
                         </form>
                     </td>
@@ -180,6 +179,73 @@
         </div>
     </div>
 	<button onclick="window.dialog.close();" class="x">❌</button>
+</dialog>
+
+<!-- Modal Popup for details -->
+<dialog id="dialog-details" class="dialog-popups">
+    <div class="confirmation-content">
+        <div class="details-modal-content">
+            <div class="form-group">
+                <label class="popup-labels">Committed By</label>
+                <p id='committed-by-output'></p>
+            </div>
+            <div class="form-group bordered-grid">
+                <label class="popup-labels">Found By</label>
+                <p id='found-by-output'></p>
+            </div>
+            <div class="form-group">
+                <label class="popup-labels">Submitted By</label>
+                <p id='submitted-by-output'></p>
+            </div>
+            <div class="form-group">
+                <label class="popup-labels">Committed On</label>
+                <p id='committed-on-output'></p>
+            </div>
+            <div class="form-group bordered-grid">
+                <label class="popup-labels">Found On</label>
+                <p id='found-on-output'></p>
+            </div>
+            <div class="form-group">
+                <label class="popup-labels">Submitted On</label>
+                <p id='created-on-output'></p>
+            </div>
+            <div class="form-group">
+                <label class="popup-labels">Customer</label>
+                <p id='customer-name-output'></p>
+            </div>
+            <div class="form-group bordered-grid">
+                <label class="popup-labels">Unit ID</label>
+                <p id='unit-id-output'></p>
+            </div>
+            <div class="form-group">
+                <label class="popup-labels">Severity</label>
+                <p id='severity-output'></p>
+            </div>
+            <div id="griddy-test" class="grid-test">
+                <div class="form-group grid-border-bottom">
+                    <label class="popup-labels">Category</label>
+                    <p id='category-output'></p>
+                </div>
+                <div class="form-group grid-border-bottom">
+                    <label class="popup-labels">Nature</label>
+                    <p id='nature-output'></p>
+                </div>
+            </div>
+            <div class="form-group grid-span-three-columns">
+                <label class="popup-labels">Description</label>
+                <p id='description-output'></p>
+            </div>
+        </div>
+        <!-- Confirmation button container -->
+        <div class="confirmation-buttons">
+            <!-- Confirmation buttons. Yes will call confirmDelete which will trigger
+            the deleteButton input. No will close the confirmation dialog -->
+            <button id="cancel-delete-event-button" class="buttons" onclick="closeDetailsModal();">Close</button>
+        </div>
+    </div>
+    <input id="highlight-cell" type="text" disabled hidden />
+    <input id="color-before-highlight" type="text" disabled hidden />
+    <button onclick="closeDetailsModal();" class="x">❌</button>
 </dialog>
 
 @section Scripts {
@@ -322,6 +388,85 @@
         document.addEventListener('DOMContentLoaded', function() {
             restoreFilterSelections();
         });
+
+        function showDetailsModal(qaId, foundBy, customerName, unitId, foundOn, description, createdOn, submittedBy, committedBy, committedOn, severity, category, nature) {
+            event.preventDefault();
+
+            const dialogDetails = document.getElementById('dialog-details');
+
+            var tableRow = document.getElementById('qa-row-' + qaId);
+            var committedByOutput = document.getElementById('committed-by-output');
+            var foundByOutput = document.getElementById('found-by-output');
+            var submittedByOutput = document.getElementById('submitted-by-output');
+            var committedOnOutput = document.getElementById('committed-on-output');
+            var foundOnOutput = document.getElementById('found-on-output');
+            var submittedOnOutput = document.getElementById('created-on-output');
+            var customerNameOutput = document.getElementById('customer-name-output');
+            var unitIdOutput = document.getElementById('unit-id-output');
+            var severityOutput = document.getElementById('severity-output');
+            var categoryOutput = document.getElementById('category-output');
+            var natureOutput = document.getElementById('nature-output');
+            var descriptionOutput = document.getElementById('description-output');
+
+
+            var committedOnDate = committedOn.split(' ');
+            var foundOnDate = foundOn.split(' ');
+
+            committedByOutput.textContent = committedBy;
+            foundByOutput.textContent = foundBy;
+            submittedByOutput.textContent = submittedBy;
+            committedOnOutput.textContent = committedOnDate[0];
+            foundOnOutput.textContent = foundOnDate[0];
+            submittedOnOutput.textContent = createdOn;
+            customerNameOutput.textContent = customerName;
+            unitIdOutput.textContent = unitId;
+            severityOutput.textContent = severity;
+            categoryOutput.textContent = category;
+            natureOutput.textContent = nature;
+            descriptionOutput.textContent = description;
+
+            dialogDetails.addEventListener('wheel', function (event) {
+                event.preventDefault();
+            });
+
+            // Reset background for all td elements in tableRow
+            var tdElements = tableRow.getElementsByTagName('td');
+            for (var i = 0; i < tdElements.length; i++) {
+                tdElements[i].style.backgroundImage = 'none';
+            }
+
+            //tableRow.style.backgroundImage = "radial-gradient(circle, rgba(230, 168, 93, 0.2), rgba(230, 168, 93, 0.4))";
+
+            var highlightCell = document.getElementById('highlight-cell');
+            highlightCell.value = qaId;
+
+            var colorBeforeHighlightInput = document.getElementById('color-before-highlight');
+            colorBeforeHighlightInput.value = window.getComputedStyle(tableRow).backgroundColor;
+
+            applySeverityColors();
+
+            if ('@Context.Session.GetString("Theme")' === 'dark') {
+                tableRow.style.boxShadow = '0 0 5px 1px rgba(255, 255, 255, 1)';
+            }
+            else {
+                tableRow.style.boxShadow = '0 0 5px 1px rgba(230, 168, 93, 1)';
+            }
+
+            dialogDetails.showModal();
+        }
+
+        function closeDetailsModal() {
+            var highlightCell = document.getElementById('highlight-cell');
+            var colorBeforeHighlightInput = document.getElementById('color-before-highlight');
+            var tableRow = document.getElementById('qa-row-' + highlightCell.value);
+
+            tableRow.style.backgroundColor = colorBeforeHighlightInput.value;
+            tableRow.style.boxShadow = '0 0 0';
+
+            applySeverityColors();
+
+            var detailsModal = document.getElementById('dialog-details');
+            detailsModal.close();
     </script>
 }
 <!--

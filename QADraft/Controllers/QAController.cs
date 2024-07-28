@@ -355,11 +355,6 @@ namespace QADraft.Controllers
             ViewBag.categoryDict = GetQADict("category");
             ViewBag.natureDict = GetQADict("nature");
             ViewBag.timeDict = GetQADict("time");
-            Console.WriteLine("\n\n\nViewbag.timeDict = " + ViewBag.timeDict + "\n\n");
-            foreach (KeyValuePair<string, int> entry in ViewBag.timeDict)
-            {
-                Console.WriteLine(entry.Key + ": " + entry.Value);
-            }
 
             // Pass the user's role and name into the ViewBag to compare
             // against the QA they are trying to edit
@@ -712,7 +707,7 @@ namespace QADraft.Controllers
         {
             // Get all QA categories and natures from db
             var qas = _context.GeekQAs
-                .Select(qa => new { qa.CategoryOfError, qa.NatureOfError, qa.FoundOn })
+                .Select(qa => new { qa.CategoryOfError, qa.NatureOfError, qa.ErrorDate })
                 .ToList();
             // Initilize empty string:int dictionary
             var Dict = new Dictionary<string, int>();
@@ -733,18 +728,28 @@ namespace QADraft.Controllers
             }
             else if (type == "time")
             {
-                DateTime startDate = new DateTime(2024, 6, 24); 
+                DateTime startDate = new DateTime(2024, 6, 23);
+
+                Console.WriteLine("startDate = " + startDate);
+                 
 
                 Dict = qas
-                    .GroupBy(qa => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(qa.FoundOn, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday) - CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(startDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday) + 1)
+                    .GroupBy(qa => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(qa.ErrorDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday) - CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(startDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday) + 1)
                     .ToDictionary(g => $"Week {g.Key}", g => g.Count());
 
                 Console.WriteLine("timeDict = " + Dict);
                 Console.WriteLine("timeDict.length = " + Dict.Count);
                 Console.WriteLine("qas.length = " + qas.Count);
-                foreach (KeyValuePair<string, int> entry in Dict)
+                foreach (var entry in Dict)
                 {
-                    Console.WriteLine(entry.Key + ": " + entry.Value);
+                    int weekNumber = int.Parse(entry.Key.Replace("Week ", ""));
+                    DateTime weekStart = startDate.AddDays((weekNumber - 1) * 7);
+                    DateTime weekEnd = weekStart.AddDays(6);
+
+                    string weekStartFormatted = weekStart.ToString("yyyy-MM-dd");
+                    string weekEndFormatted = weekEnd.ToString("yyyy-MM-dd");
+
+                    Console.WriteLine($"{entry.Key} ({weekStartFormatted} to {weekEndFormatted}): {entry.Value}");
                 }
             }
 

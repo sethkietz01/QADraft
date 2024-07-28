@@ -753,7 +753,6 @@ dialog {
     gap: 10px;
 }
 
-/* Style for spinning loader */
 .loader {
     width: 48px;
     height: 48px;
@@ -778,9 +777,9 @@ dialog {
 
     .SnipeItContainer {
         display: grid;
-        grid-template-columns: 1fr 1fr; /* Two columns with equal width */
+        grid-template-columns: 1fr 1fr;
         grid-template-rows: auto auto;  
-        gap: 20px; /* Gap between columns */
+        gap: 20px; 
 
         border-radius: 0.5rem;
         padding: 1rem;

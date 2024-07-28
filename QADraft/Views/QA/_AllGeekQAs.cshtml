@@ -76,7 +76,7 @@
                 <td>@qa.CategoryOfError</td>
                 <td>@qa.NatureOfError</td>
                 <td id="all-qas-severity-table-data" class="severity-cell-container" data-severity="@qa.Severity"><div class="severity-cell"><span class="severity-span">@qa.Severity</span></div></td>
-                <td id="all-qas-committed-on-table-data">@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
+                <td id="all-qas-committed-on-table-data">@qa.ErrorDate.ToString("MM-dd-yyyy")</td>
                 @*<td>@qa.FoundOn.ToString("yyyy-MM-dd")</td>*@
                 @* Insert the form inputs into the table row *@
                 <td id="all-qas-actions-table-data">
@@ -329,7 +329,12 @@
 
             applySeverityColors();
 
-            tableRow.style.boxShadow = '0 0 5px 1px rgba(230, 168, 93, 1)';
+            if ('@Context.Session.GetString("Theme")' === 'dark') {
+                tableRow.style.boxShadow = '0 0 5px 1px rgba(255, 255, 255, 1)';
+            } 
+            else {
+                tableRow.style.boxShadow = '0 0 5px 1px rgba(230, 168, 93, 1)';
+            }
 
             dialogDetails.showModal();
         }

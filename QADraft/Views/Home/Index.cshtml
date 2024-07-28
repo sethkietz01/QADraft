@@ -41,22 +41,6 @@
         }
 
         function applyEventColor(id, eventColor) {
-            /*      Style the whole row 
-            var targetEvent = "event-record-" + id;
-            var tableRecord = document.getElementById(targetEvent);
-            tableRecord.style.backgroundColor = eventColor;
-            */
-
-            /* Style just the color cell
-            var targetColorCell = "table-event-color-" + id;
-            var colorCell = document.getElementById(targetColorCell);
-            colorCell.style.backgroundColor = eventColor;
-            */
-            /*      Color just the border
-            tableRecord.style.borderBottom = '3px solid black';
-            tableRecord.style.borderColor = rgbEventColor;
-            */
-
            var colorSpan = document.getElementById('event-color-span-' + id);
            colorSpan.style.backgroundColor = eventColor;
         }
@@ -192,6 +176,9 @@
                                 <input type="button" class="buttons" onclick="setColorInput('AddEvent', '#000000')" style="background-color: #000000;" />
                                 <input type="button" class="buttons rainbow-gradient" onclick="document.getElementById('add-color-input').click();" />
                             </div>
+                            <div class="color-input-container">
+                                <button class="buttons table-buttons" onclick="removeEventColor('AddEvent')">Default Color</button>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -238,7 +225,6 @@
             </div>
             <div>
                 <button id="edit-colors-button" class="buttons table-buttons" onclick="toggleColors()">Edit Colors</button>
-                <button class="buttons table-buttons" onclick="removeEventColor()">Remove Color</button>
             <div>
             <div id="edit-colors-div" class="form-group">
                 <label id="event-color-label" class="control-label popup-labels">Color</label>
@@ -257,6 +243,9 @@
                     <input type="button" class="buttons" onclick="setColorInput('EditEvent', '#FFFFFF')" style="background-color: #FFFFFF;" />
                     <input type="button" class="buttons" onclick="setColorInput('EditEvent', '#000000')" style="background-color: #000000;" />
                     <input type="button" class="buttons rainbow-gradient" onclick="document.getElementById('edit-color-input').click();" />
+                 </div>
+                 <div class="color-input-container">
+                    <button class="buttons table-buttons" onclick="removeEventColor('EditEvent')">Default Color</button>
                  </div>
             </div>
         </form>
@@ -446,20 +435,29 @@
             dialogEditEvent.close();
         }
 
-        function removeEventColor() {
+        function removeEventColor(whichForm) {
             event.preventDefault();
 
-            var editColorInput = document.getElementById('edit-color-input');
-            var editInfoInput = document.getElementById('edit-event-info-input');
+            if (whichForm === 'AddEvent') {
+                var colorInput = document.getElementById('add-event-color-input');
+                var infoInput = document.getElementById('add-event-info-input');
+            }
+            else {
+                var colorInput = document.getElementById('edit-event-color-input');
+                var infoInput = document.getElementById('edit-event-info-input');
+            }
+
+
+
             var userTheme = '@Context.Session.GetString("Theme")';
 
             if (userTheme === "dark") {
-                editColorInput.value = "#4A4A4A";
-                editInfoInput.style.backgroundColor = "#4A4A4A";
+                colorInput.value = "#4A4A4A";
+                infoInput.style.backgroundColor = "#4A4A4A";
             }
             else {
-                editColorInput.value = "#F5F5F5";
-                editInfoInput.style.backgroundColor = "#F5F5F5";
+                colorInput.value = "#F5F5F5";
+                infoInput.style.backgroundColor = "#F5F5F5";
             }
         }
 

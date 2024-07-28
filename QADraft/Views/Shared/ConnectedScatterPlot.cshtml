@@ -74,6 +74,12 @@
                 title.innerText = "Nature";
             } else if (type === 'time') {
                 data = @Html.Raw(Json.Serialize(timeDict));
+                console.log("Time Dict = " + data);
+                console.log("aasdjflkasjf " + Object.keys(data));
+                
+                console.log("Final Data = ", data);
+                console.log("Keys of Final Data = ", Object.keys(data));
+                console.log("Values of Final Data = ", Object.values(data));
                 title.innerText = "Graph by Time";
             } else {
                 console.log('else');
@@ -90,6 +96,8 @@
                     }
                 });
 
+                
+
                 title.innerText = type;
             }
 
@@ -98,7 +106,7 @@
                 return { date: parseInt(key.split(" ")[1]), value: data[key] };
             });
 
-            var weeklyDates = calculateWeeklyDates("2024-6-4", formattedData.length)
+            var weeklyDates = calculateWeeklyDates("2024-6-23", formattedData.length)
 
             let newData = formattedData.map((item, index) => ({
                 ...item,
@@ -234,6 +242,12 @@
             }
 
             console.log("\n\nweeklyDates = " + weeklyDates);
+            console.log("\n\nweeklyDates = " + Object.keys(weeklyDates));
+            console.log("\n\nweeklyDates = " + Object.values(weeklyDates));
+            weeklyDates.forEach((week, index) => {
+                console.log(`Week ${index + 1}: Start Date = ${week.startDate}, End Date = ${week.endDate}`);
+            });
+
 
             return weeklyDates;
         }
