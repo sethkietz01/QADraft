@@ -11,15 +11,39 @@
 <h2>All QAs</h2>
 
 <!-- Show and hide piechart -->
-<button onclick="toggleChart()" class="buttons">Show/Hide</button>
-<div>
-    <!-- Partial view must placed within a div that is nested in another div. -->
-    <div id="chartDiv">
-        <!-- Load the partial view for the DonutChart-->
-        <partial name="BarChart"/>
+<button id="show-and-hide-graphs" onclick="toggleCharts()" class="buttons table-buttons" value="show">Show Graphs</button>
+<div id="charts-container" class="hidden-charts">   
+    <div id="top-charts-container">
+        <h2>Graph by Nature</h2>
+        <div id="donut-chart-div">
+            <!-- Partial view must placed within a div that is nested in another div. -->
+            <div id="donut-chart-tooltip" class="tooltip"></div>
+            <div id="donut-chart-legend">
+                <table id="donut-chart-legend-table">
+                    <tbody id="donut-chart-legend-table-body">
+                        <tr>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <!-- Load the partial view for the DonutChart-->
+            <partial name="DonutChartNew"/>
+        </div>
+    </div>
+    <div id="bottom-charts-container">
+        <div id="bar-chart-div">
+            <div id="bar-chart-tooltip" class="tooltip"></div>
+            <partial name="BarChartNew"/>
+        </div>
+        <div id="scatter-plot-div">
+            <div id="scatter-plot-tooltip" class="tooltip"></div>
+            <partial name="ConnectedScatterPlot"/>
+        </div>
     </div>
 </div>
- 
+</div>
 <!-- Table used to output QAs -->
 <table class="table-qa" id="table">
     <!-- Table Header -->
@@ -29,13 +53,13 @@
             by the specified column where x is the column index. The class "arrow" is 
             used by the function to edit the column header -->
             <th onclick="sortTable(0)">Committed By<span class="arrow"></th>
-            <th onclick="sortTable(1)">Found By<span class="arrow"></th>
+            @*<th onclick="sortTable(1)">Found By<span class="arrow"></th>*@
             <th onclick="sortTable(2)">Category<span class="arrow"></th>
             <th onclick="sortTable(3)">Nature<span class="arrow"></th>
-            <th onclick="sortTable(4)">Severity<span class="arrow"></th>
-            <th onclick="sortTable(5)">Committed On<span class="arrow"></th>
-            <th onclick="sortTable(6)">Found On<span class="arrow"></th>
-            <th class="noSort">Actions</th> <!-- Don't allow the user to sort by the action column -->
+            <th id="all-qas-severity-table-header" onclick="sortTable(4)">Severity<span class="arrow"></th>
+            <th id="all-qas-committed-on-table-header" onclick="sortTable(5)">Committed On<span class="arrow"></th>
+            @*<th onclick="sortTable(6)">Found On<span class="arrow"></th>*@
+            <th id="all-qas-actions-table-header" class="noSort">Actions</th> <!-- Don't allow the user to sort by the action column -->
         </tr>
     </thead>
     <!-- Table Body -->
@@ -45,17 +69,17 @@
         @foreach (var qa in Model.OrderByDescending(q => q.ErrorDate))
         {
             // Create a new table row
-            <tr>
+            <tr id="qa-row-@qa.Id">
                 @* Insert table data from model *@
                 <td>@qa.CommittedBy?.FirstName @qa.CommittedBy?.LastName</td>
-                <td>@qa.FoundBy?.FirstName @qa.FoundBy?.LastName</td>
+                @*<td>@qa.FoundBy?.FirstName @qa.FoundBy?.LastName</td>*@
                 <td>@qa.CategoryOfError</td>
                 <td>@qa.NatureOfError</td>
-                <td class="severity-cell" data-severity="@qa.Severity"><span class="severity-span">@qa.Severity</span></td>
-                <td>@qa.ErrorDate.ToString("yyyy-MM-dd")</td>
-                <td>@qa.FoundOn.ToString("yyyy-MM-dd")</td>
+                <td id="all-qas-severity-table-data" class="severity-cell-container" data-severity="@qa.Severity"><div class="severity-cell"><span class="severity-span">@qa.Severity</span></div></td>
+                <td id="all-qas-committed-on-table-data">@qa.ErrorDate.ToString("MM-dd-yyyy")</td>
+                @*<td>@qa.FoundOn.ToString("yyyy-MM-dd")</td>*@
                 @* Insert the form inputs into the table row *@
-                <td>
+                <td id="all-qas-actions-table-data">
                     @* Assign the form method as POST and the appropriate controller and IActionResult *@
                     <form method="post" asp-controller="QA" asp-action="ManageQA">
                         @* Create hidden input to pass the ID with POST *@
@@ -71,6 +95,9 @@
                             @* This button's onclick will open a confirmation dialog. In that dialog you can confirm the 
                             delete action which will trigger the delete button input *@
                             <button id="deleteButton_@qa.Id" onclick="openConfirmationDialog(event)" class="buttons table-buttons">Delete</button>
+                            <button id="description-button" class="buttons" onclick='showDetailsModal("@qa.Id", "@qa.FoundBy?.FirstName @qa.FoundBy?.LastName", "@qa.CustomerName", "@qa.UnitId", "@qa.FoundOn", "@qa.Description", "@qa.CreatedAt", "@qa.SubmittedBy", "@qa.CommittedBy?.FirstName @qa.CommittedBy?.LastName", "@qa.ErrorDate", "@qa.Severity", "@qa.CategoryOfError", "@qa.NatureOfError");'>
+                                <img id="description-icon" src="~/images/descriptionIconWhite.png" alt="Details" />
+                            </button>
                         </div>
 
                     </form>
@@ -86,7 +113,6 @@
                         {
                             // Get the text of the committedSelect element 
                             var committedBy = '@qa.CommittedBy?.FirstName' + ' ' + '@qa.CommittedBy?.LastName'
-                            console.log(committedBy)
                             // Check if the CommittedBy name is the same as the user's name
                             if (committedBy == userName) {
                                 // If it is, disable the Edit button
@@ -114,6 +140,73 @@
         </div>
     </div>
 	<button onclick="window.dialog.close();" class="x">❌</button>
+</dialog>
+
+<!-- Modal Popup for details -->
+<dialog id="dialog-details" class="dialog-popups">
+	<div class="confirmation-content">
+        <div class="details-modal-content">
+            <div class="form-group">
+                <label class="popup-labels">Committed By</label>
+                <p id='committed-by-output'></p>
+            </div>
+            <div class="form-group bordered-grid">
+                <label class="popup-labels">Found By</label>
+                <p id='found-by-output'></p>
+            </div>
+            <div class="form-group">
+                <label class="popup-labels">Submitted By</label>
+                <p id='submitted-by-output'></p>
+            </div>
+            <div class="form-group">
+                <label class="popup-labels">Committed On</label>
+                <p id='committed-on-output'></p>
+            </div>
+            <div class="form-group bordered-grid">
+                <label class="popup-labels">Found On</label>
+                <p id='found-on-output'></p>
+            </div>
+            <div class="form-group">
+                <label class="popup-labels">Submitted On</label>
+                <p id='created-on-output'></p>
+            </div>
+            <div class="form-group">
+                <label class="popup-labels">Customer</label>
+                <p id='customer-name-output'></p>
+            </div>
+            <div class="form-group bordered-grid">
+                <label class="popup-labels">Unit ID</label>
+                <p id='unit-id-output'></p>
+            </div>
+            <div class="form-group">
+                <label class="popup-labels">Severity</label>
+                <p id='severity-output'></p>
+            </div>
+            <div id="griddy-test" class="grid-test">
+            <div class="form-group grid-border-bottom">
+                <label class="popup-labels">Category</label>
+                <p id='category-output'></p>
+            </div>
+            <div class="form-group grid-border-bottom">
+                <label class="popup-labels">Nature</label>
+                <p id='nature-output'></p>
+            </div>
+            </div>
+            <div class="form-group grid-span-three-columns">
+                <label class="popup-labels">Description</label>
+                <p id='description-output'></p>
+            </div>
+        </div>
+        <!-- Confirmation button container -->
+        <div class="confirmation-buttons">
+            <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
+            the deleteButton input. No will close the confirmation dialog -->
+            <button id="cancel-delete-event-button" class="buttons" onclick="closeDetailsModal();">Close</button>
+        </div>
+    </div>
+    <input id="highlight-cell" type="text" disabled hidden />
+    <input id="color-before-highlight" type="text" disabled hidden />
+	<button onclick="closeDetailsModal();" class="x">❌</button>
 </dialog>
  
 @section Scripts {
@@ -161,9 +254,102 @@
             // Flip the value of toggle so that the next time it is called the visiblity of the elements will flip.
             toggle = !toggle;
         }
+
+        function toggleCharts() {
+            var chartsContainer = document.getElementById('charts-container');
+            var toggleGraphsButton = document.getElementById('show-and-hide-graphs');
+
+            chartsContainer.classList.toggle('hidden-charts');
+            
+            if (toggleGraphsButton.value === 'show') {
+                toggleGraphsButton.value = 'hide';
+                toggleGraphsButton.textContent = 'Hide Graphs';
+            }
+            else {
+                toggleGraphsButton.value = 'show';
+                toggleGraphsButton.textContent = 'Show Graphs';
+            }
+        }
         
+        function showDetailsModal(qaId, foundBy, customerName, unitId, foundOn, description, createdOn, submittedBy, committedBy, committedOn, severity, category, nature) {
+            event.preventDefault();
+
+            const dialogDetails = document.getElementById('dialog-details');
+
+            var tableRow = document.getElementById('qa-row-' + qaId);
+            var committedByOutput = document.getElementById('committed-by-output');
+            var foundByOutput = document.getElementById('found-by-output');
+            var submittedByOutput = document.getElementById('submitted-by-output');
+            var committedOnOutput = document.getElementById('committed-on-output');
+            var foundOnOutput = document.getElementById('found-on-output');
+            var submittedOnOutput = document.getElementById('created-on-output');
+            var customerNameOutput = document.getElementById('customer-name-output');
+            var unitIdOutput = document.getElementById('unit-id-output');
+            var severityOutput = document.getElementById('severity-output');
+            var categoryOutput = document.getElementById('category-output');
+            var natureOutput = document.getElementById('nature-output');
+            var descriptionOutput = document.getElementById('description-output');
 
 
+            var committedOnDate = committedOn.split(' ');
+            var foundOnDate = foundOn.split(' ');
+
+            committedByOutput.textContent = committedBy;
+            foundByOutput.textContent = foundBy;
+            submittedByOutput.textContent = submittedBy;
+            committedOnOutput.textContent = committedOnDate[0];
+            foundOnOutput.textContent = foundOnDate[0];
+            submittedOnOutput.textContent = createdOn;
+            customerNameOutput.textContent = customerName;
+            unitIdOutput.textContent = unitId;
+            severityOutput.textContent = severity;
+            categoryOutput.textContent = category;
+            natureOutput.textContent = nature;
+            descriptionOutput.textContent = description;
+
+            dialogDetails.addEventListener('wheel', function(event) {
+                event.preventDefault();
+            });
+
+            // Reset background for all td elements in tableRow
+            var tdElements = tableRow.getElementsByTagName('td');
+            for (var i = 0; i < tdElements.length; i++) {
+                tdElements[i].style.backgroundImage = 'none';
+            }
+
+            //tableRow.style.backgroundImage = "radial-gradient(circle, rgba(230, 168, 93, 0.2), rgba(230, 168, 93, 0.4))";
+
+            var highlightCell = document.getElementById('highlight-cell');
+            highlightCell.value = qaId;
+
+            var colorBeforeHighlightInput = document.getElementById('color-before-highlight');
+            colorBeforeHighlightInput.value = window.getComputedStyle(tableRow).backgroundColor;
+
+            applySeverityColors();
+
+            if ('@Context.Session.GetString("Theme")' === 'dark') {
+                tableRow.style.boxShadow = '0 0 5px 1px rgba(255, 255, 255, 1)';
+            } 
+            else {
+                tableRow.style.boxShadow = '0 0 5px 1px rgba(230, 168, 93, 1)';
+            }
+
+            dialogDetails.showModal();
+        }
+
+        function closeDetailsModal() {
+            var highlightCell = document.getElementById('highlight-cell');
+            var colorBeforeHighlightInput = document.getElementById('color-before-highlight');
+            var tableRow = document.getElementById('qa-row-' + highlightCell.value);
+
+            tableRow.style.backgroundColor = colorBeforeHighlightInput.value;
+            tableRow.style.boxShadow = '0 0 0';
+
+            applySeverityColors();
+
+            var detailsModal = document.getElementById('dialog-details');
+            detailsModal.close();
+        }
     </script>
 }
  

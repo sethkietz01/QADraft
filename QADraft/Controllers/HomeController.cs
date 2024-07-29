@@ -150,6 +150,29 @@ namespace QADraft.Controllers
             return RedirectToAction("Login");
         }
 
+        // Display the guides page
+        [HttpGet]
+        public IActionResult Guides()
+        {
+            // Verify that the user is logged in
+            if (!SessionUtil.IsAuthenticated(HttpContext))
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Geek", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
+            // Return the guides view
+            return View();
+        }
+
         // Display the extern-site outages page
         [HttpGet]
         public IActionResult Outages()

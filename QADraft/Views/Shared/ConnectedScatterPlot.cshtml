@@ -1,0 +1,274 @@
+﻿@{
+    var categoryDict = ViewBag.categoryDict as Dictionary<string, int>;
+    var natureDict = ViewBag.natureDict as Dictionary<string, int>;
+    var timeDict = ViewBag.timeDict as Dictionary<string, int>;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connected Scatter Plot</title>
+    <style>
+        /* CSS styles can be adjusted as needed */
+        .scatter-plot {
+            font-family: Arial, sans-serif;
+        }
+        .scatter-plot .axis text {
+            font-size: 12px;
+        }
+        .scatter-plot .axis path,
+        .scatter-plot .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+        .scatter-plot .line {
+            fill: none;
+            stroke: #ff42c4;
+            stroke-width: 2px;
+        }
+        .scatter-plot .dot {
+            fill: #bf19ff;
+        }
+    </style>
+</head>
+<body>
+    <h2 id="chartDesc">Category</h2>
+
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v6.js"></script>
+
+    <div id="scatter-plot-div"></div>
+
+    <script>
+        // Set the dimensions and margins of the graph
+        const scatterPlotMargin = { top: 20, right: 30, bottom: 70, left: 60 },
+            scatterPlotWidth = 450 - scatterPlotMargin.left - scatterPlotMargin.right,
+            scatterPlotHeight = 400 - scatterPlotMargin.top - scatterPlotMargin.bottom;
+
+        // Add the tooltip
+        const scatterPlotTooltip = d3.select("#scatter-plot-tooltip");
+
+        // Append the SVG object to the div called 'scatter-plot-div'
+        const scatterPlotSvg = d3.select("#scatter-plot-div")
+            .append("svg")
+            .attr("width", scatterPlotWidth + scatterPlotMargin.left + scatterPlotMargin.right)
+            .attr("height", scatterPlotHeight + scatterPlotMargin.top + scatterPlotMargin.bottom)
+            .append("g")
+            .attr("class", "scatter-plot")
+            .attr("transform", `translate(${scatterPlotMargin.left},${scatterPlotMargin.top})`);
+
+        function callScatter(type) {
+            let data = {}; // To store the current data
+            let title = document.getElementById('chartDesc');
+
+            if (type === 'category') {
+                data = @Html.Raw(Json.Serialize(categoryDict));
+                console.log('category');
+                title.innerText = "Category";
+            } else if (type === 'nature') {
+                data = @Html.Raw(Json.Serialize(natureDict));
+                console.log('nature');
+                title.innerText = "Nature";
+            } else if (type === 'time') {
+                data = @Html.Raw(Json.Serialize(timeDict));
+                console.log("Time Dict = " + data);
+                console.log("aasdjflkasjf " + Object.keys(data));
+                
+                console.log("Final Data = ", data);
+                console.log("Keys of Final Data = ", Object.keys(data));
+                console.log("Values of Final Data = ", Object.values(data));
+                title.innerText = "Graph by Time";
+            } else {
+                console.log('else');
+                // Assuming you have a natureMapping array accessible in your JavaScript context
+                const init_data = @Html.Raw(Json.Serialize(natureDict));
+
+                data = {};
+                // Use the natureMapping to grab only those natures where category is equal to type
+                Object.keys(init_data).forEach(description => {
+                    const count = init_data[description];
+                    const entry = natureMapping.find(item => item.nature === description && item.categories.includes(type));
+                    if (entry) {
+                        data[description] = count;
+                    }
+                });
+
+                
+
+                title.innerText = type;
+            }
+
+            // Convert data into array format for D3.js
+            const formattedData = Object.keys(data).map(key => {
+                return { date: parseInt(key.split(" ")[1]), value: data[key] };
+            });
+
+            var weeklyDates = calculateWeeklyDates("2024-6-23", formattedData.length)
+
+            let newData = formattedData.map((item, index) => ({
+                ...item,
+                startDate: weeklyDates[index].startDate,
+                endDate: weeklyDates[index].endDate
+            }));
+
+
+            graphScatterPlot(newData);
+        }
+
+        // Function to format dates
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const month = date.getMonth() + 1; // getMonth() is zero-based
+            const day = date.getDate() + 1;
+            const year = date.getFullYear();
+
+            // Add leading zeroes to month and day if needed
+            const formattedMonth = month < 10 ? `0${month}` : month;
+            const formattedDay = day < 10 ? `0${day}` : day;
+
+            return `${formattedMonth}/${formattedDay}/${year}`;
+        }
+
+        function graphScatterPlot(data) {
+            // Clear previous elements
+            scatterPlotSvg.selectAll("*").remove();
+
+            // Create scales
+            const x = d3.scaleLinear()
+                .domain([d3.min(data, d => d.date), d3.max(data, d => d.date)])
+                .nice()
+                .range([0, scatterPlotWidth]);
+
+            const y = d3.scaleLinear()
+                .domain([0, d3.max(data, d => d.value) + (0.25 * d3.max(data, d => d.value))])
+                .nice()
+                .range([scatterPlotHeight, 0]);
+
+            // Line generator
+            const line = d3.line()
+                .x(d => x(d.date))
+                .y(d => y(d.value));
+
+            var labelColor = '';
+
+            if ('@Context.Session.GetString("Theme")' === "dark") {
+                labelColor = 'white';
+            }
+            else {
+                labelColor = 'black';
+            }
+
+            // Draw line
+            scatterPlotSvg.append("path")
+                .datum(data)
+                .attr("class", "line")
+                .attr("fill", "none")
+                .attr("stroke", "steelblue")
+                .attr("stroke-width", 2)
+                .attr("d", line);
+
+            
+
+            // Draw dots
+            scatterPlotSvg.selectAll(".dot")
+                .data(data)
+                .enter().append("circle")
+                .attr("class", "dot")
+                .attr("cx", d => x(d.date))
+                .attr("cy", d => y(d.value))
+                .attr("r", 5)
+                .attr("fill", "steelblue")
+                .on("mouseover", (event, d) => {
+                    scatterPlotTooltip.transition()
+                        .duration(200)
+                        .style("opacity", 0.9);
+                    scatterPlotTooltip.html(`<strong>Start Date:</strong> ${formatDate(d.startDate)}<br/>
+                                                <strong>End Date:</strong> ${formatDate(d.endDate)}<br/>
+                                                <strong>Errors:</strong> ${d.value}`)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", () => {
+                    scatterPlotTooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                });
+                
+
+            // Add X axis
+            scatterPlotSvg.append("g")
+                .attr("transform", `translate(0, ${scatterPlotHeight})`)
+                .call(d3.axisBottom(x).ticks(data.length))
+                .selectAll("text")
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("transform", "translate(13)")
+                .style("font-size", "12px");
+
+            // Add Y axis
+            scatterPlotSvg.append("g")
+                .call(d3.axisLeft(y).ticks(10))
+                .selectAll("text")
+                .style("font-size", "12px");
+
+            // Add X axis label
+            scatterPlotSvg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("x", scatterPlotWidth / 2)
+                .attr("y", scatterPlotHeight + scatterPlotMargin.bottom - 10)
+                .attr("fill", labelColor)
+                .text("Week")
+                .style("font-size", "16px");
+
+            // Add Y axis label
+            scatterPlotSvg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("transform", "rotate(-90)")
+                .attr("x", -scatterPlotHeight / 2)
+                .attr("y", -scatterPlotMargin.left + 20)
+                .attr("fill", labelColor)
+                .text("Number of Errors")
+                .style("font-size", "16px");
+        }
+
+        function calculateWeeklyDates(startDateStr, numWeeks) {
+            let startDate = new Date(startDateStr); // Convert starting date string to Date object
+            let weeklyDates = [];
+
+            for (let i = 0; i < numWeeks; i++) {
+                let endDate = new Date(startDate); // Create a new date object each iteration
+
+                // Calculate end date of the current week by adding 7 days
+                endDate.setDate(endDate.getDate() + 6); // End of the week is 6 days after the start
+
+                // Format dates as needed (e.g., to ISO strings)
+                let startDateFormatted = startDate.toISOString().split('T')[0];
+                let endDateFormatted = endDate.toISOString().split('T')[0];
+
+                // Push start and end dates to array
+                weeklyDates.push({ startDate: startDateFormatted, endDate: endDateFormatted });
+
+                // Move to the next week's start date
+                startDate.setDate(startDate.getDate() + 7); // Move to the next week
+            }
+
+            console.log("\n\nweeklyDates = " + weeklyDates);
+            console.log("\n\nweeklyDates = " + Object.keys(weeklyDates));
+            console.log("\n\nweeklyDates = " + Object.values(weeklyDates));
+            weeklyDates.forEach((week, index) => {
+                console.log(`Week ${index + 1}: Start Date = ${week.startDate}, End Date = ${week.endDate}`);
+            });
+
+
+            return weeklyDates;
+        }
+
+        // Initial call to plot with 'time' data
+        callScatter('time');
+
+    </script>
+</body>
+</html>

@@ -41,7 +41,7 @@ namespace QADraft.Models
         public string UnitId { get; set; }
 
         // Validation attribute for ErrorDate being before FoundOn
-        [DateBefore(nameof(FoundOn), ErrorMessage = "Error Date must be before Found On Date.")]
+        [DateBefore(nameof(FoundOn), ErrorMessage = "Error Date must be before or the same as  Found On Date.")]
         public DateTime ErrorDate { get; set; }
 
         // Validation attribute for FoundOn being before the current date

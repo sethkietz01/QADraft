@@ -166,11 +166,6 @@ select option {
         background-color: #7c7c7c;
     }
 
-#dialog {
-    background-color: #2C2C2C;
-    color: #fff;
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
-}
 
 .disabled-input {
     pointer-events: none;
@@ -189,3 +184,72 @@ select option {
         box-shadow: 0 0 7px rgba(255, 255, 255, 0.7);
         transition: box-shadow 0.2s;
     }
+
+.SnipeItContainer {
+    border-color: #4A4A4A !important;
+}
+
+.DatePicker, .snipeit-stat-outputs {
+    background-color: #3b3b3b;
+    border: 1px solid #4A4A4A;
+}
+
+#snipe-it-header {
+    color: #fff;
+}
+
+
+.dialog-popups {
+    background-color: #2C2C2C;
+    color: #fff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+}
+
+.bordered-grid {
+    border-left: 1px solid #4A4A4A;
+    border-right: 1px solid #4A4A4A;
+}
+
+.grid-border-bottom {
+    border-bottom: 1px solid #4A4A4A;
+}
+
+#donut-chart-tooltip {
+    background-color: #2C2C2C;
+    color: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+}
+
+#donut-chart-legend {
+    border-color: #4a4a4a;
+    scrollbar-color: #fff #4a4a4a;
+}
+
+#scatter-plot-tooltip {
+    background-color: #2C2C2C;
+    color: #fff;
+    border-color: #fff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+}
+
+.guide-buttons {
+    color: #fff;
+    background-color: #4A4A4A;
+    border-color: #4A4A4A;
+}
+
+.guide-buttons:hover {
+    color: #fff;
+    background-color: #7c7c7c;
+    border-color: #fff;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+}
+
+.svg-icon {
+    filter: invert(100%);
+}
+
+#dateFilter {
+    accent-color: #4a4a4a;
+}

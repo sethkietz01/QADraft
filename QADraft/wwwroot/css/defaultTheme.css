@@ -27,7 +27,7 @@
 
 .navbar {
     background-color: #861F41;
-    border-bottom: 3px solid rgb(230, 168, 93);
+    border-bottom: 3px ridge rgb(230, 168, 93);
 }
 
 body {
@@ -77,4 +77,69 @@ body {
     pointer-events: none;
     user-select: none;
     background-color: rgba(135, 144, 154, 0.1);
+}
+
+.DatePicker, .snipeit-stat-outputs {
+    background-color: #861F41;
+}
+
+#snipe-it-submit-button {
+    background-color: #6d6565;
+}
+
+#snipe-it-header {
+    color: #000;
+}
+
+.dialog-popups {
+    box-shadow: 0 0 5px rgba(230, 168, 93, 1);
+}
+
+.bordered-grid {
+    border-left: 1px solid;
+    border-right: 1px solid;
+}
+
+.grid-border-bottom {
+    border-bottom: 1px solid;
+}
+
+* {
+    scrollbar-color: rgba(230, 168, 93, 0.5) lightgray;
+}
+
+#donut-chart-tooltip {
+    border-color: #E6A65D;
+    box-shadow: 0 0 5px rgba(230, 168, 93, 1);
+}
+
+#scatter-plot-tooltip {
+    border-color: #E6A65D;
+    box-shadow: 0 0 5px rgba(230, 168, 93, 1);
+}
+
+.guide-buttons {
+    color: #fff;
+    background-color: #861F41;
+    border-color: #861F41;
+}
+
+    .guide-buttons:hover {
+        color: #fff;
+        background-color: #b31f4f;
+        border-color: #E6A65D;
+        box-shadow: 0 0 5px rgba(230, 168, 93, 0.7);
+    }
+
+iframe {
+    border: 1px solid #E6A65D;
+}
+
+
+.svg-icon {
+    filter: invert(100%);
+}
+
+#dateFilter {
+    accent-color: #861F41;
 }

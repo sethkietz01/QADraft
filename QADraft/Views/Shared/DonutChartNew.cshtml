@@ -1,0 +1,251 @@
+﻿<!-- This partial view will place the pie chart into main page wherever you place the partial -->
+<!-- If the chart is not showing, ensure that the Dictionaries are passed by the  -->
+@{
+    //load viewbag dictionaries
+    var categoryDict = ViewBag.categoryDict as Dictionary<string, int>;
+    var natureDict = ViewBag.natureDict as Dictionary<string, int>;
+}
+    
+
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v6.js"></script>
+
+<div id="container" />
+
+<script>
+// set the dimensions and margins of the graph
+const width = 500,
+    height = 500,
+    margin = 60
+
+// The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
+const radius = Math.min(width, height) / 2 - margin;
+
+// Add the tooltip
+const tooltip = d3.select("#donut-chart-tooltip");
+
+// append the svg object to the div called 'container'
+const svg = d3.select("#donut-chart-div")
+  .append("svg")
+    .attr("width", width)
+    .attr("height", height)
+  .append("g")
+    .attr("transform", `translate(${width/2},155)`);
+
+
+    function generateRainbowColors(numOfColors) {
+        // Create a sequential color scale with interpolateSinebow
+        const colorScale = d3.scaleSequential(d3.interpolateSinebow)
+
+        // Generate the array of colors
+        return Array.from({ length: numOfColors }, (_, i) => colorScale(i / (numOfColors - 1)));
+    }
+
+function callDonut(type) {
+    let data = {}; // To store the current data
+    
+
+    if (type === 'category') {
+        data = @Html.Raw(Json.Serialize(ViewBag.categoryDict));
+    }
+    if (type === 'nature') {
+        data = @Html.Raw(Json.Serialize(ViewBag.natureDict));
+    }
+    console.log(Object.keys(data));
+    update(data);
+}
+
+function update(data) {
+
+    colorsArray = generateRainbowColors(Object.keys(data).length);
+
+    // Set the color scale
+    const color = d3.scaleOrdinal()
+        .range(colorsArray)
+        .domain(Object.keys(data));
+
+    // Compute the position of each group on the pie:
+    const pie = d3.pie()
+      .sort(null) // Do not sort group by size
+      .value(d => d[1]);
+    const data_ready = pie(Object.entries(data));
+
+    // The arc generator
+    const arc = d3.arc()
+      .innerRadius(radius * 0.5)         // This is the size of the donut hole
+      .outerRadius(radius * 0.8);
+
+    // Select all slices
+    const slices = svg.selectAll('.slice')
+      .data(data_ready);
+
+    var strokeColor = '';
+    var labelColor = '';
+
+    if ('@Context.Session.GetString("Theme")' === "dark") {
+        strokeColor = '#4a4a4a';
+        labelColor = '#fff';
+    }
+    else {
+        strokeColor = '#000';
+        labelColor = '#000';
+    }
+
+    var legendColors = [];
+
+    // Enter new slices
+    slices.enter()
+      .append('path')
+      .attr('class', 'slice')
+      .attr('d', arc)
+            .attr("fill", (d, i) => {
+                const colorValue = color(i); // Get color for this slice
+                legendColors.push(colorValue); // Save the color to legendColors
+                return colorValue; // Return the color for the fill attribute
+            })
+      .attr("stroke", strokeColor)
+      .style("stroke-width", "2px")
+        .on("mouseover", function(event, d) {
+            tooltip.transition()
+            .duration(200)
+            .style("opacity", .9);
+            tooltip.html(`<strong>${d.data[0]}:</strong> ${d.data[1]}`)
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 28) + "px");
+        })
+        .on("mouseout", function() {
+            tooltip.transition()
+            .duration(500)
+            .style("opacity", 0);
+        })
+        .transition() // Add transition
+        .duration(1000) // Duration of transition
+        .attrTween("d", function(d) { // Interpolate between old and new paths
+            const interpolate = d3.interpolate(this._current, d);
+            this._current = interpolate(0);
+            return function(t) {
+                return arc(interpolate(t));
+            };
+        });
+
+    populateLegend(data, legendColors);
+
+    // Variables to calculate the percentage of each QA
+    var totalData = d3.sum(data_ready, d => d.data[1]);
+    var percentage = 0;
+    var dataArray = data_ready.map(d => d.data[1]);
+
+    // Add labels numbering the slices
+    svg.selectAll(".labelNumber")
+      .data(data_ready)
+      .enter()
+      .append("text")
+      .attr("class", "labelNumber")
+      .attr("transform", d => `translate(${arc.centroid(d)})`)
+      .attr("dy", "0.35em")
+      .attr("text-anchor", "middle")
+      .attr("fill", labelColor)
+      .text((d, i) => {
+        // Calculate the percentage and round to one decimal place
+        const percentage = (dataArray[i] / totalData) * 100;
+
+        if (percentage > 5)
+        {
+            return percentage.toFixed(1) + '%'; // Rounds to one decimal place
+        }
+
+        return "";
+
+      });
+
+    // Remove old label numbers
+    svg.selectAll(".labelNumber")
+      .data(data_ready)
+      .exit()
+      .remove();
+}
+
+function populateLegend(data, legendColors) {
+    var legendTable = document.getElementById('donut-chart-legend-table-body');
+    legendTable.innerHTML = ''; 
+
+    var halfOfData = 0;
+
+    if (Object.keys(data).length % 2 == 0) {
+        halfOfData = Object.keys(data).length / 2;
+    }
+    else {
+        halfOfData = Math.ceil((Object.keys(data).length / 2));
+    }
+
+    var borderColor = '';
+
+    if ('@Context.Session.GetString("Theme")' === "dark") {
+        borderColor = "#4a4a4a";
+    }
+    else {
+        borderColor = "#000";
+    }
+
+
+    for (let i = 0; i < halfOfData; i++) {
+        var row = document.createElement('tr');
+
+        row.style.fontSize = '15px';
+
+        var firstColorCell = document.createElement('td');
+        firstColorCell.style.width = "25px";
+        firstColorCell.style.backgroundColor = legendColors[i];  
+        firstColorCell.style.border = '1px solid';
+        firstColorCell.style.borderColor = borderColor;
+
+
+
+        var firstKeyCell = document.createElement('td');
+        firstKeyCell.textContent = Object.keys(data)[i];
+        firstKeyCell.style.paddingLeft = '20px';
+        firstKeyCell.style.paddingRight = '20px';
+        firstKeyCell.style.borderColor = borderColor;
+
+        row.appendChild(firstColorCell);
+            row.appendChild(firstKeyCell);
+
+
+        if (i + halfOfData >= Object.keys(data).length) {
+            var placeholderCell = document.createElement('td');
+            row.appendChild(placeholderCell);
+
+            
+            legendTable.appendChild(row);
+
+            break;
+        }
+
+        var secondColorCell = document.createElement('td');
+        secondColorCell.style.width = "25px";
+        secondColorCell.style.backgroundColor = legendColors[i + halfOfData];
+        secondColorCell.style.border = '1px solid';
+        secondColorCell.style.borderColor = borderColor;
+
+        var secondKeyCell = document.createElement('td');
+        secondKeyCell.textContent = Object.keys(data)[i + halfOfData];
+        secondKeyCell.style.paddingLeft = '20px';
+
+        row.style.borderBottom = '1px solid';
+        row.style.borderColor = borderColor;
+
+        row.appendChild(firstColorCell);
+        row.appendChild(firstKeyCell);
+        row.appendChild(secondColorCell);
+        row.appendChild(secondKeyCell);
+
+        
+
+        legendTable.appendChild(row);
+    }
+}
+
+callDonut('nature');
+
+</script>

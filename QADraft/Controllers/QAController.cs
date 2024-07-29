@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration.UserSecrets;
 using NuGet.Packaging;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.IdentityModel.Tokens;
+using System.Globalization;
 
 namespace QADraft.Controllers
 {
@@ -149,7 +150,7 @@ namespace QADraft.Controllers
 
         // Display the Filter page
         [HttpGet]
-        public async Task<IActionResult> Filter(string dateFilter, DateTime? startDate, DateTime? endDate, int? committedBy, int? loggedBy, string category)
+        public async Task<IActionResult> Filter(string dateFilter, DateTime? startDate, DateTime? endDate, int? committedBy, int? loggedBy, string category, int? severity, string? customerName)
         {
             Debug.WriteLine("\n\n\ndateFilter on filter = " + dateFilter + "\n\n\n");
 
@@ -229,6 +230,16 @@ namespace QADraft.Controllers
             {
                 // Add QAs that are of the same category
                 qas = qas.Where(q => q.CategoryOfError == category);
+            }
+
+            if (severity.HasValue)
+            {
+                qas = qas.Where(q => q.Severity == severity.Value);
+            }    
+
+            if (!string.IsNullOrEmpty(customerName))
+            {
+                qas = qas.Where(q => q.CustomerName.ToLower() == customerName.ToLower());
             }
 
             // Add the QAs to a list and await async
@@ -353,6 +364,7 @@ namespace QADraft.Controllers
             // Get dictionaries of all QA Categories/Nature in form {Name:Count}. Pass these Dicts into the ViewBag.
             ViewBag.categoryDict = GetQADict("category");
             ViewBag.natureDict = GetQADict("nature");
+            ViewBag.timeDict = GetQADict("time");
 
             // Pass the user's role and name into the ViewBag to compare
             // against the QA they are trying to edit
@@ -450,7 +462,8 @@ namespace QADraft.Controllers
                 return RedirectToAction("EditQA", new { id = qaId, source = source });
             }
             // Check if the passed action is to Delete
-            else if (action == "Delete QA")
+            else 
+            if (action == "Delete QA")
             {
                 // Direct to the DeleteQA action and pass the ID of the QA and the source page
                 return RedirectToAction("DeleteQA", new { id = qaId, source = source });
@@ -704,7 +717,7 @@ namespace QADraft.Controllers
         {
             // Get all QA categories and natures from db
             var qas = _context.GeekQAs
-                .Select(qa => new { qa.CategoryOfError, qa.NatureOfError })
+                .Select(qa => new { qa.CategoryOfError, qa.NatureOfError, qa.ErrorDate })
                 .ToList();
             // Initilize empty string:int dictionary
             var Dict = new Dictionary<string, int>();
@@ -722,6 +735,32 @@ namespace QADraft.Controllers
                 Dict = qas
                     .GroupBy(qa => qa.NatureOfError)
                     .ToDictionary(g => g.Key, g => g.Count());
+            }
+            else if (type == "time")
+            {
+                DateTime startDate = new DateTime(2024, 6, 23);
+
+                Console.WriteLine("startDate = " + startDate);
+                 
+
+                Dict = qas
+                    .GroupBy(qa => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(qa.ErrorDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday) - CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(startDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday) + 1)
+                    .ToDictionary(g => $"Week {g.Key}", g => g.Count());
+
+                Console.WriteLine("timeDict = " + Dict);
+                Console.WriteLine("timeDict.length = " + Dict.Count);
+                Console.WriteLine("qas.length = " + qas.Count);
+                foreach (var entry in Dict)
+                {
+                    int weekNumber = int.Parse(entry.Key.Replace("Week ", ""));
+                    DateTime weekStart = startDate.AddDays((weekNumber - 1) * 7);
+                    DateTime weekEnd = weekStart.AddDays(6);
+
+                    string weekStartFormatted = weekStart.ToString("yyyy-MM-dd");
+                    string weekEndFormatted = weekEnd.ToString("yyyy-MM-dd");
+
+                    Console.WriteLine($"{entry.Key} ({weekStartFormatted} to {weekEndFormatted}): {entry.Value}");
+                }
             }
 
             // Return the fetched dictionary

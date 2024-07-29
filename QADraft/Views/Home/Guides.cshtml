@@ -1,0 +1,89 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<h2>Guides</h2>
+
+
+
+<div class="guides-container">
+    <ul class="guides-list">
+        <li>
+            <button id="snipe-it-comments-guide-button" class="guide-buttons" onclick="showGuide('snipe-it-comments-guide-container', 'snipe-it-comments-guide-button')">
+                Snipe-IT Comments Guide
+                <img src="/images/arrowDown.svg" alt="Arrow Down" class="svg-icon" id="snipe-it-comments-guide-arrow-icon">
+            </button>
+            <div id="snipe-it-comments-guide-container" class="hidden-guide">
+                <iframe src="https://docs.google.com/document/d/e/2PACX-1vS0V_Bt1MO-IL152xIR7OGcVig1gQuLAX-LrFs7B8n3OoBaVZOyMryuYhwbBgKjVH7rxtRaEWBZI4ph/pub?embedded=true"></iframe>
+            </div>
+        </li>
+        <li>
+            <button id="headshot-guide-button" class="guide-buttons" onclick="showGuide('headshot-guide-container', 'headshot-guide-button')">
+                Headshot Guide
+                <img src="/images/arrowDown.svg" alt="Arrow Down" class="svg-icon" id="headshot-guide-arrow-icon" />
+            </button>
+            <div id="headshot-guide-container" class="hidden-guide">
+                <iframe src="https://docs.google.com/document/d/e/2PACX-1vT7AiL8IUIo--tYyNQ_K2E9R94WuMsgs995QLkEFywuo4rUicYEQruV371AEFC2PESsrJic-ukKSPUP/pub?embedded=true"></iframe>
+            </div>
+        </li>
+        <li>
+            <button id="cloud-printing-guide-button" class="guide-buttons" onclick="showGuide('cloud-printing-guide-container', 'cloud-printing-guide-button')">
+                Cloud Printing Guide
+                <img src="/images/arrowDown.svg" alt="Arrow Down" class="svg-icon" id="cloud-printing-guide-arrow-icon" />
+            </button>
+            <div id="cloud-printing-guide-container" class="hidden-guide">
+                <iframe src="https://docs.google.com/document/d/e/2PACX-1vQsCaUNAfWHYs9as8H1FBoJ3L13OZz2WvIWuKUEMrVF6ioJVUpgzOj1jc4zzi-x_UGkMrpwOxViv2Im/pub?embedded=true"></iframe>
+            </div>
+        </li>
+        <li>
+            <button id="windows-yubikey-guide-button" class="guide-buttons" onclick="showGuide('windows-yubikey-guide-container', 'windows-yubikey-guide-button')">
+                How to set up a YubiKey on Windows Guide
+                <img src="/images/arrowDown.svg" alt="Arrow Down" class="svg-icon" id="windows-yubikey-guide-arrow-icon" />
+            </button>
+            <div id="windows-yubikey-guide-container" class="hidden-guide">
+                <iframe src="https://docs.google.com/document/d/e/2PACX-1vREnEjKNGpSw2H8pEn8xlRhrxaSDNAj5WOY-kIiB9QPtrHkca6JOUa_IGvRG8Pf1fu8EJiJYfIqAJ01/pub?embedded=true"></iframe>
+            </div>
+        </li>
+        <li>
+            <button id="mac-yubikey-guide-button" class="guide-buttons" onclick="showGuide('mac-yubikey-guide-container', 'mac-yubikey-guide-button')">
+                How to set up a YubiKey on Mac Guide
+                <img src="/images/arrowDown.svg" alt="Arrow Down" class="svg-icon" id="mac-yubikey-guide-arrow-icon" />
+            </button>
+            <div id="mac-yubikey-guide-container" class="hidden-guide">
+                <iframe src="https://docs.google.com/document/d/e/2PACX-1vQxTxvsVIAnnfChEJ6BeTybwq36zOL33Q8yd9mRNfV7FRGgmdIJdHqHKd1aCe91WsZNIC-0aqv4F8xS/pub?embedded=true"></iframe>
+            </div>
+        </li>
+        <li>
+            <button id="popcorn-guide-button" class="guide-buttons" onclick="showGuide('popcorn-guide-container', 'popcorn-guide-button')">
+                How to clean the popcorn machine Guide
+                <img src="/images/arrowDown.svg" alt="Arrow Down" class="svg-icon" id="popcorn-guide-arrow-icon" />
+            </button>
+            <div id="popcorn-guide-container" class="hidden-guide">
+                <iframe src="https://docs.google.com/document/d/e/2PACX-1vSTXFRDXK-zrqNntfSCZK_HK123PC8PAb-X6LGEz4MuzBuCSzlsitNcEdnVwJA-EpfFun1wBK6Ldyhd/pub?embedded=true"></iframe>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var outageLink = document.getElementById('guides-link'); 
+        outageLink.classList.toggle('highlight-link');
+    });
+
+    function showGuide(guideId, buttonId) {
+        var guide = document.getElementById(guideId);
+        var button = document.getElementById(buttonId);
+        var arrowIcon = button.querySelector('.svg-icon');
+
+        guide.classList.toggle('hidden-guide');
+
+        if (guide.classList.contains('hidden-guide')) {
+            arrowIcon.src = '/images/arrowDown.svg';
+        } else {
+            arrowIcon.src = '/images/arrowUp.svg'; 
+        }
+    }
+</script>
