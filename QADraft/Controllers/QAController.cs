@@ -150,7 +150,7 @@ namespace QADraft.Controllers
 
         // Display the Filter page
         [HttpGet]
-        public async Task<IActionResult> Filter(string dateFilter, DateTime? startDate, DateTime? endDate, int? committedBy, int? loggedBy, string category)
+        public async Task<IActionResult> Filter(string dateFilter, DateTime? startDate, DateTime? endDate, int? committedBy, int? loggedBy, string category, int? severity, string? customerName)
         {
             Debug.WriteLine("\n\n\ndateFilter on filter = " + dateFilter + "\n\n\n");
 
@@ -230,6 +230,16 @@ namespace QADraft.Controllers
             {
                 // Add QAs that are of the same category
                 qas = qas.Where(q => q.CategoryOfError == category);
+            }
+
+            if (severity.HasValue)
+            {
+                qas = qas.Where(q => q.Severity == severity.Value);
+            }    
+
+            if (!string.IsNullOrEmpty(customerName))
+            {
+                qas = qas.Where(q => q.CustomerName.ToLower() == customerName.ToLower());
             }
 
             // Add the QAs to a list and await async

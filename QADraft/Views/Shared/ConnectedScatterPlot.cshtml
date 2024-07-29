@@ -118,6 +118,20 @@
             graphScatterPlot(newData);
         }
 
+        // Function to format dates
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const month = date.getMonth() + 1; // getMonth() is zero-based
+            const day = date.getDate() + 1;
+            const year = date.getFullYear();
+
+            // Add leading zeroes to month and day if needed
+            const formattedMonth = month < 10 ? `0${month}` : month;
+            const formattedDay = day < 10 ? `0${day}` : day;
+
+            return `${formattedMonth}/${formattedDay}/${year}`;
+        }
+
         function graphScatterPlot(data) {
             // Clear previous elements
             scatterPlotSvg.selectAll("*").remove();
@@ -171,9 +185,9 @@
                     scatterPlotTooltip.transition()
                         .duration(200)
                         .style("opacity", 0.9);
-                    scatterPlotTooltip.html(`<strong>Start Date:</strong> ${d.startDate}<br/>
-                                            <strong>End Date:</strong> ${d.endDate}<br/>
-                                            <strong>Errors:</strong> ${d.value}`)
+                    scatterPlotTooltip.html(`<strong>Start Date:</strong> ${formatDate(d.startDate)}<br/>
+                                                <strong>End Date:</strong> ${formatDate(d.endDate)}<br/>
+                                                <strong>Errors:</strong> ${d.value}`)
                         .style("left", (event.pageX + 10) + "px")
                         .style("top", (event.pageY - 28) + "px");
                 })

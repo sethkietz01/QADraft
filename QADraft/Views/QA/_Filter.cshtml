@@ -29,7 +29,7 @@
         <!-- Create div to contain the Committed By elements -->
         <div class="form-group">
             <!-- Label for CommittedBy-->
-            <label for="committedBy">Committed By:</label>
+            <label for="committedBy" class="control-label">Committed By</label>
             <!-- Create the drop down selection for CommitedBy -->
             <select id="committedBy" name="committedBy" class="form-control">
                 <option value="">Any User</option>
@@ -44,7 +44,7 @@
         <!-- Create div to contain the Logged By elements -->
         <div class="form-group">
             <!-- Label for LoggedBy -->
-            <label for="loggedBy">Logged By:</label>
+            <label for="loggedBy" class="control-label">Logged By</label>
             <!-- Create the drop down selection for LoggedBy -->
             <select id="loggedBy" name="loggedBy" class="form-control">
                 <option value="">Any User</option>
@@ -59,7 +59,7 @@
         <!-- Create div to contain the Category elements -->
         <div class="form-group">
             <!-- Label for Category -->
-            <label for="category">Category:</label>
+            <label for="category" class="control-label">Category</label>
             <!-- Create the dropdown selection for Category-->
             <select id="category" name="category" class="form-control">
                 <option value="">Any Category</option>
@@ -71,11 +71,25 @@
                 }
             </select>
         </div>
+        <div class="form-group">
+            <label for="severity" class="control-label">Severity</label>
+            <select id="severity" name="severity" class="form-control">
+                <option value"">Any Severity</option>
+                @for (int i = 1; i <= 10; i++)
+                {
+                    <option value="@i">@i</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="customerName" class="control-label">Customer Name</label>
+            <input id="customer-name" name="customerName" class="form-control" placeholder="Any Customer" />
+        </div>
         <!-- Create div to contain submission buttons -->
         <div class="button-group">
-            <button type="submit" class="buttons">Apply Filters</button>
+            <button type="submit" class="buttons table-buttons">Apply Filters</button>
             <!-- Button click calls js function resetFilters() -->
-            <button type="button" class="buttons" onclick="resetFilters()">Reset Filters</button>
+            <button type="button" class="buttons table-buttons" onclick="resetFilters()">Reset Filters</button>
         </div>
     </form>
 </div>
@@ -109,7 +123,7 @@
             @foreach (var qa in Model.OrderByDescending(q => q.ErrorDate))
             {
                 @* Add each QA in the list of GeekQAs in its own table row *@
-                <tr>
+                <tr id="qa-row-@qa.Id">
                     @* Insert the data from the model *@
                     <td>@qa.CommittedBy?.FirstName @qa.CommittedBy?.LastName</td>
                     <td>@qa.CategoryOfError</td>
@@ -368,7 +382,6 @@
             localStorage.setItem('committedBy', document.getElementById('committedBy').value);
             localStorage.setItem('loggedBy', document.getElementById('loggedBy').value);
             localStorage.setItem('category', document.getElementById('category').value);
-            // Add more selections as needed
         }
 
         // Function to restore filter selections from local storage
@@ -376,7 +389,6 @@
             document.getElementById('committedBy').value = localStorage.getItem('committedBy') || '';
             document.getElementById('loggedBy').value = localStorage.getItem('loggedBy') || '';
             document.getElementById('category').value = localStorage.getItem('category') || '';
-            // Restore more selections as needed
         }
 
         // Event listener to store selections before form submission
@@ -467,6 +479,7 @@
 
             var detailsModal = document.getElementById('dialog-details');
             detailsModal.close();
+        }
     </script>
 }
 <!--

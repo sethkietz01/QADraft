@@ -249,3 +249,7 @@ select option {
 .svg-icon {
     filter: invert(100%);
 }
+
+#dateFilter {
+    accent-color: #4a4a4a;
+}
