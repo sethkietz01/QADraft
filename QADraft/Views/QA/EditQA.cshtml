@@ -110,8 +110,6 @@
             // Get the form element
             const form = document.getElementById('form-items');
 
-            // Disable 
-
             // Check if the form exists
             if (form) {
                 // Get all form elements inside the form
@@ -125,7 +123,6 @@
                     // Check if the element is an input, select, or textarea
                     if (element.tagName === 'INPUT' || element.tagName === 'SELECT' || element.tagName === 'TEXTAREA') {
                         // Enable the element
-                        //element.disabled = false;
                         element.classList.remove("disabled-input");
                     }
                 });
@@ -166,7 +163,6 @@
                     // Check if the element is an input, select, or textarea
                     if (element.tagName === 'INPUT' || element.tagName === 'SELECT' || element.tagName === 'TEXTAREA') {
                         // Disable the element
-                        //element.disabled = true;
                         element.classList.add("disabled-input");
                     }
                 });
