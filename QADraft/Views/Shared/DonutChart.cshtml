@@ -6,48 +6,49 @@
     var natureDict = ViewBag.natureDict as Dictionary<string, int>;
 }
 
-<button id="categoryBtn" onclick="call('category')" class="buttons form-buttons">Category</button>
-<button id="natureBtn" onclick="call('nature')" class="buttons form-buttons">Nature</button>
-<h1 id="chartDesc">Name here</h1>
+<button id="categoryBtn" onclick="call_donut('category')" class="buttons form-buttons">Category</button>
+<button id="natureBtn" onclick="call_donut('nature')" class="buttons form-buttons">Nature</button>
+<h1 id="chartDesc_donut">Name here</h1>
 
 
 <!-- Load d3.js -->
 <script src="https://d3js.org/d3.v6.js"></script>
 
-<div id="container" />
+<div id="container_donutchart" />
 
 <script>
 // set the dimensions and margins of the graph
-const width = 1150,
-    height = 550,
-    margin = 60;
+const width_donut = 1150,
+    height_donut = 550,
+    margin_donut = 60;
 
 // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
-const radius = Math.min(width, height) / 2 - margin
+const radius = Math.min(width_donut, height_donut) / 2 - margin_donut
 
-// append the svg object to the div called 'container'
-const svg = d3.select("#container")
+// append the svg object to the div called 'container_donutchart'
+const svg_donut = d3.select("#container_donutchart")
   .append("svg")
-    .attr("width", width)
-    .attr("height", height)
+    .attr("width", width_donut)
+    .attr("height", height_donut)
   .append("g")
-    .attr("transform", `translate(${width/2},${height/2})`);
+    .attr("transform", `translate(${width_donut/2},${height_donut/2})`);
 
 
-function call(type) {
+function call_donut(type) {
     let data = {}; // To store the current data
-    let title = document.getElementById('chartDesc');
+    let title = document.getElementById('chartDesc_donut');
 
     if (type === 'category') {
         data = @Html.Raw(Json.Serialize(ViewBag.categoryDict));
-        title.innerText  = "Category";
+        title.innerHTML  = "Category";
+        console.log(title.innerText);
     }
     if (type === 'nature') {
         data = @Html.Raw(Json.Serialize(ViewBag.natureDict));
-        title.innerText  = "Nature";
+        title.innerHTML  = "Nature";
     }
     console.log(Object.keys(data));
-    update(data);
+    update_donut(data);
 }
 
  
@@ -55,7 +56,7 @@ function call(type) {
 const color = d3.scaleOrdinal()
     .range(d3.schemeCategory10);
 
-function update(data) {
+function update_donut(data) {
     // Update the color domain based on the current data
     color.domain(Object.keys(data));
 
@@ -76,7 +77,7 @@ function update(data) {
       .outerRadius(radius * 0.9);
 
     // Select all slices
-    const slices = svg.selectAll('.slice')
+    const slices = svg_donut.selectAll('.slice')
       .data(data_ready);
 
     // Update existing slices
@@ -116,7 +117,7 @@ function update(data) {
       .remove();
 
     // Add the polylines between chart and labels:
-    const polylines = svg.selectAll('.polyline')
+    const polylines = svg_donut.selectAll('.polyline')
       .data(data_ready);
 
     // Update existing polylines
@@ -158,7 +159,7 @@ function update(data) {
 
 
     // Add the labels:
-    const labels = svg.selectAll('.label')
+    const labels = svg_donut.selectAll('.label')
       .data(data_ready);
 
     // Update existing labels
@@ -213,10 +214,10 @@ function update(data) {
 
     console.log(percents[0]);
 
-    svg.selectAll(".labelNumber").remove();
+    svg_donut.selectAll(".labelNumber").remove();
 
     // Add labels numbering the slices
-    svg.selectAll(".labelNumber")
+    svg_donut.selectAll(".labelNumber")
       .data(data_ready)
       .enter()
       .append("text")
@@ -227,7 +228,7 @@ function update(data) {
       .text((d, i) => percents[i] + "%"); // Numbering starts from 1
 
     // Remove old label numbers
-    svg.selectAll(".labelNumber")
+    svg_donut.selectAll(".labelNumber")
       .data(data_ready)
       .exit()
       .remove();
@@ -237,6 +238,6 @@ function update(data) {
     
 }
 
-call('category');
+call_donut('category');
 
 </script>

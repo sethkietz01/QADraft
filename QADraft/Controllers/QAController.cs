@@ -767,13 +767,6 @@ namespace QADraft.Controllers
             return Dict;
         }
 
-        // Display the category / nature Donutchart
-        [HttpGet]
-        public IActionResult DonutChart()
-        {
-            // Return the Donutchart view
-            return View();
-        }
 
     }
 }
