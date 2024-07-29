@@ -903,6 +903,7 @@ dialog {
 
 .severity-cell-container {
     padding-right: 10px !important;
+    width: 40px;
 }
 
 .grid-test {
