@@ -986,3 +986,7 @@ iframe {
     max-width: 25px;
 }
 
+#scatter-plot-div {
+    display: flex;
+    flex-direction: column;
+}

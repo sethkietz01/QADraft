@@ -40,6 +40,7 @@
         <div id="scatter-plot-div">
             <div id="scatter-plot-tooltip" class="tooltip"></div>
             <partial name="ConnectedScatterPlot"/>
+            <button class="buttons table-buttons" onclick="showChangeDatesModal()">Change Start/End Dates</button>
         </div>
     </div>
 </div>
@@ -136,7 +137,7 @@
             <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
             the deleteButton input. No will close the confirmation dialog -->
             <button class="buttons" onclick="confirmDelete()">Yes</button> 
-            <button class="buttons-accent" onclick="window.dialog.close();">No</button>
+            <button class="buttons buttons-accent" onclick="window.dialog.close();">No</button>
         </div>
     </div>
 	<button onclick="window.dialog.close();" class="x">❌</button>
@@ -207,6 +208,25 @@
     <input id="highlight-cell" type="text" disabled hidden />
     <input id="color-before-highlight" type="text" disabled hidden />
 	<button onclick="closeDetailsModal();" class="x">❌</button>
+</dialog>
+
+<dialog id="dialog-change-dates">
+    <div class="confirmation-content">
+        <p>Enter the new Start and End dates (start date must be a Sunday)</p>
+        <div class="form-group">
+            <label for="startDate" class="control-label">Start Date</label>
+            <input id="start-date-input" class="form-control" type="date" />
+        </div>
+        <div class="form-group">
+            <label for="endDate" class="control-label">End Date</label>
+            <input id="end-date-input" class="form-control" type="date" />
+        </div>
+        <div class="confirmation-buttons">
+            <button class="buttons" onclick="updateDates()">Confirm</button>
+            <button class="buttons buttons-accent" onclick="closeChangeDatesModal()">Cancel</button>
+        </div>
+    </div>
+    <button onclick="closeChangeDatesModal();" class="x">❌</button>
 </dialog>
  
 @section Scripts {
@@ -347,9 +367,76 @@
 
             applySeverityColors();
 
-            var detailsModal = document.getElementById('dialog-details');
-            detailsModal.close();
+            document.getElementById('dialog-details').close();
         }
+
+        async function fetchDates() {
+            try {
+                const response = await fetch('/api/datesettings/dates');
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                // Read the response as text
+                const text = await response.text();
+                console.log('Raw Response Text:', text);
+
+                // Parse the JSON text
+                const data = JSON.parse(text);
+                console.log('Parsed Dates:', data);
+
+                console.log('StartDate = ' + data.StartDate);
+                console.log('EndDate = ' + data.EndDate);
+
+            } catch (error) {
+                console.error('Error fetching dates:', error);
+            }
+        }
+
+
+        async function updateDates() {
+            try {
+                const startDate = document.getElementById('start-date-input').value;
+                const endDate = document.getElementById('end-date-input').value;
+
+                const response = await fetch('/api/datesettings/update-dates', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ StartDate: startDate, EndDate: endDate })
+                });
+
+                if (response.ok) {
+                    alert('Dates updated successfully');
+                } else {
+                    alert(`Failed to update dates. Status: ${response.status}`);
+                }
+            } catch (error) {
+                console.error('Error updating dates:', error);
+            }
+
+            document.getElementById('dialog-change-dates').close();
+            location.reload();
+        }
+
+        function showChangeDatesModal() {
+            event.preventDefault();
+
+            document.getElementById('dialog-change-dates').showModal();
+
+        }
+
+        function closeChangeDatesModal() {
+            event.preventDefault();
+
+            document.getElementById('dialog-change-dates').close();
+
+        }
+
+        // Call fetchDates when the page loads
+        window.onload = fetchDates;
     </script>
 }
  

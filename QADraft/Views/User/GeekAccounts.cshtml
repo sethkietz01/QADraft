@@ -80,7 +80,7 @@
             <button class="buttons" onclick="closeAccountDetailsModal();">Close</button>
         </div>
     </div>
-	<button onclick="closeDetailsModal();" class="x">❌</button>
+	<button onclick="closeAccountDetailsModal();" class="x">❌</button>
 </dialog>
 
 <dialog id="dialog" class="dialog-popups">
@@ -92,11 +92,11 @@
             <textarea id="flag-description"></textarea>
         </div>
         <div class="confirmation-buttons">
-            <button id="confirm-delete-event-button" class="buttons" onclick="flagAccount()">Confirm</button> 
-            <button id="cancel-delete-event-button" class="buttons buttons-accent" onclick="window.dialog.close();">Cancel</button>
+            <button id="confirm-flag-account-button" class="buttons" onclick="flagAccount()">Confirm</button> 
+            <button id="cancel-flag-account-button" class="buttons buttons-accent" onclick="document.getElementById('dialog').close();">Cancel</button>
         </div>
     </div>
-	<button onclick="window.dialog.close();" class="x">❌</button>
+    <button onclick="document.getElementById('dialog').close();" class="x">❌</button>
 </dialog>
 
 <script>
@@ -171,7 +171,6 @@
     }
 
     function closeAccountDetailsModal() {
-            const dialogDetails = document.getElementById('dialog-account-details');
-            dialogDetails.close();
+            document.getElementById('dialog-account-details').close();
         }
 </script>
