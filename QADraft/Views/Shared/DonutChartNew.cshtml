@@ -93,48 +93,49 @@ function update(data) {
     }
 
     var legendColors = [];
+    // Variables to calculate the percentage of each QA
+    var totalData = d3.sum(data_ready, d => d.data[1]);
+    var dataArray = data_ready.map(d => d.data[1]);
 
     // Enter new slices
-    slices.enter()
-      .append('path')
-      .attr('class', 'slice')
-      .attr('d', arc)
+        slices.enter()
+            .append('path')
+            .attr('class', 'slice')
+            .attr('d', arc)
             .attr("fill", (d, i) => {
                 const colorValue = color(i); // Get color for this slice
                 legendColors.push(colorValue); // Save the color to legendColors
                 return colorValue; // Return the color for the fill attribute
             })
-      .attr("stroke", strokeColor)
-      .style("stroke-width", "2px")
-        .on("mouseover", function(event, d) {
-            tooltip.transition()
-            .duration(200)
-            .style("opacity", .9);
-            tooltip.html(`<strong>${d.data[0]}:</strong> ${d.data[1]}`)
-            .style("left", (event.pageX + 10) + "px")
-            .style("top", (event.pageY - 28) + "px");
-        })
-        .on("mouseout", function() {
-            tooltip.transition()
-            .duration(500)
-            .style("opacity", 0);
-        })
-        .transition() // Add transition
-        .duration(1000) // Duration of transition
-        .attrTween("d", function(d) { // Interpolate between old and new paths
-            const interpolate = d3.interpolate(this._current, d);
-            this._current = interpolate(0);
-            return function(t) {
-                return arc(interpolate(t));
-            };
-        });
+            .attr("stroke", strokeColor)
+            .style("stroke-width", "2px")
+            .on("mouseover", function (event, d) {
+                const percentage = (d.data[1] / totalData) * 100;
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html(`<strong>${d.data[0]}:</strong> ${d.data[1]} (${percentage.toFixed(1)}%)`)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function () {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            })
+            .transition() // Add transition
+            .duration(1000) // Duration of transition
+            .attrTween("d", function (d) { // Interpolate between old and new paths
+                const interpolate = d3.interpolate(this._current, d);
+                this._current = interpolate(0);
+                return function (t) {
+                    return arc(interpolate(t));
+                };
+            });
 
     populateLegend(data, legendColors);
 
-    // Variables to calculate the percentage of each QA
-    var totalData = d3.sum(data_ready, d => d.data[1]);
-    var percentage = 0;
-    var dataArray = data_ready.map(d => d.data[1]);
+    
 
     // Add labels numbering the slices
     svg.selectAll(".labelNumber")
