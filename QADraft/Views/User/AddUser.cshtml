@@ -48,6 +48,7 @@
             <option value="Geek">Geek</option>
             <option value="Coordinator">Coordinator</option>
             <option value="Admin">Admin</option>
+            <option value="Super Admin">Super Admin</option>
             <option value="Inactive">Inactive</option>
         </select>
         <span asp-validation-for="Role" class="text-danger"></span>
@@ -76,7 +77,7 @@
 
 
 <!-- Dynamic Modal Popup for password error messages -->
-<dialog id="dialog">
+<dialog id="dialog-password">
 	<div class="confirmation-content">
         <!-- Dynamic text -->
         <p id="password-error"></p>
@@ -84,10 +85,10 @@
         <div class="confirmation-buttons">
             <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
             the deleteButton input. No will close the confirmation dialog -->
-            <button class="buttons" onclick="window.dialog.close();">OK</button>
+            <button class="buttons" onclick="document.getElementById('dialog-password').close();">OK</button>
         </div>
     </div>
-	<button onclick="window.dialog.close();" class="x">❌</button>
+    <button onclick="document.getElementById('dialog-password').close();" class="x">❌</button>
 </dialog>
 
 
@@ -114,10 +115,10 @@
                 else if (!/\d/.test(password)) {
                     displayModal("Password must contain at least one numeric character.");
                 }
-
-                // If password meets criteria, proceed with form submission
-                console.log("met");
-                document.querySelector('input[type="submit"][value="Add User"]').click();
+                else {
+                    // If password meets criteria, proceed with form submission
+                    document.querySelector('input[type="submit"][value="Add User"]').click();
+                }
             }
             else {
                 // If the passwords are different, clear the password fields
@@ -127,15 +128,13 @@
                 // display an error
                 displayModal("Password must match");
             }
-
         }
 
         function displayModal(message) {
             // Set the text of the modal to the message string
             document.getElementById("password-error").innerHTML = message;
             // Show the popup
-            window.dialog.showModal();
-
+            document.getElementById('dialog-password').showModal();
         }
 
         document.addEventListener('DOMContentLoaded', function() {

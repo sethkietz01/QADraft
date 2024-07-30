@@ -47,6 +47,7 @@
             <option value="Geek">Geek</option>
             <option value="Coordinator">Coordinator</option>
             <option value="Admin">Admin</option>
+            <option value="Super Admin">Super Admin</option>
             <option value="Inactive">Inactive</option>
         </select>
         <span asp-validation-for="Role" class="text-danger"></span>
@@ -80,14 +81,14 @@
             <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
             the deleteButton input. No will close the confirmation dialog -->
             <button class="buttons" onclick="confirmEdit()">Confirm</button> 
-            <button class="buttons-accent" onclick="window.dialog.close();">No</button>
+            <button class="buttons buttons-accent" onclick="window.dialog.close();">No</button>
         </div>
     </div>
 	<button onclick="window.dialog.close();" class="x">❌</button>
 </dialog>
 
 <!-- Dynamic Modal Popup for password error messages -->
-<dialog id="dialog">
+<dialog id="dialog-password">
 	<div class="confirmation-content">
         <!-- Dynamic text -->
         <p id="password-error"></p>
@@ -95,10 +96,10 @@
         <div class="confirmation-buttons">
             <!-- Confirmation buttons. Yes will call confirmDelete which will trigger 
             the deleteButton input. No will close the confirmation dialog -->
-            <button class="buttons" onclick="window.dialog.close();">OK</button>
+            <button class="buttons" onclick="document.getElementById('dialog-password').close();">OK</button>
         </div>
     </div>
-	<button onclick="window.dialog.close();" class="x">❌</button>
+    <button onclick="document.getElementById('dialog-password').close();" class="x">❌</button>
 </dialog>
 
 @section Scripts {
@@ -116,7 +117,6 @@
         });
 
         function confirmEdit() {
-
             // Get the two password fields
             var pass1 = document.getElementById("password-field");
             var pass2 = document.getElementById("confirm-password-field");
@@ -151,24 +151,25 @@
                     // Otherwise, password meets criteria, proceed with form submission
                     document.querySelector('input[type="submit"][value="Edit User"]').click();
                 }
-
             }
             else {
-                // If the passwords are different, lear the password fields
+                console.log('else');
+                // If the passwords are different, clear the password fields
                 pass1.value = "";
                 pass2.value = "";
                 
                 // display an error
                 displayModal("Password must match");
             }
-
         }
 
         function displayModal(message) {
+            // Close the first modal
+            document.getElementById('dialog').close();
             // Set the text of the modal to the message string
             document.getElementById("password-error").innerHTML = message;
             // Show the popup
-            window.dialog.showModal();
+            document.getElementById('dialog-password').showModal();
 
         }
 
