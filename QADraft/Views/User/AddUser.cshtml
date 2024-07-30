@@ -8,7 +8,7 @@
 <h2>Add User</h2>
 
 <!-- Form to get details of the user being added -->
-<form asp-controller="User" asp-action="AddUser" method="post">
+<form id="add-user-form" asp-controller="User" asp-action="AddUser" method="post">
     <div class="form-group">
         <label asp-for="Username" class="control-label"></label>
         <input id="username" asp-for="Username" class="form-control" />
@@ -147,37 +147,10 @@
 
         function cancel()
         {
-            var usernameInput = document.getElementById('username');
-            var passwordInput = document.getElementById('password');
-            var confirmPasswordInput = document.getElementById('confirmPassword');
-            var firstNameInput = document.getElementById('firstname');
-            var lastNameInput = document.getElementById('lastname');
-            var emailInput = document.getElementById('email');
-            var roleInput = document.getElementById('role');
+            const form = document.getElementById('add-user-form');
 
-            usernameInput.style.color = 'transparent';
-            usernameInput.value = "placeholder";
-
-            passwordInput.style.color = 'transparent';
-            passwordInput.value = "placeholder";
-
-            confirmPasswordInput.style.color = 'transparent';
-            confirmPasswordInput.value = "placeholder";
-
-            firstNameInput.style.color = 'transparent';
-            firstNameInput.value = "placeholder";
-
-            lastNameInput.style.color = 'transparent';
-            lastNameInput.value = "placeholder";
-
-            emailInput.style.color = 'transparent';
-            emailInput.value = "placeholder";
-
-            roleInput.style.color = 'transparent';
-            if (roleInput.options.length > 1) {
-                roleInput.value = roleInput.options[1].value;
-            }
-
+            form.remove();
+            
             var cancelForm = document.getElementById("cancel-form");
 
             cancelForm.submit();
