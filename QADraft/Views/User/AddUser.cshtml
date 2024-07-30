@@ -11,7 +11,7 @@
 <form asp-controller="User" asp-action="AddUser" method="post">
     <div class="form-group">
         <label asp-for="Username" class="control-label"></label>
-        <input asp-for="Username" class="form-control" />
+        <input id="username" asp-for="Username" class="form-control" />
         <span asp-validation-for="Username" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -26,24 +26,24 @@
     </div>
     <div class="form-group">
         <label asp-for="FirstName" class="control-label">First Name</label>
-        <input asp-for="FirstName" class="form-control" />
+        <input id ="firstname" asp-for="FirstName" class="form-control" />
         <span asp-validation-for="FirstName" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="LastName" class="control-label">Last Name</label>
-        <input asp-for="LastName" class="form-control" />
+        <input id="lastname" asp-for="LastName" class="form-control" />
         <span asp-validation-for="LastName" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label asp-for="Email" class="control-label">Email Address</label>
-        <input asp-for="Email" class="form-control" />
+        <input id="email" asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 
     
     <div class="form-group">
         <label asp-for="Role" class="control-label"></label>
-        <select asp-for="Role" class="form-control">
+        <select id="role" asp-for="Role" class="form-control">
             <option class="placeholder" value="" disabled selected>Select Role</option>
             <option value="Geek">Geek</option>
             <option value="Coordinator">Coordinator</option>
@@ -147,6 +147,37 @@
 
         function cancel()
         {
+            var usernameInput = document.getElementById('username');
+            var passwordInput = document.getElementById('password');
+            var confirmPasswordInput = document.getElementById('confirmPassword');
+            var firstNameInput = document.getElementById('firstname');
+            var lastNameInput = document.getElementById('lastname');
+            var emailInput = document.getElementById('email');
+            var roleInput = document.getElementById('role');
+
+            usernameInput.style.color = 'transparent';
+            usernameInput.value = "placeholder";
+
+            passwordInput.style.color = 'transparent';
+            passwordInput.value = "placeholder";
+
+            confirmPasswordInput.style.color = 'transparent';
+            confirmPasswordInput.value = "placeholder";
+
+            firstNameInput.style.color = 'transparent';
+            firstNameInput.value = "placeholder";
+
+            lastNameInput.style.color = 'transparent';
+            lastNameInput.value = "placeholder";
+
+            emailInput.style.color = 'transparent';
+            emailInput.value = "placeholder";
+
+            roleInput.style.color = 'transparent';
+            if (roleInput.options.length > 1) {
+                roleInput.value = roleInput.options[1].value;
+            }
+
             var cancelForm = document.getElementById("cancel-form");
 
             cancelForm.submit();
