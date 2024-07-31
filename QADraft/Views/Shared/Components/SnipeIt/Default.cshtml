@@ -15,7 +15,7 @@
         <text>End Date: </text>
         <input type="date" id="endDate" class="form-control" value="@ViewBag.endDate?.ToString("yyyy-MM-dd")"/>
 
-        <button id="snipe-it-submit-button" class="buttons" onclick="SubmitSnipeItDates()">Submit</button>
+        <button id="snipe-it-submit-button" class="buttons" onclick="SubmitSnipeItDates(false)">Submit</button>
     </div>
     <div class="snipeit-stat-outputs" style="grid-row: 2;">
         <table>
@@ -49,9 +49,17 @@
             <tr><td>Cameras:</td><td>@ViewBag.availablCam</td></tr>
         </table>
     </div>
+    <p class="snipeit-stat-outputs">Last Update: @ViewBag.lastUpdate <button onclick="refresh()">&#8635;</button></p>
 </div>
 
 <script>
+    function refresh() {
+        SubmitSnipeItDates();
+        console.log("refresh");
+    }
+       
+      
+
     function SubmitSnipeItDates() {
         console.log("submit");
 
@@ -70,7 +78,7 @@
             type: "GET",
             url: _url,
             traditional: true,
-            data: { startDate: startDate, endDate: endDate, dataArray: dataArray},
+            data: { startDate: startDate, endDate: endDate},
             success: function (result) {
                 // Replace the html of the embed container with html retured by ajax.
                 var container = document.getElementById("embed-reports-container");

@@ -11,6 +11,8 @@ using Microsoft.CodeAnalysis.Elfie.Model.Tree;
 using System.ComponentModel;
 using System.Collections.Specialized;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Xml.Linq;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 public class SnipeItApiClient
 {
@@ -24,6 +26,49 @@ public class SnipeItApiClient
         _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {api_token}");
     }
 
+    public async Task UpdateXml()
+    {
+        // Make API calls to get updated data
+        int currentCheckedout = await GetStatusCount("Checked Out", 5);
+        int currentReChecked = await GetStatusCount("Re-Checked Out", 13);
+        int currentReminderEmail = await GetStatusCount("Reminder Email", 2);
+        int currentCourtesyCallCompleted = await GetStatusCount("Courtesy Call Completed", 12);
+        int current1stLateFee = await GetStatusCount("1st Late Fee", 4);
+        int current2ndLateFee = await GetStatusCount("2nd Late Fee", 9);
+        int currentMaintenance = await GetStatusCount("Maintenance/Diagnose", 1);
+        //int currentReplacementFee = await GetStatusCount("Replacement Fee", 14);
+        int currentCirculation = await GetStatusCount("In Circulation", 7);
+        int availableWin = await GetCountInCirculation("WIN");
+        int availableAir = await GetCountInCirculation("AIR");
+        int availableMac = await GetCountInCirculation("MAC");
+        int availablGcal = await GetCountInCirculation("GCAL");
+        int availablProj = await GetCountInCirculation("PROJ");
+        int availablCam = await GetCountInCirculation("CAM");
+
+        // Save that data to an XMl file
+        new XDocument(
+            new XElement("SnipeIt",
+                new XElement("Current-Checked-Out", currentCheckedout.ToString()),
+                new XElement("Current-Rechecked-Out", currentReChecked.ToString()),
+                new XElement("Current-Reminder-Email", currentReminderEmail.ToString()),
+                new XElement("Current-Courtesy-Call-Completed", currentCourtesyCallCompleted.ToString()),
+                new XElement("Current-1st-LateFee", current1stLateFee.ToString()),
+                new XElement("Current-2nd-LateFee", current2ndLateFee.ToString()),
+                new XElement("Current-Maintenance", currentMaintenance.ToString()),
+                //new XElement("Current-Replacement-Fee", currentReplacementFee.ToString()),
+                new XElement("Current-Circulation", currentCirculation.ToString()),
+                new XElement("Available-WIN", availableWin.ToString()),
+                new XElement("Available-AIR", availableAir.ToString()),
+                new XElement("Available-MAC", availableMac.ToString()),
+                new XElement("Available-GCAL", availablGcal.ToString()),
+                new XElement("Available-PROJ", availablProj.ToString()),
+                new XElement("Available-CAM", availablCam.ToString()),
+                new XElement("Last-Update", DateTime.Now.ToString("MM/dd/yy hh:mm tt"))
+            )
+        )
+        .Save("wwwroot/xml/SnipeItData.xml");
+    }
+
     public async Task<int> ActivityReportBetween(string actionType, DateTime StartDate, DateTime EndDate)
     {
         //overwrite for testing
@@ -33,6 +78,7 @@ public class SnipeItApiClient
 
         HttpResponseMessage response = await _httpClient.GetAsync(endpoint);
         response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        Console.WriteLine("ActivityReportAPI");
 
         if (response.IsSuccessStatusCode)
         {
@@ -93,11 +139,12 @@ public class SnipeItApiClient
 
     public async Task<int> GetCountInCirculation(string tag)
     {
-        int status_id = await GetStatusId("In Circulation");
+        int status_id = 7; // 7 is the status id for In Circulation
         string endpoint = $"hardware?limit=100000&status_id={status_id}&search={tag}";
 
         // Send GET request
         HttpResponseMessage response = await _httpClient.GetAsync(base_url + endpoint);
+        Console.WriteLine("Circulation Count API" + DateTime.Now.ToString("HH:mm:ss"));
 
         // Check if successful
         if (response.IsSuccessStatusCode)
@@ -135,14 +182,14 @@ public class SnipeItApiClient
         }
     }
 
-    public async Task<int> GetStatusCount(string status)
+    public async Task<int> GetStatusCount(string status, int status_id)
     {
         Console.WriteLine(status);
-        int status_id = await GetStatusId(status);
         string endpoint = $"hardware?limit=100000&status_id={status_id}";
 
         // Send GET request
         HttpResponseMessage response = await _httpClient.GetAsync(base_url + endpoint);
+        Console.WriteLine("Status Count API");
 
         // Check if successful
         if (response.IsSuccessStatusCode)
@@ -164,51 +211,7 @@ public class SnipeItApiClient
 
     }
 
-    public async Task<int> GetStatusId(string status)
-    {
-        // Construct endpoint with query parameters
-        string endpoint = $"statuslabels?name={status}";
-
-        try
-        {
-            // Send GET request
-            HttpResponseMessage response = await _httpClient.GetAsync(base_url + endpoint);
-
-            // Check if successful
-            if (response.IsSuccessStatusCode)
-            {
-                // Read response content
-                string responseContent = await response.Content.ReadAsStringAsync();
-                string json = @responseContent;
-
-                // Deserialize JSON
-                JObject jsonObject = JsonConvert.DeserializeObject<JObject>(json);
-                JArray rows = jsonObject["rows"] as JArray;
-
-                List<Status> statuses = rows.Select(row =>
-                    new Status
-                    {
-                        id = (int)row["id"]
-                    }).ToList();
-                // There will only be 1 matching status, so grab the first index
-                return statuses[0].id;
-
-            }
-            else
-            {
-                // Handle unsuccessful response
-                throw new HttpRequestException($"Failed to search activity reports: {response.StatusCode}");
-            }
-        }
-        catch (Exception ex)
-        {
-            // Handle exceptions
-            Console.WriteLine($"Exception: {ex.Message}");
-            throw;
-        }
-
-        return -1;
-    }
+    
 }
 
 // Class construction for parsing activity report

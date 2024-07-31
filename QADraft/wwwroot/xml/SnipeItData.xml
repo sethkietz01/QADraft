@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SnipeIt>
+  <Current-Checked-Out>10</Current-Checked-Out>
+  <Current-Rechecked-Out>2</Current-Rechecked-Out>
+  <Current-Reminder-Email>0</Current-Reminder-Email>
+  <Current-Courtesy-Call-Completed>0</Current-Courtesy-Call-Completed>
+  <Current-1st-LateFee>1</Current-1st-LateFee>
+  <Current-2nd-LateFee>2</Current-2nd-LateFee>
+  <Current-Maintenance>46</Current-Maintenance>
+  <Current-Circulation>1006</Current-Circulation>
+  <Available-WIN>136</Available-WIN>
+  <Available-AIR>47</Available-AIR>
+  <Available-MAC>0</Available-MAC>
+  <Available-GCAL>32</Available-GCAL>
+  <Available-PROJ>7</Available-PROJ>
+  <Available-CAM>7</Available-CAM>
+  <Last-Update>07/29/24 04:31 PM</Last-Update>
+</SnipeIt>

@@ -5,6 +5,7 @@
     Layout = ViewBag.Layout;
     string userRole = ViewBag.role;
 }
+<body onload="EmbedLoad()"></body>
 
 <div class="text-center">
     <h1 class="display-4">Welcome, @Context.Session.GetString("FirstName")!</h1>
@@ -325,7 +326,9 @@
             }
         });
 
-        $(document).ready(function () {
+        function EmbedLoad() {
+            console.log("embed load")
+
             // Toggle the visibility of past events to false on page load
             $('.past-event').toggle();
             var pastEventsVisible = false
@@ -357,7 +360,7 @@
             $.ajax({
                 type: "GET",
                 url: _url,
-                data: { startDate: yearStartDate, endDate: yearEndDate, dataArray: [] }, // Pass the start/end date and an empty array for the data
+                data: { startDate: yearStartDate, endDate: yearEndDate}, // Pass the start/end date and an empty array for the data
                 success: function (result) {
                     // Save the fetched html to the div holding the embed
                     $("#embed-reports-container").html(result);
@@ -366,8 +369,8 @@
                     console.error("Error fetching Snipe-IT data (Index):", error);
                 }
             });
-            
-        });
+        }
+
 
         // Function called by the delete button to open confirmation modal
         function openConfirmationDialog(event) {
