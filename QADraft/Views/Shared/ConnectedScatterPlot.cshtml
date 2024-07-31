@@ -60,7 +60,7 @@
             .attr("class", "scatter-plot")
             .attr("transform", `translate(${scatterPlotMargin.left},${scatterPlotMargin.top})`);
 
-        function callScatter(type) {
+        async function callScatter(type) {
             let data = {}; // To store the current data
             let title = document.getElementById('chartDesc');
 
@@ -76,7 +76,7 @@
                 data = @Html.Raw(Json.Serialize(timeDict));
                 console.log("Time Dict = " + data);
                 console.log("aasdjflkasjf " + Object.keys(data));
-                
+
                 console.log("Final Data = ", data);
                 console.log("Keys of Final Data = ", Object.keys(data));
                 console.log("Values of Final Data = ", Object.values(data));
@@ -96,26 +96,60 @@
                     }
                 });
 
-                
-
                 title.innerText = type;
             }
+
+            // Wait for the dates to be fetched before proceeding
+            const startAndEndDates = await fetchDates();
+
+            // Ensure startAndEndDates is defined and contains valid dates
+            if (!startAndEndDates || startAndEndDates.length !== 2) {
+                console.error("Invalid dates fetched");
+                return;
+            }
+
+            // Calculate weekly dates
+            const weeklyDates = calculateWeeklyDates(startAndEndDates[0], startAndEndDates[1]);
 
             // Convert data into array format for D3.js
             const formattedData = Object.keys(data).map(key => {
                 return { date: parseInt(key.split(" ")[1]), value: data[key] };
             });
 
-            var weeklyDates = calculateWeeklyDates("2024-6-23", formattedData.length)
-
+            // Map formatted data to include start and end dates for each week
             let newData = formattedData.map((item, index) => ({
                 ...item,
-                startDate: weeklyDates[index].startDate,
-                endDate: weeklyDates[index].endDate
+                startDate: weeklyDates[index] ? weeklyDates[index].startDate : null,
+                endDate: weeklyDates[index] ? weeklyDates[index].endDate : null
             }));
 
-
+            // Pass newData to the graph function
             graphScatterPlot(newData);
+        }
+
+
+        async function fetchDates() {
+            try {
+                const response = await fetch('/api/datesettings/dates');
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                // Read the response as text
+                const text = await response.text();
+
+                // Parse the JSON text
+                const data = JSON.parse(text);
+
+                console.log('StartDate (scatter) = ' + data.StartDate);
+                console.log('EndDate (scatter) = ' + data.EndDate);
+
+                return [data.StartDate, data.EndDate];
+
+            } catch (error) {
+                console.error('Error fetching dates:', error);
+            }
         }
 
         // Function to format dates
@@ -234,34 +268,45 @@
                 .style("font-size", "16px");
         }
 
-        function calculateWeeklyDates(startDateStr, numWeeks) {
+        function calculateWeeklyDates(startDateStr, endDateStr) {
+            console.log('startDateStr = ' + startDateStr);
+            console.log('endDateStr = ' + endDateStr);
+
             let startDate = new Date(startDateStr); // Convert starting date string to Date object
+            let endDate = new Date(endDateStr); // Convert ending date string to Date object
             let weeklyDates = [];
 
-            for (let i = 0; i < numWeeks; i++) {
-                let endDate = new Date(startDate); // Create a new date object each iteration
+            // Ensure the endDate is after or equal to the startDate
+            if (endDate < startDate) {
+                console.error("End date must be after or equal to the start date.");
+                return [];
+            }
 
-                // Calculate end date of the current week by adding 7 days
-                endDate.setDate(endDate.getDate() + 6); // End of the week is 6 days after the start
+            while (startDate <= endDate) {
+                // Calculate end date of the current week
+                let weekEndDate = new Date(startDate);
+                weekEndDate.setDate(startDate.getDate() + 6); // End of the week is 6 days after the start
+
+                // If the calculated end date exceeds the actual endDate, adjust it
+                if (weekEndDate > endDate) {
+                    weekEndDate = endDate;
+                }
 
                 // Format dates as needed (e.g., to ISO strings)
                 let startDateFormatted = startDate.toISOString().split('T')[0];
-                let endDateFormatted = endDate.toISOString().split('T')[0];
+                let weekEndDateFormatted = weekEndDate.toISOString().split('T')[0];
 
                 // Push start and end dates to array
-                weeklyDates.push({ startDate: startDateFormatted, endDate: endDateFormatted });
+                weeklyDates.push({ startDate: startDateFormatted, endDate: weekEndDateFormatted });
 
                 // Move to the next week's start date
                 startDate.setDate(startDate.getDate() + 7); // Move to the next week
             }
 
-            console.log("\n\nweeklyDates = " + weeklyDates);
-            console.log("\n\nweeklyDates = " + Object.keys(weeklyDates));
-            console.log("\n\nweeklyDates = " + Object.values(weeklyDates));
+            console.log("\n\nweeklyDates = " + JSON.stringify(weeklyDates, null, 2));
             weeklyDates.forEach((week, index) => {
                 console.log(`Week ${index + 1}: Start Date = ${week.startDate}, End Date = ${week.endDate}`);
             });
-
 
             return weeklyDates;
         }

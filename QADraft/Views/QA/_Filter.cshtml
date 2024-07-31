@@ -107,11 +107,13 @@
             by the specified column where x is the column index. The class "arrow" is 
             used by the function to edit the column header -->
             <th onclick="sortTable(0)">Committed By<span class="arrow"></th>
+            @*<th onclick="sortTable(1)">Found By<span class="arrow"></th>*@
             <th onclick="sortTable(2)">Category<span class="arrow"></th>
             <th onclick="sortTable(3)">Nature<span class="arrow"></th>
-            <th onclick="sortTable(4)">Severity<span class="arrow"></th>
-            <th onclick="sortTable(5)">Commited On<span class="arrow"></th>
-            <th class="noSort">Actions</th> <!-- Don't allow the user to sort by the action column -->
+            <th id="all-qas-severity-table-header" onclick="sortTable(4)">Severity<span class="arrow"></th>
+            <th id="all-qas-committed-on-table-header" onclick="sortTable(5)">Committed On<span class="arrow"></th>
+            @*<th onclick="sortTable(6)">Found On<span class="arrow"></th>*@
+            <th id="all-qas-actions-table-header" class="noSort">Actions</th> <!-- Don't allow the user to sort by the action column -->
         </tr>
     </thead>
     <!-- Create the table body -->
@@ -129,8 +131,8 @@
                     <td>@qa.CategoryOfError</td>
                     <td>@qa.NatureOfError</td>
                     <td id="all-qas-severity-table-data" class="severity-cell-container" data-severity="@qa.Severity"><div class="severity-cell"><span class="severity-span">@qa.Severity</span></div></td>
-                    <td>@qa.ErrorDate.ToString("MM-dd-yyyy")</td>
-                    <td>
+                    <td id="all-qas-committed-on-table-data">@qa.ErrorDate.ToString("MM-dd-yyyy")</td>
+                    <td id="all-qas-actions-table-data">
                         @* Insert form elements into each row *@
                         @* Assign the form method as POST and the appropriate controller and IActionResult *@
                         <form method="post" asp-controller="QA" asp-action="ManageQA" >
@@ -139,9 +141,9 @@
                              @* Create div to hold buttons *@
                             <div class="form-group">
                                 @* Inputs that send action with POST. That value is used in ManageQA to determine the correct action to take *@
-                                <input type="submit" name="action" value="View/Edit" class="buttons table-buttons" />
+                                <input id="updateButton" type="submit" name="action" value="View/Edit" class="buttons table-buttons" />
                                 @* The delete input is hidden and cannot be selected by the user *@
-                                <input type="submit" name="action" value="Delete QA" class="buttons table-buttons" hidden />
+                                <input id="deleteButton" type="submit" name="action" value="Delete QA" class="buttons table-buttons" hidden />
                                 @* Hidden input to pass the source with POST *@
                                 <input type="hidden" name="source" value="Filter" />
                                 @* This button's onclick will open a confirmation dialog. In that dialog you can confirm the 

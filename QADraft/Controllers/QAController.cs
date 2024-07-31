@@ -17,6 +17,7 @@ using NuGet.Packaging;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.IdentityModel.Tokens;
 using System.Globalization;
+using Microsoft.Identity.Client;
 
 namespace QADraft.Controllers
 {
@@ -24,11 +25,13 @@ namespace QADraft.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICompositeViewEngine _viewEngine;
-        
+        private readonly string _filePath;
+
         public QAController(ApplicationDbContext context,ICompositeViewEngine viewEngine)
         {
             _context = context;
             _viewEngine = viewEngine;
+            _filePath = Path.Combine(Directory.GetCurrentDirectory(), "datesettings.json");
         }
 
         // Display the AddQA page
@@ -738,13 +741,30 @@ namespace QADraft.Controllers
             }
             else if (type == "time")
             {
-                DateTime startDate = new DateTime(2024, 6, 23);
+                // Read the JSON file into a string
+                string jsonString = System.IO.File.ReadAllText(_filePath);
+
+                // Deserialize the JSON string into a DateSettings object
+                var settings = System.Text.Json.JsonSerializer.Deserialize<DateSettings>(jsonString);
+
+                Console.WriteLine("settings = " + settings);
+
+                // Parse the dates from the settings
+                DateTime startDate = DateTime.Parse(settings.StartDate);
+                DateTime endDate = DateTime.Parse(settings.EndDate);
 
                 Console.WriteLine("startDate = " + startDate);
-                 
+                Console.WriteLine("endDate = " + endDate);
 
+                // Calculate the number of weeks between startDate and endDate
+                int startWeek = CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(startDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday);
+                int endWeek = CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(endDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday);
+                int totalWeeks = endWeek - startWeek + 1;
+
+                // Group the `qas` data by week number relative to startDate
                 Dict = qas
-                    .GroupBy(qa => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(qa.ErrorDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday) - CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(startDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday) + 1)
+                    .Where(qa => qa.ErrorDate >= startDate && qa.ErrorDate <= endDate)  // Filter by date range
+                    .GroupBy(qa => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(qa.ErrorDate, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday) - startWeek + 1)
                     .ToDictionary(g => $"Week {g.Key}", g => g.Count());
 
                 Console.WriteLine("timeDict = " + Dict);
@@ -755,6 +775,12 @@ namespace QADraft.Controllers
                     int weekNumber = int.Parse(entry.Key.Replace("Week ", ""));
                     DateTime weekStart = startDate.AddDays((weekNumber - 1) * 7);
                     DateTime weekEnd = weekStart.AddDays(6);
+
+                    // Ensure that weekEnd does not exceed the endDate
+                    if (weekEnd > endDate)
+                    {
+                        weekEnd = endDate;
+                    }
 
                     string weekStartFormatted = weekStart.ToString("yyyy-MM-dd");
                     string weekEndFormatted = weekEnd.ToString("yyyy-MM-dd");
@@ -767,6 +793,10 @@ namespace QADraft.Controllers
             return Dict;
         }
 
-
+        public class DateSettings
+        {
+            public string StartDate { get; set; }
+            public string EndDate { get; set; }
+        }
     }
 }
