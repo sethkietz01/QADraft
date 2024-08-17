@@ -116,7 +116,7 @@ namespace QADraft.Controllers
                         HttpContext.Session.SetString("LastName", user.LastName);
                         HttpContext.Session.SetInt32("Id", user.Id);
                         HttpContext.Session.SetString("Role", user.Role);
-                        HttpContext.Session.SetString("Theme", user.theme);
+                        HttpContext.Session.SetString("Theme", user.Theme);
 
                         // Set the current DateTime as LastLogin for user in database
                         user.LastLogin = DateTime.Now;

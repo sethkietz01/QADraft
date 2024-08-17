@@ -24,8 +24,8 @@ builder.Configuration
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<GeekQAService>();
 // Add TimedHostedService background timer
-builder.Services.AddSingleton<SnipeItApiClient>();
-builder.Services.AddHostedService<TimedHostedService>();
+//builder.Services.AddSingleton<SnipeItApiClient>();
+//builder.Services.AddHostedService<TimedHostedService>();
 
 // Configure Entity Framework to use SQL Server with connection string from appsettings.json
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")

@@ -32,6 +32,10 @@
             _logger.LogInformation(
                 "Timed Hosted Service is working. Count: {Count}", count);
         }
+        catch
+        {
+
+        }
         
 
         

@@ -192,7 +192,7 @@ namespace QADraft.Controllers
             // Assign the appropriate layout
             ViewBag.layout = SessionUtil.GetLayout(HttpContext);
 
-            Debug.WriteLine("Id: " + user.Id + "\nUsername: " + user.Username + "\nPassword: " + user.Password + "\nFirstName: " + user.FirstName + "\nLastName: " + user.LastName + "\nEmail: " + user.Email + "\nRole: " + user.Role + "\nisFlagged: " + user.isFlagged + "\nisActive: " + user.isActive + "\nCreatedAt: " + user.CreatedAt + "\nLastLogin: " + user.LastLogin + "\nStartDate: " + user.startDate + "\nendDate: " + user.endDate + "\ntheme: " + user.theme + "\nFlagDescription: " + user.FlagDescription);
+            Debug.WriteLine("Id: " + user.Id + "\nUsername: " + user.Username + "\nPassword: " + user.Password + "\nFirstName: " + user.FirstName + "\nLastName: " + user.LastName + "\nEmail: " + user.Email + "\nRole: " + user.Role + "\nisFlagged: " + user.isFlagged + "\nisActive: " + user.isActive + "\nCreatedAt: " + user.CreatedAt + "\nLastLogin: " + user.LastLogin + "\nStartDate: " + user.startDate + "\nendDate: " + user.endDate + "\nTheme: " + user.Theme + "\nFlagDescription: " + user.FlagDescription);
 
             // Verify that the user Model state is valid
             if (ModelState.IsValid)
@@ -301,7 +301,7 @@ namespace QADraft.Controllers
 
             if (user != null)
             {
-                user.theme = theme;
+                user.Theme = theme;
                 _context.Update(user);
                 _context.SaveChanges();
             }

@@ -11,7 +11,7 @@
 
         <form id="form-items" asp-action="UserThemes" method="post">
             <input type="hidden" asp-for="Id" value="@Context.Session.GetInt32("Id")" />
-            <input type="hidden" asp-for="theme" value="default" />
+            <input type="hidden" asp-for="Theme" value="default" />
             <input type="submit" class="buttons" value="Apply Default Theme" />
         </form>
     </div>
@@ -21,7 +21,7 @@
 
         <form id="form-items" asp-action="UserThemes" method="post">
             <input type="hidden" asp-for="Id" value="@Context.Session.GetInt32("Id")" />
-            <input type="hidden" asp-for="theme" value="dark" />
+            <input type="hidden" asp-for="Theme" value="dark" />
             <input type="submit" class="buttons" value="Apply Dark Theme" />
         </form>
     </div>
