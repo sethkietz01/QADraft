@@ -152,6 +152,33 @@ namespace QADraft.Controllers
             return RedirectToAction("Login");
         }
 
+
+        // Display the SnipeIt Helper Integration Page
+        [HttpGet]
+        public IActionResult SnipeItHelper()
+        {
+            // Verify that the user is logged in
+            if (!SessionUtil.IsAuthenticated(HttpContext))
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Verify that the user has the permissions to view this page
+            if (!SessionUtil.CheckPermissions("Geek", HttpContext))
+            {
+                return RedirectToAction("PermissionsDenied", "Home");
+            }
+
+            // Assign the appropriate layout
+            ViewBag.layout = SessionUtil.GetLayout(HttpContext);
+
+            // Pass the user's role to index
+            ViewBag.role = SessionUtil.GetRole(HttpContext);
+
+            // Return the guides view
+            return View();
+        }
+
         // Display the guides page
         [HttpGet]
         public IActionResult Guides()
